@@ -309,3 +309,29 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
+const siteHeaderElement = document.querySelector(`.page-header`);
+const mainTripInfoElement = siteHeaderElement.querySelector(`.trip-main`);
+const switchTripViewElement = mainTripInfoElement.querySelector(`.trip-controls > h2:first-child`);
+const filterEventsElement = mainTripInfoElement.querySelector(`.trip-controls > h2:last-child`);
+
+render(mainTripInfoElement, createMainTripInfoTemplate(), `afterbegin`);
+render(switchTripViewElement, createSwitchTripViewTemplate(), `afterend`);
+render(filterEventsElement, createFilterTemplate(), `afterend`);
+
+const siteMainElement = document.querySelector(`.page-main`);
+const tripEventsElement = siteMainElement.querySelector(`.trip-events`);
+
+render(tripEventsElement, createSortingTemplate(), `beforeend`);
+render(tripEventsElement, createEventEditTemplate(), `beforeend`);
+render(tripEventsElement, createDaysListTemplate(), `beforeend`);
+
+const daysListElement = tripEventsElement.querySelector(`ul.trip-events__list`);
+
+render(daysListElement, createDayTemplate(), `beforeend`);
+
+const dayElement = daysListElement.querySelector(`ul.trip-events__list`);
+
+for (let i = 0; i < DAY_COUNT; i++) {
+  render(dayElement, createEventTemplate(), `beforeend`);
+};
+
