@@ -1,3 +1,5 @@
+"use strict";
+
 const DAY_COUNT = 3;
 
 const createMainTripInfoTemplate = () => {
@@ -248,9 +250,9 @@ const createEventEditTemplate = () => {
 };
 
 const createDaysListTemplate = () => {
- return (
-   `<ul class="trip-events__list"></ul>`
- );
+  return (
+    `<ul class="trip-events__list"></ul>`
+  );
 };
 
 const createDayTemplate = () => {
@@ -333,5 +335,4 @@ const dayElement = daysListElement.querySelector(`ul.trip-events__list`);
 
 for (let i = 0; i < DAY_COUNT; i++) {
   render(dayElement, createEventTemplate(), `beforeend`);
-};
-
+}
