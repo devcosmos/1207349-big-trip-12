@@ -2,7 +2,7 @@
 
 const EVENT_COUNT = 3;
 
-const createMainTripInfoTemplate = () => {
+const createMenuTemplate = () => {
   return (
     ` <section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -338,11 +338,11 @@ const render = (container, template, place) => {
 };
 
 const siteHeaderElement = document.querySelector(`.page-header`);
-const mainTripInfoElement = siteHeaderElement.querySelector(`.trip-main`);
-const switchTripViewElement = mainTripInfoElement.querySelector(`.trip-controls > h2:first-child`);
-const filterEventsElement = mainTripInfoElement.querySelector(`.trip-controls > h2:last-child`);
+const menuElement = siteHeaderElement.querySelector(`.trip-main`);
+const switchTripViewElement = menuElement.querySelector(`.trip-controls > h2:first-child`);
+const filterEventsElement = menuElement.querySelector(`.trip-controls > h2:last-child`);
 
-render(mainTripInfoElement, createMainTripInfoTemplate(), `afterbegin`);
+render(menuElement, createMenuTemplate(), `afterbegin`);
 render(switchTripViewElement, createSwitchTripViewTemplate(), `afterend`);
 render(filterEventsElement, createFilterTemplate(), `afterend`);
 
