@@ -1,6 +1,6 @@
 "use strict";
 
-const DAY_COUNT = 3;
+const EVENT_COUNT = 3;
 
 const createMainTripInfoTemplate = () => {
   return (
@@ -327,12 +327,12 @@ render(tripEventsElement, createSortingTemplate(), `beforeend`);
 render(tripEventsElement, createEventEditTemplate(), `beforeend`);
 render(tripEventsElement, createDaysListTemplate(), `beforeend`);
 
-const daysListElement = tripEventsElement.querySelector(`ul.trip-events__list`);
+const daysElement = tripEventsElement.querySelector(`ul.trip-events__list`);
 
-render(daysListElement, createDayTemplate(), `beforeend`);
+render(daysElement, createDayTemplate(), `beforeend`);
 
-const dayElement = daysListElement.querySelector(`ul.trip-events__list`);
+const dayElement = daysElement.querySelector(`ul.trip-events__list`);
 
-for (let i = 0; i < DAY_COUNT; i++) {
+for (let i = 0; i < EVENT_COUNT; i++) {
   render(dayElement, createEventTemplate(), `beforeend`);
 }
