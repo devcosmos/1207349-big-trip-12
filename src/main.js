@@ -346,6 +346,10 @@ render(menuElement, createMenuTemplate(), `afterbegin`);
 render(switchTripViewElement, createSwitchTripViewTemplate(), `afterend`);
 render(filterEventsElement, createFilterTemplate(), `afterend`);
 
+const menuInfoElement = menuElement.querySelector(`.trip-info`);
+
+render(menuInfoElement, createTotalPriceTemplate(), `beforeend`);
+
 const siteMainElement = document.querySelector(`.page-main`);
 const tripEventsElement = siteMainElement.querySelector(`.trip-events`);
 
@@ -354,6 +358,10 @@ render(tripEventsElement, createEventEditTemplate(), `beforeend`);
 render(tripEventsElement, createDaysListTemplate(), `beforeend`);
 
 const daysElement = tripEventsElement.querySelector(`ul.trip-events__list`);
+const eventEditDetailsElement = tripEventsElement.querySelector(`.event__details`);
+
+render(eventEditDetailsElement, createEventEditOffersTemplate(), `beforeend`);
+render(eventEditDetailsElement, createEventEditDestinationTemplate(), `beforeend`);
 
 render(daysElement, createDayTemplate(), `beforeend`);
 
