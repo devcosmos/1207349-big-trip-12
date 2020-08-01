@@ -2,7 +2,7 @@
 
 const EVENT_COUNT = 3;
 
-const createMenuTemplate = () => {
+const createMainTripInfoTemplate = () => {
   return (
     ` <section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -275,9 +275,9 @@ const createEventEditDestinationTemplate = () => {
   );
 };
 
-const createDaysListTemplate = () => {
+const createDaysTemplate = () => {
   return (
-    `<ul class="trip-events__list"></ul>`
+    `<ul class="trip-days">`
   );
 };
 
@@ -338,31 +338,30 @@ const render = (container, template, place) => {
 };
 
 const siteHeaderElement = document.querySelector(`.page-header`);
-const menuElement = siteHeaderElement.querySelector(`.trip-main`);
-const switchTripViewElement = menuElement.querySelector(`.trip-controls > h2:first-child`);
-const filterEventsElement = menuElement.querySelector(`.trip-controls > h2:last-child`);
+const mainTripElement = siteHeaderElement.querySelector(`.trip-main`);
+const switchTripViewElement = mainTripElement.querySelector(`.trip-controls > h2:first-child`);
+const filterEventsElement = mainTripElement.querySelector(`.trip-controls > h2:last-child`);
 
-render(menuElement, createMenuTemplate(), `afterbegin`);
+render(mainTripElement, createMainTripInfoTemplate(), `afterbegin`);
 render(switchTripViewElement, createSwitchTripViewTemplate(), `afterend`);
 render(filterEventsElement, createFilterTemplate(), `afterend`);
 
-const menuInfoElement = menuElement.querySelector(`.trip-info`);
+const mainTripInfoElement = mainTripElement.querySelector(`.trip-info`);
 
-render(menuInfoElement, createTotalPriceTemplate(), `beforeend`);
+render(mainTripInfoElement, createTotalPriceTemplate(), `beforeend`);
 
 const siteMainElement = document.querySelector(`.page-main`);
 const tripEventsElement = siteMainElement.querySelector(`.trip-events`);
 
 render(tripEventsElement, createSortingTemplate(), `beforeend`);
 render(tripEventsElement, createEventEditTemplate(), `beforeend`);
-render(tripEventsElement, createDaysListTemplate(), `beforeend`);
+render(tripEventsElement, createDaysTemplate(), `beforeend`);
 
-const daysElement = tripEventsElement.querySelector(`ul.trip-events__list`);
 const eventEditDetailsElement = tripEventsElement.querySelector(`.event__details`);
+const daysElement = tripEventsElement.querySelector(`ul.trip-days`);
 
 render(eventEditDetailsElement, createEventEditOffersTemplate(), `beforeend`);
 render(eventEditDetailsElement, createEventEditDestinationTemplate(), `beforeend`);
-
 render(daysElement, createDayTemplate(), `beforeend`);
 
 const dayElement = daysElement.querySelector(`ul.trip-events__list`);
