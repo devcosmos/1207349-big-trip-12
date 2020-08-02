@@ -1,16 +1,8 @@
 import {createTripInfoTemplate} from "./view/trip-info.js";
 import {createTotalPriceTemplate} from "./view/total-price.js";
+import {createNavigationControllerTemplate} from "./view/nav-controller.js";
 
 const EVENT_COUNT = 3;
-
-const createNavigationControllerTemplate = () => {
-  return (
-    `<nav class="trip-controls__trip-tabs  trip-tabs">
-      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-      <a class="trip-tabs__btn" href="#">Stats</a>
-    </nav>`
-  );
-};
 
 const createEventFiltrationTemplate = () => {
   return (
