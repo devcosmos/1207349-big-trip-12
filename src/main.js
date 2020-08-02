@@ -1,14 +1,7 @@
 import {createTripInfoTemplate} from "./view/trip-info.js";
+import {createTotalPriceTemplate} from "./view/total-price.js";
 
 const EVENT_COUNT = 3;
-
-const createTotalPriceTemplate = () => {
-  return (
-    `<p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
-    </p>`
-  );
-};
 
 const createNavigationControllerTemplate = () => {
   return (
