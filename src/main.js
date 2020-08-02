@@ -6,14 +6,9 @@ import {createSortingTemplate} from "./view/sorting.js";
 import {createEventEditorTemplate} from "./view/event-editor.js";
 import {createEventOffersTemplate} from "./view/event-offers.js";
 import {createEventDestinationTemplate} from "./view/event-destination.js";
+import {createDaysTemplate} from "./view/days.js";
 
 const EVENT_COUNT = 3;
-
-const createDaysTemplate = () => {
-  return (
-    `<ul class="trip-days">`
-  );
-};
 
 const createDayTemplate = () => {
   return (
