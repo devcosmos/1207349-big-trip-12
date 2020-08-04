@@ -1,14 +1,14 @@
-import {createTripInfoTemplate} from "./view/trip-info.js";
-import {createTotalPriceTemplate} from "./view/total-price.js";
-import {createNavigationControllerTemplate} from "./view/nav-controller.js";
-import {createEventFiltrationTemplate} from "./view/event-filtration.js";
-import {createSortingTemplate} from "./view/sorting.js";
-import {createEventEditorTemplate} from "./view/event-editor.js";
-import {createEventOffersTemplate} from "./view/event-offers.js";
-import {createEventDestinationTemplate} from "./view/event-destination.js";
-import {createDaysTemplate} from "./view/days.js";
-import {createDayTemplate} from "./view/day.js";
-import {createEventTemplate} from "./view/event.js";
+import {createTripInfoTemplate} from "./view/trip-info";
+import {createTotalPriceTemplate} from "./view/total-price";
+import {createNavigationControllerTemplate} from "./view/nav-controller";
+import {createEventFiltrationTemplate} from "./view/event-filtration";
+import {createSortingTemplate} from "./view/sorting";
+import {createEventEditorTemplate} from "./view/event-editor";
+import {createEventOffersTemplate} from "./view/event-offers";
+import {createEventDestinationTemplate} from "./view/event-destination";
+import {createDaysTemplate} from "./view/days";
+import {createDayTemplate} from "./view/day";
+import {createEventTemplate} from "./view/event";
 
 const EVENT_COUNT = 3;
 
