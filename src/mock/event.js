@@ -47,6 +47,10 @@ const getOffers = (type) => {
   }
 };
 
+const generateDate = (date) => {
+  return new Date(date.getTime() + getRandomInteger(1, 30) * 60 * 60 * 1000);
+};
+
 const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
 const generateRandomData = (data) => data[getRandomInteger(0, data.length - 1)];
 
@@ -54,6 +58,8 @@ export const generateEvent = () => {
   const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
   const eventType = generateRandomData(EVENT_TYPE);
   const offers = getOffers(eventType);
+  const dateStart = generateDate(new Date());
+  const dateEnd = generateDate(dateStart);
 
   return {
     eventType,
@@ -63,8 +69,8 @@ export const generateEvent = () => {
       text: generateRandomData(DESCRIPTIONS),
       images,
     },
-    startDate: null,
-    endDate: null,
+    dateStart,
+    dateEnd,
     cost: getRandomInteger(0, 600)
   };
 };
