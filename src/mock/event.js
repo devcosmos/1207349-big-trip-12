@@ -1,36 +1,41 @@
 import {getRandomInteger} from "../utils";
 
-const generateDescription = () => {
-  const descriptions = [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    `Cras aliquet varius magna, non porta ligula feugiat eget. `,
-    `Fusce tristique felis at fermentum pharetra.`,
-    `Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`
-  ];
+const DESCRIPTIONS = [
+  `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+  `Cras aliquet varius magna, non porta ligula feugiat eget. `,
+  `Fusce tristique felis at fermentum pharetra.`,
+  `Aliquam id orci ut lectus varius viverra.`,
+  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`
+];
 
-  const randomIndex = getRandomInteger(0, descriptions.length - 1);
+const DESTINATIONS = [
+  `Amsterdam`,
+  `Chamonix`,
+  `Geneva`,
+  `Moscow`
+];
 
-  return descriptions[randomIndex];
-};
+const EVENT_TYPE = [
+  `check-in`,
+  `sightseeing`,
+  `restaurant`,
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+];
 
-const generateDestination = () => {
-  const destinations = [
-    `Amsterdam`,
-    `Chamonix`,
-    `Geneva`,
-    `Moscow`
-  ];
-
-  const randomIndex = getRandomInteger(0, destinations.length - 1);
-
-  return destinations[randomIndex];
-};
+const generateDestination = () => DESTINATIONS[getRandomInteger(0, DESTINATIONS.length - 1)];
+const generateDescription = () => DESCRIPTIONS[getRandomInteger(0, DESCRIPTIONS.length - 1)];
+const generateEventType = () => EVENT_TYPE[getRandomInteger(0, EVENT_TYPE.length - 1)];
 
 export const generateEvent = () => {
   return {
-    typeEvent: `Taxi`,
+    eventType: generateEventType(),
     destination: generateDestination(),
     offers: ``,
     description: {
