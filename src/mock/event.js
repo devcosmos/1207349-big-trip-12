@@ -29,25 +29,22 @@ const EVENT_TYPE = [
   `flight`,
 ];
 
-
-const generateDestination = () => DESTINATIONS[getRandomInteger(0, DESTINATIONS.length - 1)];
-const generateDescription = () => DESCRIPTIONS[getRandomInteger(0, DESCRIPTIONS.length - 1)];
-const generateEventType = () => EVENT_TYPE[getRandomInteger(0, EVENT_TYPE.length - 1)];
 const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
+const generateRandomData = (data) => data[getRandomInteger(0, data.length - 1)];
 
 export const generateEvent = () => {
   const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
 
   return {
-    eventType: generateEventType(),
-    destination: generateDestination(),
+    eventType: generateRandomData(EVENT_TYPE),
+    destination: generateRandomData(DESTINATIONS),
     offers: ``,
     description: {
-      text: generateDescription(),
+      text: generateRandomData(DESCRIPTIONS),
       images,
     },
     startDate: null,
     endDate: null,
-    cost: null
+    cost: getRandomInteger(0, 600)
   };
 };
