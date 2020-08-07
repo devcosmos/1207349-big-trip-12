@@ -17,28 +17,48 @@ const DESTINATIONS = [
 ];
 
 const EVENT_TYPE = [
-  `check-in`,
-  `sightseeing`,
-  `restaurant`,
-  `taxi`,
-  `bus`,
-  `train`,
-  `ship`,
-  `transport`,
-  `drive`,
-  `flight`,
+  `Check-in`,
+  `Sightseeing`,
+  `Restaurant`,
+  `Taxi`,
+  `Bus`,
+  `Train`,
+  `Ship`,
+  `Transport`,
+  `Drive`,
+  `Flight`,
 ];
+
+const getOffers = (type) => {
+  if (type.includes(`Flight`) || type.includes(`Ship`) || type.includes(`Bus`)) {
+    return [
+      {name: `Add luggage`, cost: 30},
+      {name: `Switch to comfort class`, cost: 100},
+      {name: `Add meal`, cost: 15},
+      {name: `Choose seats`, cost: 10},
+    ];
+  } else {
+    return [
+      {name: `Travel by train`, cost: 30},
+      {name: `Rent a car`, cost: 100},
+      {name: `Add meal`, cost: 15},
+      {name: `Order Uber`, cost: 10},
+    ];
+  }
+};
 
 const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
 const generateRandomData = (data) => data[getRandomInteger(0, data.length - 1)];
 
 export const generateEvent = () => {
   const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
+  const eventType = generateRandomData(EVENT_TYPE);
+  const offers = getOffers(eventType);
 
   return {
-    eventType: generateRandomData(EVENT_TYPE),
+    eventType,
     destination: generateRandomData(DESTINATIONS),
-    offers: ``,
+    offers,
     description: {
       text: generateRandomData(DESCRIPTIONS),
       images,
