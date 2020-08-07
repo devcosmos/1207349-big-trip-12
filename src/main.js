@@ -9,8 +9,10 @@ import {createEventDestinationTemplate} from "./view/event-destination";
 import {createDaysTemplate} from "./view/days";
 import {createDayTemplate} from "./view/day";
 import {createEventTemplate} from "./view/event";
+import {generateEvent} from "./mock/event";
 
 const EVENT_COUNT = 3;
+const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
