@@ -13,12 +13,25 @@ const generateDescription = () => {
   const randomIndex = getRandomInteger(0, descriptions.length - 1);
 
   return descriptions[randomIndex];
-}
+};
+
+const generateDestination = () => {
+  const destinations = [
+    `Amsterdam`,
+    `Chamonix`,
+    `Geneva`,
+    `Moscow`
+  ];
+
+  const randomIndex = getRandomInteger(0, destinations.length - 1);
+
+  return destinations[randomIndex];
+};
 
 export const generateEvent = () => {
   return {
     typeEvent: `Taxi`,
-    destination: `Amsterdam`,
+    destination: generateDestination(),
     offers: ``,
     description: {
       text: generateDescription(),
