@@ -48,5 +48,5 @@ render(daysElement, createDayTemplate(), `beforeend`);
 const dayElement = daysElement.querySelector(`ul.trip-events__list`);
 
 for (let i = 0; i < EVENT_COUNT; i++) {
-  render(dayElement, createEventTemplate(), `beforeend`);
+  render(dayElement, createEventTemplate(events[i]), `beforeend`);
 }
