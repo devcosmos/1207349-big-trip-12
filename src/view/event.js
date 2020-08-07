@@ -1,5 +1,5 @@
 export const createEventTemplate = (event) => {
-  const {eventType, cost} = event;
+  const {eventType, dateStart, dateEnd, cost} = event;
 
   const isTransport = (type) => {
     if (type === `Check-in` || type === `Sightseeing` || type === `Restaurant`) {
@@ -8,7 +8,53 @@ export const createEventTemplate = (event) => {
     return true;
   };
 
+  const addZero = (i) => {
+    if (i < 10) {
+      i = `0` + i;
+    }
+
+    return i;
+  };
+
+  const getEventTimeFrontend = (date) => {
+    const h = addZero(date.getHours());
+    const m = addZero(date.getMinutes());
+
+    return `${h}:${m}`;
+  };
+
+  const getEventTimeBackend = (date) => {
+    const y = date.getFullYear();
+    const m = addZero(date.getMonth());
+    const d = addZero(date.getDate());
+
+    return `${y}:${m}:${d}T${getEventTimeFrontend(date)}`;
+  };
+
+  const getDifference = (start, end) => {
+    const difference = (Date.parse(end) - Date.parse(start));
+
+    let minuts = difference / (1000 * 60);
+    if (minuts >= 60) {
+      let hours = Math.floor(minuts / 60);
+      minuts = Math.floor(minuts % (hours * 60));
+
+      if (minuts === 0) {
+        return `${hours}H`;
+      }
+
+      return `${hours}H ${minuts}M`;
+    }
+
+    return `${minuts}M`;
+  };
+
   const prepositions = isTransport(eventType) ? `in` : `to`;
+  const eventStartTimeFrontend = getEventTimeFrontend(dateStart);
+  const eventStartTimeBackend = getEventTimeBackend(dateStart);
+  const eventEndTimeFrontend = getEventTimeFrontend(dateEnd);
+  const eventEndTimeBackend = getEventTimeBackend(dateEnd);
+  const durationTime = getDifference(dateStart, dateEnd);
 
   return (
     `<li class="trip-events__item">
@@ -20,11 +66,11 @@ export const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="${eventStartTimeBackend}">${eventStartTimeFrontend}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="${eventEndTimeBackend}">${eventEndTimeFrontend}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${durationTime}</p>
         </div>
 
         <p class="event__price">
