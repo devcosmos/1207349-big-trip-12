@@ -1,4 +1,4 @@
-import {getRandomInteger} from "../utils";
+import {getRandomInteger, getRandomArray} from "../utils";
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -33,7 +33,7 @@ const getOffers = (type) => {
   if (type.includes(`Flight`) || type.includes(`Ship`) || type.includes(`Bus`)) {
     return [
       {name: `Add luggage`, cost: 30},
-      {name: `Switch to comfort class`, cost: 100},
+      {name: `Switch to comfort`, cost: 100},
       {name: `Add meal`, cost: 15},
       {name: `Choose seats`, cost: 10},
     ];
@@ -58,6 +58,7 @@ export const generateEvent = () => {
   const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
   const eventType = generateRandomData(EVENT_TYPE);
   const offers = getOffers(eventType);
+  const acceptedOffers = getRandomArray(0, offers.length - 1, offers);
   const dateStart = generateDate(new Date());
   const dateEnd = generateDate(dateStart);
 
@@ -65,6 +66,7 @@ export const generateEvent = () => {
     eventType,
     destination: generateRandomData(DESTINATIONS),
     offers,
+    acceptedOffers,
     description: {
       text: generateRandomData(DESCRIPTIONS),
       images,
