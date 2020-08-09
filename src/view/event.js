@@ -1,12 +1,7 @@
+import {isTransport} from "../utils"
+
 export const createEventTemplate = (event) => {
   const {eventType, destination, acceptedOffers, dateStart, dateEnd, cost} = event;
-
-  const isTransport = (type) => {
-    if (type === `Check-in` || type === `Sightseeing` || type === `Restaurant`) {
-      return false;
-    }
-    return true;
-  };
 
   const addZero = (i) => {
     if (i < 10) {

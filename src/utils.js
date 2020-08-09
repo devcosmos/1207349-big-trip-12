@@ -17,3 +17,10 @@ export const getRandomArray = (min, max, array) => {
   }
   return newArray;
 };
+
+export const isTransport = (type) => {
+  if (type === `Check-in` || type === `Sightseeing` || type === `Restaurant`) {
+    return false;
+  }
+  return true;
+};

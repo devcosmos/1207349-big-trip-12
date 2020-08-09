@@ -1,4 +1,5 @@
 import {getRandomInteger, getRandomArray} from "../utils";
+import {EVENT_TYPE} from "../const";
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -14,19 +15,6 @@ const DESTINATIONS = [
   `Chamonix`,
   `Geneva`,
   `Moscow`
-];
-
-const EVENT_TYPE = [
-  `Check-in`,
-  `Sightseeing`,
-  `Restaurant`,
-  `Taxi`,
-  `Bus`,
-  `Train`,
-  `Ship`,
-  `Transport`,
-  `Drive`,
-  `Flight`,
 ];
 
 const getOffers = (type) => {

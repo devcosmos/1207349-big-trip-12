@@ -1,3 +1,4 @@
+import {EVENT_COUNT} from "./const";
 import {createTripInfoTemplate} from "./view/trip-info";
 import {createTotalPriceTemplate} from "./view/total-price";
 import {createNavigationControllerTemplate} from "./view/nav-controller";
@@ -11,7 +12,6 @@ import {createDayTemplate} from "./view/day";
 import {createEventTemplate} from "./view/event";
 import {generateEvent} from "./mock/event";
 
-const EVENT_COUNT = 4;
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const render = (container, template, place) => {
