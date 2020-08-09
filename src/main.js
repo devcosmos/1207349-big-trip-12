@@ -11,7 +11,7 @@ import {createDayTemplate} from "./view/day";
 import {createEventTemplate} from "./view/event";
 import {generateEvent} from "./mock/event";
 
-const EVENT_COUNT = 3;
+const EVENT_COUNT = 4;
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const render = (container, template, place) => {
@@ -35,7 +35,7 @@ const siteMainElement = document.querySelector(`.page-main`);
 const eventsElement = siteMainElement.querySelector(`.trip-events`);
 
 render(eventsElement, createSortingTemplate(), `beforeend`);
-render(eventsElement, createEventEditorTemplate(), `beforeend`);
+render(eventsElement, createEventEditorTemplate(events[0]), `beforeend`);
 render(eventsElement, createDaysTemplate(), `beforeend`);
 
 const eventDetailsElement = eventsElement.querySelector(`.event__details`);
@@ -47,6 +47,6 @@ render(daysElement, createDayTemplate(), `beforeend`);
 
 const dayElement = daysElement.querySelector(`ul.trip-events__list`);
 
-for (let i = 0; i < EVENT_COUNT; i++) {
+for (let i = 1; i < EVENT_COUNT; i++) {
   render(dayElement, createEventTemplate(events[i]), `beforeend`);
 }
