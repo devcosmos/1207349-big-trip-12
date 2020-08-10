@@ -1,19 +1,17 @@
 const createDestinationsTitleTemplate = (cities) => {
-  let destinationsTitle = ``;
+  let route;
 
   if (cities.length > 3) {
-    destinationsTitle = cities[0] + `&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;` + cities[cities.length - 1];
+    route = cities[0] + `&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;` + cities[cities.length - 1];
   } else {
-    for (let i = 0; i <= cities.length - 1; i++) {
-      if (i === 0) {
-        destinationsTitle = cities[i];
-      } else {
-        destinationsTitle = destinationsTitle + `&nbsp;&mdash;&nbsp;` + cities[i];
-      }
+    route = [];
+    for (let el of cities) {
+      route.push(el);
     }
+    route = route.join(` — `);
   }
 
-  return destinationsTitle;
+  return route;
 };
 
 export const createTripInfoTemplate = (event) => {
