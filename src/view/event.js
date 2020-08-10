@@ -46,7 +46,7 @@ const createAcceptedOffersTemplate = (offers) => {
     offers !== 0
       ? `<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${Array.from(offers).map((offer) => `<li class="event__offer">
+          ${offers.map((offer) => `<li class="event__offer">
             <span class="event__offer-title">${offer.name}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
