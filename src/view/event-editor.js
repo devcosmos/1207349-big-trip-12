@@ -1,4 +1,5 @@
 import {EVENT_TYPE} from "../const";
+import {isTransport} from "../utils";
 
 export const createEventEditorTemplate = (event = {}) => {
   const {
@@ -8,6 +9,7 @@ export const createEventEditorTemplate = (event = {}) => {
     dateEnd = null,
     cost = null
   } = event;
+
 
   const createEventTypeTemplate = (type) => {
     return (
@@ -21,8 +23,8 @@ export const createEventEditorTemplate = (event = {}) => {
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Transfer</legend>
 
-          ${EVENT_TYPE.map((transfer) => `<div class="event__type-item">
-            <input id="event-type-${transfer}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer}">
+          ${EVENT_TYPE.filter(isTransport).map((transfer) => `<div class="event__type-item">
+            <input id="event-type-${transfer}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer}" ${transfer === type ? `checked` : ``}>
             <label class="event__type-label  event__type-label--${transfer}" for="event-type-${transfer}-1">${transfer}</label>
           </div>`).join(``)}
 
@@ -31,9 +33,9 @@ export const createEventEditorTemplate = (event = {}) => {
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Activity</legend>
 
-          ${EVENT_TYPE.map((transfer) => `<div class="event__type-item">
-            <input id="event-type-${transfer}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer}">
-            <label class="event__type-label  event__type-label--${transfer}" for="event-type-${transfer}-1">${transfer}</label>
+          ${EVENT_TYPE.filter((activityType) => !isTransport(activityType)).map((activity) => `<div class="event__type-item">
+            <input id="event-type-${activity}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${activity}" ${activity === type ? `checked` : ``}>
+            <label class="event__type-label  event__type-label--${activity}" for="event-type-${activity}-1">${activity}</label>
           </div>`).join(``)}
 
         </fieldset>
@@ -42,6 +44,7 @@ export const createEventEditorTemplate = (event = {}) => {
   };
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
+  const prepositions = isTransport(eventType) ? `in` : `to`;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -54,7 +57,7 @@ export const createEventEditorTemplate = (event = {}) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            Flight to
+            ${eventType} ${prepositions}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
           <datalist id="destination-list-1">

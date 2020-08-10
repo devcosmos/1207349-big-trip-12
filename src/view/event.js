@@ -1,4 +1,4 @@
-import {isTransport} from "../utils"
+import {isTransport} from "../utils";
 
 export const createEventTemplate = (event) => {
   const {eventType, destination, acceptedOffers, dateStart, dateEnd, cost} = event;
