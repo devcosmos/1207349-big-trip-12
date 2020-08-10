@@ -33,17 +33,31 @@ const createEventTypeTemplate = (type) => {
   );
 };
 
+const createEventDestinationTemplate = (eventType, destinations) => {
+  const prepositions = isTransport(eventType) ? `in` : `to`;
+
+  return (
+    `<label class="event__label  event__type-output" for="event-destination-1">
+      ${eventType} ${prepositions}
+    </label>
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+    <datalist id="destination-list-1">  
+      ${destinations.map((destination) => `<option value="${destination}"></option>`).join(``)}
+    </datalist>`
+  );
+};
+
 export const createEventEditorTemplate = (event = {}) => {
   const {
     eventType = `Taxi`,
-    destination = ``,
+    destinations = ``,
     dateStart = null,
     dateEnd = null,
     cost = null
   } = event;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
-  const prepositions = isTransport(eventType) ? `in` : `to`;
+  const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -55,16 +69,9 @@ export const createEventEditorTemplate = (event = {}) => {
         </div>
 
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
-            ${eventType} ${prepositions}
-          </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
-          <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
-            <option value="Saint Petersburg"></option>
-          </datalist>
+          
+          ${eventDestinationTemplate}
+
         </div>
 
         <div class="event__field-group  event__field-group--time">

@@ -1,7 +1,7 @@
 import {isTransport} from "../utils";
 
 export const createEventTemplate = (event) => {
-  const {eventType, destination, acceptedOffers, dateStart, dateEnd, cost} = event;
+  const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
   const addZero = (i) => {
     if (i < 10) {
@@ -73,7 +73,7 @@ export const createEventTemplate = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${eventType} ${prepositions} ${destination}</h3>
+        <h3 class="event__title">${eventType} ${prepositions} ${currentDestination}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

@@ -52,7 +52,8 @@ export const generateEvent = () => {
 
   return {
     eventType,
-    destination: generateRandomData(DESTINATIONS),
+    destinations: DESTINATIONS,
+    currentDestination: generateRandomData(DESTINATIONS),
     offers,
     acceptedOffers,
     description: {
