@@ -23,7 +23,7 @@ const tripElement = siteHeaderElement.querySelector(`.trip-main`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 
-render(tripElement, createTripInfoTemplate(), `afterbegin`);
+render(tripElement, createTripInfoTemplate(events[0]), `afterbegin`);
 render(tripControlsFirstElement, createNavigationControllerTemplate(), `afterend`);
 render(tripControlsSecondElement, createEventFiltrationTemplate(), `afterend`);
 
