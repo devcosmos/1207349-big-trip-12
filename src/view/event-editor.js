@@ -47,6 +47,25 @@ const createEventDestinationTemplate = (eventType, destinations) => {
   );
 };
 
+const addZero = (i) => {
+  if (i < 10) {
+    i = `0` + i;
+  }
+
+  return i;
+};
+
+const getEventTime = (date) => {
+  const y = addZero(date.getFullYear() % 100);
+  const m = addZero(date.getMonth());
+  const d = addZero(date.getDate());
+  const h = addZero(date.getHours());
+  const minuts = addZero(date.getMinutes());
+
+  return `${d}/${m}/${y} ${h}:${minuts}`;
+};
+
+
 export const createEventEditorTemplate = (event = {}) => {
   const {
     eventType = `Taxi`,
@@ -58,6 +77,8 @@ export const createEventEditorTemplate = (event = {}) => {
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations);
+  const eventStartTime = getEventTime(dateStart);
+  const eventEndTime = getEventTime(dateEnd);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -78,12 +99,12 @@ export const createEventEditorTemplate = (event = {}) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${eventStartTime}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${eventEndTime}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -91,7 +112,7 @@ export const createEventEditorTemplate = (event = {}) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${cost}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
