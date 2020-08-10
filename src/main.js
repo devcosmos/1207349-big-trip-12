@@ -42,7 +42,7 @@ const eventDetailsElement = eventsElement.querySelector(`.event__details`);
 const daysElement = eventsElement.querySelector(`ul.trip-days`);
 
 render(eventDetailsElement, createEventOffersTemplate(), `beforeend`);
-render(eventDetailsElement, createEventDestinationTemplate(), `beforeend`);
+render(eventDetailsElement, createEventDestinationTemplate(events[0]), `beforeend`);
 render(daysElement, createDayTemplate(), `beforeend`);
 
 const dayElement = daysElement.querySelector(`ul.trip-events__list`);
