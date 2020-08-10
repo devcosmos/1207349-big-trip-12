@@ -1,4 +1,4 @@
-export const EVENT_COUNT = 4;
+export const EVENT_COUNT = 15;
 
 export const EVENT_TYPE = [
   `Check-in`,
