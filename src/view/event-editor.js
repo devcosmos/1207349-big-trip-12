@@ -1,5 +1,5 @@
 import {EVENT_TYPE} from "../const";
-import {isTransport} from "../utils";
+import {isTransport, addZero} from "../utils";
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -47,14 +47,6 @@ const createEventDestinationTemplate = (eventType, destinations) => {
   );
 };
 
-const addZero = (i) => {
-  if (i < 10) {
-    i = `0` + i;
-  }
-
-  return i;
-};
-
 const getEventTime = (date) => {
   const y = addZero(date.getFullYear() % 100);
   const m = addZero(date.getMonth());
@@ -64,7 +56,6 @@ const getEventTime = (date) => {
 
   return `${d}/${m}/${y} ${h}:${minuts}`;
 };
-
 
 export const createEventEditorTemplate = (event = {}) => {
   const {

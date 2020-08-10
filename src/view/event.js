@@ -1,12 +1,4 @@
-import {isTransport} from "../utils";
-
-const addZero = (i) => {
-  if (i < 10) {
-    i = `0` + i;
-  }
-
-  return i;
-};
+import {isTransport, addZero} from "../utils";
 
 const getEventTimeFrontend = (date) => {
   const h = addZero(date.getHours());

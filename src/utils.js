@@ -24,3 +24,11 @@ export const isTransport = (type) => {
   }
   return true;
 };
+
+export const addZero = (i) => {
+  if (i < 10) {
+    i = `0` + i;
+  }
+
+  return i;
+};
