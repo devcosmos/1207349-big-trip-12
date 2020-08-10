@@ -27,8 +27,20 @@ const getDifference = (start, end) => {
   const difference = (Date.parse(end) - Date.parse(start));
 
   let minuts = difference / (1000 * 60);
-  if (minuts >= 60) {
-    let hours = Math.floor(minuts / 60);
+  let hours = Math.floor(minuts / 60);
+  let days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    minuts = Math.floor(minuts % (hours * 60));
+    hours = Math.floor(hours % (days * 24));
+
+    if (minuts === 0) {
+      return `${days}D ${hours}H`;
+    }
+
+    return `${days}D ${hours}H ${minuts}M`;
+
+  } else if (hours > 0) {
     minuts = Math.floor(minuts % (hours * 60));
 
     if (minuts === 0) {
@@ -36,9 +48,10 @@ const getDifference = (start, end) => {
     }
 
     return `${hours}H ${minuts}M`;
-  }
 
-  return `${minuts}M`;
+  } else {
+    return `${minuts}M`;
+  }
 };
 
 const createAcceptedOffersTemplate = (offers) => {
