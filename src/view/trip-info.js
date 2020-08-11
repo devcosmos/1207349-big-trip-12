@@ -1,4 +1,5 @@
-const createDestinationsTitleTemplate = (cities) => {
+const getTripRoute = (tripEvents) => {
+  const cities = tripEvents[0].destinations;
   let route;
 
   if (cities.length > 3) {
@@ -14,16 +15,30 @@ const createDestinationsTitleTemplate = (cities) => {
   return route;
 };
 
-export const createTripInfoTemplate = (event) => {
-  const {destinations} = event;
+const getDateAtShortFormat = (timestemp) => {
+  return timestemp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
+};
 
-  const destinationsTitleTemplate = createDestinationsTitleTemplate(destinations);
+const getTripDateInterval = (tripEvents) => {
+  const start = getDateAtShortFormat(tripEvents[0].dateStart).split(` `);
+  const end = getDateAtShortFormat(tripEvents[tripEvents.length - 1].dateStart).split(` `);
+  if (start[0] === end[0]) {
+    end[0] = ``;
+  }
+
+  return `${start[0]} ${start[1]}&nbsp;&mdash;&nbsp;${end[1]} ${end[0]}`;
+};
+
+export const createTripInfoTemplate = (tripEvents) => {
+
+  const tripRoute = getTripRoute(tripEvents);
+  const tripDateInterval = getTripDateInterval(tripEvents);
 
   return (
     ` <section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${destinationsTitleTemplate}</h1>
-        <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+        <h1 class="trip-info__title">${tripRoute}</h1>
+        <p class="trip-info__dates">${tripDateInterval}</p>
       </div>
     </section>`
   );
