@@ -11,30 +11,13 @@ import {createDaysTemplate} from "./view/days";
 import {createDayTemplate} from "./view/day";
 import {createEventTemplate} from "./view/event";
 import {generateEvent} from "./mock/event";
-
-const getTripEventsByDays = (tripPoints) => {
-  const tripDays = new Map();
-  for (const tripEvent of tripPoints) {
-    const date = new Date(tripEvent.dateStart).setHours(0, 0, 0, 0);
-    if (tripDays.has(date)) {
-      tripDays.get(date).push(tripEvent);
-    } else {
-      tripDays.set(date, [tripEvent]);
-    }
-  }
-  return tripDays;
-};
+import {render, getTripEventsByDays} from "./utils";
 
 const tripEvents = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
   return a.dateStart - b.dateStart;
 });
 
 const tripDays = getTripEventsByDays(tripEvents.slice(1));
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const siteHeaderElement = document.querySelector(`.page-header`);
 const tripElement = siteHeaderElement.querySelector(`.trip-main`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
@@ -60,7 +43,6 @@ const daysElement = eventsElement.querySelector(`.trip-days`);
 
 render(eventDetailsElement, createEventOffersTemplate(tripEvents[0]), `beforeend`);
 render(eventDetailsElement, createEventDestinationTemplate(tripEvents[0]), `beforeend`);
-
 
 for (let i = 0; i < tripDays.size; i++) {
   const date = Array.from(tripDays.keys())[i];

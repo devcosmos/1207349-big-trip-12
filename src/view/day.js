@@ -1,6 +1,4 @@
-const getDaysDateFrontend = (timestemp) => {
-  return timestemp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
-};
+import {getDateAtShortFormat} from "../utils";
 
 const getDaysDateBackend = (timestemp) => {
   const date = new Date();
@@ -10,7 +8,7 @@ const getDaysDateBackend = (timestemp) => {
 };
 
 export const createDayTemplate = (date, index) => {
-  const daysDateFrontend = getDaysDateFrontend(new Date(date));
+  const daysDateFrontend = getDateAtShortFormat(new Date(date));
   const daysDateBackend = getDaysDateBackend(date);
 
   return (

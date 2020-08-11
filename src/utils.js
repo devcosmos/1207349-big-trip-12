@@ -33,3 +33,24 @@ export const addZero = (i) => {
 
   return i;
 };
+
+export const getDateAtShortFormat = (timestemp) => {
+  return timestemp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
+};
+
+export const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+export const getTripEventsByDays = (tripPoints) => {
+  const tripDays = new Map();
+  for (const tripEvent of tripPoints) {
+    const date = new Date(tripEvent.dateStart).setHours(0, 0, 0, 0);
+    if (tripDays.has(date)) {
+      tripDays.get(date).push(tripEvent);
+    } else {
+      tripDays.set(date, [tripEvent]);
+    }
+  }
+  return tripDays;
+};

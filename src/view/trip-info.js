@@ -1,3 +1,5 @@
+import {getDateAtShortFormat} from "../utils";
+
 const getTripRoute = (tripEvents) => {
   const cities = tripEvents[0].destinations;
   let route;
@@ -13,10 +15,6 @@ const getTripRoute = (tripEvents) => {
   }
 
   return route;
-};
-
-const getDateAtShortFormat = (timestemp) => {
-  return timestemp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
 };
 
 const getTripDateInterval = (tripEvents) => {
