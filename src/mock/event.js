@@ -35,7 +35,16 @@ const getOffers = (type) => {
   }
 };
 
-const generateDate = (date) => {
+const generateDateStart = () => {
+  const maxDaysGap = 7;
+  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + daysGap);
+
+  return currentDate;
+};
+
+const generateDateEnd = (date) => {
   return new Date(date.getTime() + getRandomInteger(1, 100) * getRandomInteger(1, 60) * 60 * 1000);
 };
 
@@ -47,8 +56,8 @@ export const generateEvent = () => {
   const eventType = generateRandomData(EVENT_TYPE);
   const offers = getOffers(eventType);
   const acceptedOffers = getRandomArray(offers);
-  const dateStart = generateDate(new Date());
-  const dateEnd = generateDate(dateStart);
+  const dateStart = generateDateStart();
+  const dateEnd = generateDateEnd(dateStart);
 
   return {
     eventType,
