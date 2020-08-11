@@ -46,7 +46,7 @@ export const generateEvent = () => {
   const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
   const eventType = generateRandomData(EVENT_TYPE);
   const offers = getOffers(eventType);
-  const acceptedOffers = getRandomArray(0, offers.length - 1, offers);
+  const acceptedOffers = getRandomArray(offers);
   const dateStart = generateDate(new Date());
   const dateEnd = generateDate(dateStart);
 

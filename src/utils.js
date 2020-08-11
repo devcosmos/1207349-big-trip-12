@@ -5,17 +5,18 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const getRandomElement = (array) => {
-  return array[getRandomInteger(0, array.length - 1)];
-};
-
-export const getRandomArray = (min, max, array) => {
+export const getRandomArray = (array) => {
   const newArray = [];
-  const newArrayLength = getRandomInteger(min, max);
-  for (let i = 0; i < newArrayLength; i++) {
-    newArray.push(getRandomElement(array));
+  const newArrayLength = getRandomInteger(0, array.length - 1);
+
+  while (newArray.length < newArrayLength) {
+    const randomIndex = getRandomInteger(0, array.length - 1);
+    if (!newArray.includes(randomIndex)) {
+      newArray.push(randomIndex);
+    }
   }
-  return newArray;
+
+  return newArray.sort((a, b) => a - b).map((index) => array[index]);
 };
 
 export const isTransport = (type) => {
