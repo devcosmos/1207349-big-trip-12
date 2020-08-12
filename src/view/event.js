@@ -21,29 +21,26 @@ const getDifference = (start, end) => {
   let minuts = difference / (1000 * 60);
   let hours = Math.floor(minuts / 60);
   let days = Math.floor(hours / 24);
+  let durationTime;
 
   if (days > 0) {
     minuts = Math.floor(minuts % (hours * 60));
     hours = Math.floor(hours % (days * 24));
-
-    if (minuts === 0) {
-      return `${days}D ${hours}H`;
-    }
-
-    return `${days}D ${hours}H ${minuts}M`;
+    durationTime = minuts !== 0
+      ? `${days}D ${hours}H ${minuts}M`
+      : `${days}D ${hours}H`;
 
   } else if (hours > 0) {
     minuts = Math.floor(minuts % (hours * 60));
-
-    if (minuts === 0) {
-      return `${hours}H`;
-    }
-
-    return `${hours}H ${minuts}M`;
+    durationTime = minuts !== 0
+      ? `${hours}H ${minuts}M`
+      : `${hours}H`;
 
   } else {
-    return `${minuts}M`;
+    durationTime = `${minuts}M`;
   }
+
+  return durationTime;
 };
 
 const createAcceptedOffersTemplate = (offers) => {
