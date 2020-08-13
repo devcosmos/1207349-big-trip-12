@@ -33,7 +33,7 @@ const createEventTypeTemplate = (type) => {
   );
 };
 
-const createEventDestinationTemplate = (eventType, destinations) => {
+const createEventDestinationTemplate = (eventType, cities) => {
   const prepositions = isTransport(eventType) ? `in` : `to`;
 
   return (
@@ -42,7 +42,7 @@ const createEventDestinationTemplate = (eventType, destinations) => {
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
     <datalist id="destination-list-1">  
-      ${destinations.map((destination) => `<option value="${destination}"></option>`).join(``)}
+      ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
     </datalist>`
   );
 };
@@ -57,17 +57,16 @@ const getEventTime = (date) => {
   return `${d}/${m}/${y} ${h}:${minuts}`;
 };
 
-export const createEventEditorTemplate = (event = {}) => {
+export const createEventEditorTemplate = (event = {}, cities) => {
   const {
     eventType = `Taxi`,
-    destinations = ``,
     dateStart = null,
     dateEnd = null,
     cost = null
   } = event;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
-  const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations);
+  const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
   const eventStartTime = getEventTime(dateStart);
   const eventEndTime = getEventTime(dateEnd);
 

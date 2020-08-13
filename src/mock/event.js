@@ -10,7 +10,7 @@ const DESCRIPTIONS = [
   `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`
 ];
 
-const DESTINATIONS = [
+export const DESTINATIONS = [
   `Amsterdam`,
   `Chamonix`,
   `Geneva`,
@@ -61,7 +61,6 @@ export const generateEvent = () => {
 
   return {
     eventType,
-    destinations: DESTINATIONS,
     currentDestination: getRandomListItem(DESTINATIONS),
     offers,
     acceptedOffers,

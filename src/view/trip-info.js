@@ -1,7 +1,6 @@
 import {getDateAtShortFormat} from "../utils";
 
-const getTripRoute = (tripEvents) => {
-  const cities = tripEvents[0].destinations;
+const getTripRoute = (cities) => {
   let route;
 
   if (cities.length > 3) {
@@ -27,9 +26,9 @@ const getTripDateInterval = (tripEvents) => {
   return `${start[0]} ${start[1]}&nbsp;&mdash;&nbsp;${end[1]} ${end[0]}`;
 };
 
-export const createTripInfoTemplate = (tripEvents) => {
+export const createTripInfoTemplate = (tripEvents, cities) => {
 
-  const tripRoute = getTripRoute(tripEvents);
+  const tripRoute = getTripRoute(cities);
   const tripDateInterval = getTripDateInterval(tripEvents);
 
   return (
