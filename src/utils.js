@@ -34,8 +34,8 @@ export const addZero = (i) => {
   return i;
 };
 
-export const getDateAtShortFormat = (timestemp) => {
-  return timestemp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
+export const getDateAtShortFormat = (timestamp) => {
+  return timestamp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
 };
 
 export const render = (container, template, place) => {
