@@ -5,7 +5,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const getRandomArray = (array) => {
+export const getListRandomPartial = (array) => {
   const newArray = [];
   const newArrayLength = getRandomInteger(0, array.length - 1);
 
