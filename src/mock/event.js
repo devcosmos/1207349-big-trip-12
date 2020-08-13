@@ -18,7 +18,7 @@ const DESTINATIONS = [
 ];
 
 const getOffers = (type) => {
-  if (type.includes(`Flight`) || type.includes(`Ship`) || type.includes(`Bus`)) {
+  if (type === `Flight` || type === `Ship` || type === `Bus`) {
     return [
       {name: `Add luggage`, id: `luggage`, cost: 30},
       {name: `Switch to comfort`, id: `comfort`, cost: 100},
