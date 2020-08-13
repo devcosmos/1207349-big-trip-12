@@ -11,13 +11,13 @@ import {createDaysTemplate} from "./view/days";
 import {createDayTemplate} from "./view/day";
 import {createEventTemplate} from "./view/event";
 import {generateEvent} from "./mock/event";
-import {render, getEventsByDays} from "./utils";
+import {render, splitEventsByDays} from "./utils";
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
   return a.dateStart - b.dateStart;
 });
 
-const tripDays = getEventsByDays(events.slice(1));
+const tripDays = splitEventsByDays(events.slice(1));
 const siteHeaderElement = document.querySelector(`.page-header`);
 const tripElement = siteHeaderElement.querySelector(`.trip-main`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
