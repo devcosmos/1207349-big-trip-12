@@ -20,18 +20,11 @@ export const getListRandomPartial = (array) => {
 };
 
 export const isTransport = (type) => {
-  if (type === `Check-in` || type === `Sightseeing` || type === `Restaurant`) {
-    return false;
-  }
-  return true;
+  return type === `Check-in` || type === `Sightseeing` || type === `Restaurant` ? false : true;
 };
 
 export const addZero = (i) => {
-  if (i < 10) {
-    i = `0` + i;
-  }
-
-  return i;
+  return i < 10 ? (i = `0` + i) : i;
 };
 
 export const getDateAtShortFormat = (timestamp) => {
