@@ -8,8 +8,8 @@ const getTripRoute = (tripEvents) => {
     route = cities[0] + `&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;` + cities[cities.length - 1];
   } else {
     route = [];
-    for (let el of cities) {
-      route.push(el);
+    for (let city of cities) {
+      route.push(city);
     }
     route = route.join(` — `);
   }
