@@ -42,14 +42,14 @@ export const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-export const getTripEventsByDays = (tripPoints) => {
+export const getEventsByDays = (tripPoints) => {
   const tripDays = new Map();
-  for (const tripEvent of tripPoints) {
-    const date = new Date(tripEvent.dateStart).setHours(0, 0, 0, 0);
+  for (const event of tripPoints) {
+    const date = new Date(event.dateStart).setHours(0, 0, 0, 0);
     if (tripDays.has(date)) {
-      tripDays.get(date).push(tripEvent);
+      tripDays.get(date).push(event);
     } else {
-      tripDays.set(date, [tripEvent]);
+      tripDays.set(date, [event]);
     }
   }
   return tripDays;
