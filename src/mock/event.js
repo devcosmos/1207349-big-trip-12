@@ -45,7 +45,7 @@ const generateDateStart = () => {
 };
 
 const generateDateEnd = (date) => {
-  return new Date(date.getTime() + getRandomInteger(1, 100) * getRandomInteger(1, 60) * 60 * 1000);
+  return new Date(date.getTime() + getRandomInteger(1, 6000) * 60 * 1000);
 };
 
 const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
