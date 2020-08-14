@@ -10,7 +10,7 @@ const getTripDateInterval = (tripEvents) => {
   const start = getDateAtShortFormat(tripEvents[0].dateStart).split(` `);
   const end = getDateAtShortFormat(tripEvents[tripEvents.length - 1].dateStart).split(` `);
 
-  return `${start[0]}&nbsp;${start[1]}&nbsp;&mdash;&nbsp;${end[1]}${start[0] !== end[0] ? `&nbsp;` + end[0] : `` }`;
+  return `${start[1]}&nbsp;${start[0]}&nbsp;&mdash;&nbsp;${end[1]}${start[0] !== end[0] ? `&nbsp;` + end[0] : `` }`;
 };
 
 export const createTripInfoTemplate = (tripEvents, cities) => {
