@@ -8,6 +8,7 @@ const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
 });
 
 const tripDays = splitEventsByDays(events.slice(1));
+
 const siteHeaderElement = document.querySelector(`.page-header`);
 const tripElement = siteHeaderElement.querySelector(`.trip-main`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
