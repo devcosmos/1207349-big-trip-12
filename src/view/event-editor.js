@@ -1,22 +1,31 @@
 import {EVENT_TYPE} from "../const";
 import {isTransport, addZero} from "../utils";
 
-const createEventTypeIconTemplate = (type) => {
+const createEventTypeTemplate = (type) => {
   return (
-    `<label class="event__type  event__type-btn" for="event-type-toggle-1">
-      <span class="visually-hidden">Choose event type</span>
-      <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
-    </label>
-    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">`
-  );
-};
-
-const createEventTypeTemplate = (types, eventType) => {
-  return (
-    `${types.map((type) => `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${eventType === type ? `checked` : ``}>
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
-    </div>`).join(``)}`
+    `<div class="event__type-wrapper">
+      <label class="event__type  event__type-btn" for="event-type-toggle-1">
+        <span class="visually-hidden">Choose event type</span>
+        <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+      </label>
+      <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+      <div class="event__type-list">
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Transfer</legend>
+          ${EVENT_TYPE.filter(isTransport).map((transfer) => `<div class="event__type-item">
+            <input id="event-type-${transfer}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer}" ${transfer === type ? `checked` : ``}>
+            <label class="event__type-label  event__type-label--${transfer}" for="event-type-${transfer}-1">${transfer}</label>
+          </div>`).join(``)}
+        </fieldset>
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Activity</legend>
+          ${EVENT_TYPE.filter((activityType) => !isTransport(activityType)).map((activity) => `<div class="event__type-item">
+            <input id="event-type-${activity}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${activity}" ${activity === type ? `checked` : ``}>
+            <label class="event__type-label  event__type-label--${activity}" for="event-type-${activity}-1">${activity}</label>
+          </div>`).join(``)}
+        </fieldset>
+      </div>
+    </div>`
   );
 };
 
@@ -24,13 +33,15 @@ const createEventDestinationTemplate = (eventType, cities) => {
   const prepositions = isTransport(eventType) ? `in` : `to`;
 
   return (
-    `<label class="event__label  event__type-output" for="event-destination-1">
-      ${eventType} ${prepositions}
-    </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
-    <datalist id="destination-list-1">  
-      ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
-    </datalist>`
+    `<div class="event__field-group  event__field-group--destination">
+      <label class="event__label  event__type-output" for="event-destination-1">
+        ${eventType} ${prepositions}
+      </label>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+      <datalist id="destination-list-1">  
+        ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
+      </datalist>
+    </div>`
   );
 };
 
@@ -52,9 +63,7 @@ export const createEventEditorTemplate = (event = {}, cities) => {
     cost = null
   } = event;
 
-  const eventTypeIconTemplate = createEventTypeIconTemplate(eventType);
-  const eventTypeTransferTemplate = createEventTypeTemplate(EVENT_TYPE.filter(isTransport), eventType);
-  const eventTypeActivityTemplate = createEventTypeTemplate(EVENT_TYPE.filter((type) => !isTransport(type)), eventType);
+  const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
   const eventStartTime = getEventTime(dateStart);
   const eventEndTime = getEventTime(dateEnd);
@@ -62,34 +71,10 @@ export const createEventEditorTemplate = (event = {}, cities) => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
-        <div class="event__type-wrapper">
-
-          ${eventTypeIconTemplate}
-
-          <div class="event__type-list">
+        
+        ${eventTypeTemplate}
           
-          <fieldset class="event__type-group">
-            <legend class="visually-hidden">Transfer</legend>
-            
-            ${eventTypeTransferTemplate}
-            
-          </fieldset>
-
-          <fieldset class="event__type-group">
-            <legend class="visually-hidden">Activity</legend>
-                
-            ${eventTypeActivityTemplate}
-            
-            </fieldset>
-
-          </div>
-        </div>
-
-        <div class="event__field-group  event__field-group--destination">
-          
-          ${eventDestinationTemplate}
-
-        </div>
+        ${eventDestinationTemplate}
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">
