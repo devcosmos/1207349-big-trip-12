@@ -1,19 +1,9 @@
 import {getDateAtShortFormat} from "../utils";
 
 const getTripRoute = (cities) => {
-  let route;
-
-  if (cities.length > 3) {
-    route = cities[0] + `&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;` + cities[cities.length - 1];
-  } else {
-    route = [];
-    for (let city of cities) {
-      route.push(city);
-    }
-    route = route.join(` — `);
-  }
-
-  return route;
+  return (cities.length > 3)
+    ? cities[0] + `&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;` + cities[cities.length - 1]
+    : cities.join(` — `);
 };
 
 const getTripDateInterval = (tripEvents) => {
