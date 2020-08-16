@@ -1,5 +1,5 @@
 import {getRandomInteger, getListRandomPartial} from "../utils";
-import {EVENT_TYPE} from "../const";
+import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -53,7 +53,7 @@ const getRandomListItem = (list) => list[getRandomInteger(0, list.length - 1)];
 
 export const generateEvent = () => {
   const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
-  const eventType = getRandomListItem(EVENT_TYPE);
+  const eventType = getRandomListItem(EVENT_TYPE_TRANSFER.concat(EVENT_TYPE_ACTIVITY));
   const offers = getOffers(eventType);
   const acceptedOffers = getListRandomPartial(offers);
   const dateStart = generateDateStart();

@@ -1,4 +1,5 @@
-import {isTransport, addZero} from "../utils";
+import {addZero} from "../utils";
+import {EVENT_TYPE_ACTIVITY} from "../const";
 
 const getEventTimeFrontend = (date) => {
   const h = addZero(date.getHours());
@@ -61,7 +62,7 @@ const createAcceptedOffersTemplate = (offers) => {
 export const createEventTemplate = (event) => {
   const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
-  const prepositions = isTransport(eventType) ? `in` : `to`;
+  const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
   const eventStartTimeFrontend = getEventTimeFrontend(dateStart);
   const eventStartTimeBackend = getEventTimeBackend(dateStart);
   const eventEndTimeFrontend = getEventTimeFrontend(dateEnd);

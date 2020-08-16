@@ -1,5 +1,5 @@
-import {EVENT_TYPE} from "../const";
-import {isTransport, addZero} from "../utils";
+import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
+import {addZero} from "../utils";
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -12,14 +12,14 @@ const createEventTypeTemplate = (type) => {
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Transfer</legend>
-          ${EVENT_TYPE.filter(isTransport).map((transfer) => `<div class="event__type-item">
+          ${EVENT_TYPE_TRANSFER.map((transfer) => `<div class="event__type-item">
             <input id="event-type-${transfer}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer}" ${transfer === type ? `checked` : ``}>
             <label class="event__type-label  event__type-label--${transfer}" for="event-type-${transfer}-1">${transfer}</label>
           </div>`).join(``)}
         </fieldset>
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Activity</legend>
-          ${EVENT_TYPE.filter((activityType) => !isTransport(activityType)).map((activity) => `<div class="event__type-item">
+          ${EVENT_TYPE_ACTIVITY.map((activity) => `<div class="event__type-item">
             <input id="event-type-${activity}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${activity}" ${activity === type ? `checked` : ``}>
             <label class="event__type-label  event__type-label--${activity}" for="event-type-${activity}-1">${activity}</label>
           </div>`).join(``)}
@@ -30,7 +30,7 @@ const createEventTypeTemplate = (type) => {
 };
 
 const createEventDestinationTemplate = (eventType, cities) => {
-  const prepositions = isTransport(eventType) ? `in` : `to`;
+  const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
 
   return (
     `<div class="event__field-group  event__field-group--destination">

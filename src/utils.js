@@ -19,10 +19,6 @@ export const getListRandomPartial = (array) => {
   return newArray.sort((a, b) => a - b).map((index) => array[index]);
 };
 
-export const isTransport = (type) => {
-  return type === `Check-in` || type === `Sightseeing` || type === `Restaurant` ? false : true;
-};
-
 export const addZero = (i) => {
   return i < 10 ? (i = `0` + i) : i;
 };
