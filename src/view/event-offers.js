@@ -13,7 +13,7 @@ export const createEventOffersTemplate = (event) => {
             id="event-offer-${offer.id}-1" 
             type="checkbox" 
             name="event-offer-${offer.id}" 
-            ${acceptedOffers.indexOf(offer) !== -1 ? `checked` : ``}>
+            ${acceptedOffers.includes(offer) ? `checked` : ``}>
           <label class="event__offer-label" for="event-offer-${offer.id}">
             <span class="event__offer-title">${offer.name}</span>
             &plus;
