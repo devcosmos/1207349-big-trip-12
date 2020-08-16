@@ -14,7 +14,7 @@ const tripElement = siteHeaderElement.querySelector(`.trip-main`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 
-render(tripElement, veiw.createTripInfoTemplate(events.slice(1), DESTINATIONS), `afterbegin`);
+render(tripElement, veiw.createTripInfoTemplate(events.slice(1)), `afterbegin`);
 render(tripControlsFirstElement, veiw.createNavigationControllerTemplate(), `afterend`);
 render(tripControlsSecondElement, veiw.createEventFiltrationTemplate(), `afterend`);
 

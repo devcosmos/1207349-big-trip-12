@@ -21,10 +21,10 @@ const getTripDateInterval = (tripEvents) => {
   return `${start[1]}&nbsp;${start[0]}&nbsp;&mdash;&nbsp;${end[1]}${start[0] !== end[0] ? `&nbsp;` + end[0] : `` }`;
 };
 
-export const createTripInfoTemplate = (tripEvents) => {
+export const createTripInfoTemplate = (tripEvents = null) => {
 
-  const tripRoute = getTripRoute(tripEvents);
-  const tripDateInterval = getTripDateInterval(tripEvents);
+  const tripRoute = tripEvents === null || tripEvents.length === 0 ? `` : getTripRoute(tripEvents);
+  const tripDateInterval = tripEvents === null || tripEvents.length === 0 ? `` : getTripDateInterval(tripEvents);
 
   return (
     ` <section class="trip-main__trip-info  trip-info">
