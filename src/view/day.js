@@ -1,6 +1,6 @@
-import {getDateAtShortFormat} from "../utils";
+import {getDayAtShortFormat} from "../utils";
 
-const getDaysDateBackend = (timestemp) => {
+const getDayAtSystemFormat = (timestemp) => {
   const date = new Date();
   date.setTime(timestemp);
 
@@ -8,8 +8,8 @@ const getDaysDateBackend = (timestemp) => {
 };
 
 export const createDayTemplate = (date, index) => {
-  const daysDateFrontend = getDateAtShortFormat(new Date(date));
-  const daysDateBackend = getDaysDateBackend(date);
+  const daysDateFrontend = getDayAtShortFormat(new Date(date));
+  const daysDateBackend = getDayAtSystemFormat(date);
 
   return (
     `<li class="trip-days__item  day">

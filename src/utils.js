@@ -23,7 +23,7 @@ export const addZeroToDate = (i) => {
   return i < 10 ? (i = `0` + i) : i;
 };
 
-export const getDateAtShortFormat = (timestamp) => {
+export const getDayAtShortFormat = (timestamp) => {
   return timestamp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
 };
 
