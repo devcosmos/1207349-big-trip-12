@@ -7,9 +7,11 @@ const getTripRoute = (tripEvents) => {
     cities.push(tripEvent.currentDestination);
   }
 
-  return (cities.length > 3)
+  const uniqueCities = Array.from(new Set(cities));
+
+  return (uniqueCities.length > 3)
     ? cities[0] + `&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;` + cities[cities.length - 1]
-    : cities.join(` — `);
+    : uniqueCities.join(` — `);
 };
 
 const getTripDateInterval = (tripEvents) => {
