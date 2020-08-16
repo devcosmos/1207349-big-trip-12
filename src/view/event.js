@@ -1,17 +1,17 @@
-import {addZero} from "../utils";
+import {addZeroToDate} from "../utils";
 import {EVENT_TYPE_ACTIVITY} from "../const";
 
 const getEventTimeFrontend = (date) => {
-  const h = addZero(date.getHours());
-  const m = addZero(date.getMinutes());
+  const h = addZeroToDate(date.getHours());
+  const m = addZeroToDate(date.getMinutes());
 
   return `${h}:${m}`;
 };
 
 const getEventTimeBackend = (date) => {
   const y = date.getFullYear();
-  const m = addZero(date.getMonth());
-  const d = addZero(date.getDate());
+  const m = addZeroToDate(date.getMonth());
+  const d = addZeroToDate(date.getDate());
 
   return `${y}:${m}:${d}T${getEventTimeFrontend(date)}`;
 };

@@ -1,5 +1,5 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import {addZero} from "../utils";
+import {addZeroToDate} from "../utils";
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -46,11 +46,11 @@ const createEventDestinationTemplate = (eventType, cities) => {
 };
 
 const getEventTime = (date) => {
-  const y = addZero(date.getFullYear() % 100);
-  const m = addZero(date.getMonth());
-  const d = addZero(date.getDate());
-  const h = addZero(date.getHours());
-  const minuts = addZero(date.getMinutes());
+  const y = addZeroToDate(date.getFullYear() % 100);
+  const m = addZeroToDate(date.getMonth());
+  const d = addZeroToDate(date.getDate());
+  const h = addZeroToDate(date.getHours());
+  const minuts = addZeroToDate(date.getMinutes());
 
   return `${d}/${m}/${y} ${h}:${minuts}`;
 };

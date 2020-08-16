@@ -1,13 +1,13 @@
 import {EVENT_COUNT} from "./const";
 import {generateEvent, DESTINATIONS} from "./mock/event";
-import {render, splitEventsByDays} from "./utils";
+import {render, filterEventsByDays} from "./utils";
 import * as veiw from "./view/index";
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
   return a.dateStart - b.dateStart;
 });
 
-const tripDays = splitEventsByDays(events.slice(1));
+const tripDays = filterEventsByDays(events.slice(1));
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const tripElement = siteHeaderElement.querySelector(`.trip-main`);

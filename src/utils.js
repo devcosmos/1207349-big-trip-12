@@ -5,7 +5,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const getListRandomPartial = (array) => {
+export const getRandomPartialList = (array) => {
   const newArray = [];
   const newArrayLength = getRandomInteger(0, array.length - 1);
 
@@ -19,7 +19,7 @@ export const getListRandomPartial = (array) => {
   return newArray.sort((a, b) => a - b).map((index) => array[index]);
 };
 
-export const addZero = (i) => {
+export const addZeroToDate = (i) => {
   return i < 10 ? (i = `0` + i) : i;
 };
 
@@ -31,7 +31,7 @@ export const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-export const splitEventsByDays = (tripPoints) => {
+export const filterEventsByDays = (tripPoints) => {
   const tripDays = new Map();
   for (const event of tripPoints) {
     const date = new Date(event.dateStart).setHours(0, 0, 0, 0);

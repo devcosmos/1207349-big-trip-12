@@ -1,4 +1,4 @@
-import {getRandomInteger, getListRandomPartial} from "../utils";
+import {getRandomInteger, getRandomPartialList} from "../utils";
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
 
 const DESCRIPTIONS = [
@@ -55,7 +55,7 @@ export const generateEvent = () => {
   const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
   const eventType = getRandomListItem(EVENT_TYPE_TRANSFER.concat(EVENT_TYPE_ACTIVITY));
   const offers = getOffers(eventType);
-  const acceptedOffers = getListRandomPartial(offers);
+  const acceptedOffers = getRandomPartialList(offers);
   const dateStart = generateDateStart();
   const dateEnd = generateDateEnd(dateStart);
 
