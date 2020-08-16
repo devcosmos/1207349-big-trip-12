@@ -65,8 +65,8 @@ export const createEventEditorTemplate = (event = {}, cities) => {
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
-  const eventStartTime = getEventTime(dateStart);
-  const eventEndTime = getEventTime(dateEnd);
+  const eventStartTime = dateStart === null ? `` : getEventTime(dateStart);
+  const eventEndTime = dateEnd === null ? `` : getEventTime(dateEnd);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -93,7 +93,7 @@ export const createEventEditorTemplate = (event = {}, cities) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${cost}">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${cost === null ? `` : cost}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
