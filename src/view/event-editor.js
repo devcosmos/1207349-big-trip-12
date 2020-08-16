@@ -45,7 +45,7 @@ const createEventDestinationTemplate = (eventType, cities) => {
   );
 };
 
-const getEventTime = (date) => {
+const getDateEventAtFormat = (date) => {
   const y = addZeroToDate(date.getFullYear() % 100);
   const m = addZeroToDate(date.getMonth());
   const d = addZeroToDate(date.getDate());
@@ -65,8 +65,8 @@ export const createEventEditorTemplate = (event = {}, cities) => {
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
-  const eventStartTime = dateStart === null ? `` : getEventTime(dateStart);
-  const eventEndTime = dateEnd === null ? `` : getEventTime(dateEnd);
+  const dateStartEventAtFormat = dateStart === null ? `` : getDateEventAtFormat(dateStart);
+  const dateEndEventAtFormat = dateEnd === null ? `` : getDateEventAtFormat(dateEnd);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -80,12 +80,12 @@ export const createEventEditorTemplate = (event = {}, cities) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${eventStartTime}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateStartEventAtFormat}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${eventEndTime}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateEndEventAtFormat}">
         </div>
 
         <div class="event__field-group  event__field-group--price">

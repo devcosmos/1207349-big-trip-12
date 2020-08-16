@@ -8,14 +8,14 @@ const getDayAtSystemFormat = (timestemp) => {
 };
 
 export const createDayTemplate = (date, index) => {
-  const daysDateFrontend = getDayAtShortFormat(new Date(date));
-  const daysDateBackend = getDayAtSystemFormat(date);
+  const dayAtShortFormat = getDayAtShortFormat(new Date(date));
+  const dayAtSystemFormat = getDayAtSystemFormat(date);
 
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
         <span class="day__counter">${index}</span>
-        <time class="day__date" datetime="${daysDateBackend}">${daysDateFrontend}</time>
+        <time class="day__date" datetime="${dayAtSystemFormat}">${dayAtShortFormat}</time>
       </div>
 
       <ul class="trip-events__list" id="trip-events__list-${index}"></ul>

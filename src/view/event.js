@@ -63,11 +63,11 @@ export const createEventTemplate = (event) => {
   const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
-  const startTimeAtShortFormat = getTimeAtShortFormat(dateStart);
-  const startTimeAtSystemFormat = getTimeAtSystemFormat(dateStart);
-  const endTimeAtShortFormat = getTimeAtShortFormat(dateEnd);
-  const endTimeAtSystemFormat = getTimeAtSystemFormat(dateEnd);
-  const durationTime = getDifference(dateStart, dateEnd);
+  const timeStartAtShortFormat = getTimeAtShortFormat(dateStart);
+  const timeStartAtSystemFormat = getTimeAtSystemFormat(dateStart);
+  const timeEndAtShortFormat = getTimeAtShortFormat(dateEnd);
+  const timeEndAtSystemFormat = getTimeAtSystemFormat(dateEnd);
+  const duration = getDifference(dateStart, dateEnd);
   const acceptedOffersTemplate = createAcceptedOffersTemplate(acceptedOffers);
 
   return (
@@ -80,11 +80,11 @@ export const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startTimeAtSystemFormat}">${startTimeAtShortFormat}</time>
+            <time class="event__start-time" datetime="${timeStartAtSystemFormat}">${timeStartAtShortFormat}</time>
             &mdash;
-            <time class="event__end-time" datetime="${endTimeAtSystemFormat}">${endTimeAtShortFormat}</time>
+            <time class="event__end-time" datetime="${timeEndAtSystemFormat}">${timeEndAtShortFormat}</time>
           </p>
-          <p class="event__duration">${durationTime}</p>
+          <p class="event__duration">${duration}</p>
         </div>
 
         <p class="event__price">
