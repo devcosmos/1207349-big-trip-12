@@ -1,19 +1,19 @@
 import {addZeroToDate} from "../utils";
 import {EVENT_TYPE_ACTIVITY} from "../const";
 
-const getEventTimeFrontend = (date) => {
+const getTimeAtShortFormat = (date) => {
   const h = addZeroToDate(date.getHours());
   const m = addZeroToDate(date.getMinutes());
 
   return `${h}:${m}`;
 };
 
-const getEventTimeBackend = (date) => {
+const getTimeAtSystemFormat = (date) => {
   const y = date.getFullYear();
   const m = addZeroToDate(date.getMonth());
   const d = addZeroToDate(date.getDate());
 
-  return `${y}:${m}:${d}T${getEventTimeFrontend(date)}`;
+  return `${y}:${m}:${d}T${getTimeAtShortFormat(date)}`;
 };
 
 const getDifference = (start, end) => {
@@ -63,10 +63,10 @@ export const createEventTemplate = (event) => {
   const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
-  const eventStartTimeFrontend = getEventTimeFrontend(dateStart);
-  const eventStartTimeBackend = getEventTimeBackend(dateStart);
-  const eventEndTimeFrontend = getEventTimeFrontend(dateEnd);
-  const eventEndTimeBackend = getEventTimeBackend(dateEnd);
+  const startTimeAtShortFormat = getTimeAtShortFormat(dateStart);
+  const startTimeAtSystemFormat = getTimeAtSystemFormat(dateStart);
+  const endTimeAtShortFormat = getTimeAtShortFormat(dateEnd);
+  const endTimeAtSystemFormat = getTimeAtSystemFormat(dateEnd);
   const durationTime = getDifference(dateStart, dateEnd);
   const acceptedOffersTemplate = createAcceptedOffersTemplate(acceptedOffers);
 
@@ -80,9 +80,9 @@ export const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${eventStartTimeBackend}">${eventStartTimeFrontend}</time>
+            <time class="event__start-time" datetime="${startTimeAtSystemFormat}">${startTimeAtShortFormat}</time>
             &mdash;
-            <time class="event__end-time" datetime="${eventEndTimeBackend}">${eventEndTimeFrontend}</time>
+            <time class="event__end-time" datetime="${endTimeAtSystemFormat}">${endTimeAtShortFormat}</time>
           </p>
           <p class="event__duration">${durationTime}</p>
         </div>
