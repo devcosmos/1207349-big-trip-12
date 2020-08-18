@@ -1,12 +1,7 @@
-import {getDayAtShortFormat} from "../utils";
+import {getDateAtShortFormat} from "../date-formatters";
 
 const getTripRoute = (tripEvents) => {
-  const cities = [];
-
-  for (const tripEvent of tripEvents) {
-    cities.push(tripEvent.currentDestination);
-  }
-
+  const cities = tripEvents.map((event) => event.currentDestination);
   const uniqueCities = Array.from(new Set(cities));
 
   return (uniqueCities.length > 3)
@@ -15,8 +10,8 @@ const getTripRoute = (tripEvents) => {
 };
 
 const getTripDateInterval = (tripEvents) => {
-  const start = getDayAtShortFormat(tripEvents[0].dateStart).split(` `);
-  const end = getDayAtShortFormat(tripEvents[tripEvents.length - 1].dateStart).split(` `);
+  const start = getDateAtShortFormat(tripEvents[0].dateStart).split(` `);
+  const end = getDateAtShortFormat(tripEvents[tripEvents.length - 1].dateStart).split(` `);
 
   return `${start[1]}&nbsp;${start[0]}&nbsp;&mdash;&nbsp;${end[1]}${start[0] === end[0] ? `` : `&nbsp;` + end[0] }`;
 };

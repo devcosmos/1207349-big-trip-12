@@ -1,48 +1,5 @@
-import {addZeroToDate} from "../utils";
+import {getTimeAtFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 import {EVENT_TYPE_ACTIVITY} from "../const";
-
-const getTimeAtShortFormat = (date) => {
-  const h = addZeroToDate(date.getHours());
-  const m = addZeroToDate(date.getMinutes());
-
-  return `${h}:${m}`;
-};
-
-const getTimeAtSystemFormat = (date) => {
-  const y = date.getFullYear();
-  const m = addZeroToDate(date.getMonth());
-  const d = addZeroToDate(date.getDate());
-
-  return `${y}:${m}:${d}T${getTimeAtShortFormat(date)}`;
-};
-
-const getDifference = (start, end) => {
-  const difference = (Date.parse(end) - Date.parse(start));
-
-  let minuts = difference / (1000 * 60);
-  let hours = Math.floor(minuts / 60);
-  let days = Math.floor(hours / 24);
-  let durationTime;
-
-  if (days > 0) {
-    minuts = Math.floor(minuts % (hours * 60));
-    hours = Math.floor(hours % (days * 24));
-    durationTime = minuts === 0
-      ? `${days}D ${hours}H`
-      : `${days}D ${hours}H ${minuts}M`;
-
-  } else if (hours > 0) {
-    minuts = Math.floor(minuts % (hours * 60));
-    durationTime = minuts === 0
-      ? `${hours}H`
-      : `${hours}H ${minuts}M`;
-
-  } else {
-    durationTime = `${minuts}M`;
-  }
-
-  return durationTime;
-};
 
 const createAcceptedOffersTemplate = (offers) => {
   return (
@@ -63,11 +20,11 @@ export const createEventTemplate = (event) => {
   const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
-  const timeStartAtShortFormat = getTimeAtShortFormat(dateStart);
-  const timeStartAtSystemFormat = getTimeAtSystemFormat(dateStart);
-  const timeEndAtShortFormat = getTimeAtShortFormat(dateEnd);
-  const timeEndAtSystemFormat = getTimeAtSystemFormat(dateEnd);
-  const duration = getDifference(dateStart, dateEnd);
+  const timeStartAtShortFormat = getTimeAtFormat(dateStart);
+  const timeEndAtShortFormat = getTimeAtFormat(dateEnd);
+  const dateStartAtSystemFormat = getDateAtSystemFormat(dateStart);
+  const dateEndAtSystemFormat = getDateAtSystemFormat(dateEnd);
+  const duration = getDurationTime(dateStart, dateEnd);
   const acceptedOffersTemplate = createAcceptedOffersTemplate(acceptedOffers);
 
   return (
@@ -80,9 +37,9 @@ export const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${timeStartAtSystemFormat}">${timeStartAtShortFormat}</time>
+            <time class="event__start-time" datetime="${dateStartAtSystemFormat}T${timeStartAtShortFormat}">${timeStartAtShortFormat}</time>
             &mdash;
-            <time class="event__end-time" datetime="${timeEndAtSystemFormat}">${timeEndAtShortFormat}</time>
+            <time class="event__end-time" datetime="${dateEndAtSystemFormat}T${timeEndAtShortFormat}">${timeEndAtShortFormat}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>

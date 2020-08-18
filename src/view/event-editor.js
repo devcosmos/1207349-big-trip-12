@@ -1,5 +1,5 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import {addZeroToDate} from "../utils";
+import {getDateAtEventEditorFormat} from "../date-formatters";
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -45,16 +45,6 @@ const createEventDestinationTemplate = (eventType, cities) => {
   );
 };
 
-const getDateEventAtFormat = (date) => {
-  const y = addZeroToDate(date.getFullYear() % 100);
-  const m = addZeroToDate(date.getMonth());
-  const d = addZeroToDate(date.getDate());
-  const h = addZeroToDate(date.getHours());
-  const minuts = addZeroToDate(date.getMinutes());
-
-  return `${d}/${m}/${y} ${h}:${minuts}`;
-};
-
 export const createEventEditorTemplate = (event = {}, cities) => {
   const {
     eventType = `Taxi`,
@@ -65,8 +55,8 @@ export const createEventEditorTemplate = (event = {}, cities) => {
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
-  const dateStartEventAtFormat = dateStart === null ? `` : getDateEventAtFormat(dateStart);
-  const dateEndEventAtFormat = dateEnd === null ? `` : getDateEventAtFormat(dateEnd);
+  const dateStartEventAtFormat = dateStart === null ? `` : getDateAtEventEditorFormat(dateStart);
+  const dateEndEventAtFormat = dateEnd === null ? `` : getDateAtEventEditorFormat(dateEnd);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">

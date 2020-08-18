@@ -19,14 +19,6 @@ export const getRandomPartialList = (array) => {
   return newArray.sort((a, b) => a - b).map((index) => array[index]);
 };
 
-export const addZeroToDate = (i) => {
-  return i < 10 ? (i = `0` + i) : i;
-};
-
-export const getDayAtShortFormat = (timestamp) => {
-  return timestamp.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
-};
-
 export const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
