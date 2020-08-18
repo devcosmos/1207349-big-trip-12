@@ -17,7 +17,7 @@ export const DESTINATIONS = [
   `Moscow`
 ];
 
-const getOffers = (type) => {
+export const getOffers = (type) => {
   if (type === `Flight` || type === `Ship` || type === `Bus`) {
     return [
       {name: `Add luggage`, id: `luggage`, cost: 30},
@@ -62,7 +62,6 @@ export const generateEvent = () => {
   return {
     eventType,
     currentDestination: getRandomListItem(DESTINATIONS),
-    offers,
     acceptedOffers,
     description: {
       text: getRandomListItem(DESCRIPTIONS),

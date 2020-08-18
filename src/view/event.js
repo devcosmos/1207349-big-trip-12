@@ -27,15 +27,15 @@ const getDifference = (start, end) => {
   if (days > 0) {
     minuts = Math.floor(minuts % (hours * 60));
     hours = Math.floor(hours % (days * 24));
-    durationTime = minuts !== 0
-      ? `${days}D ${hours}H ${minuts}M`
-      : `${days}D ${hours}H`;
+    durationTime = minuts === 0
+      ? `${days}D ${hours}H`
+      : `${days}D ${hours}H ${minuts}M`;
 
   } else if (hours > 0) {
     minuts = Math.floor(minuts % (hours * 60));
-    durationTime = minuts !== 0
-      ? `${hours}H ${minuts}M`
-      : `${hours}H`;
+    durationTime = minuts === 0
+      ? `${hours}H`
+      : `${hours}H ${minuts}M`;
 
   } else {
     durationTime = `${minuts}M`;

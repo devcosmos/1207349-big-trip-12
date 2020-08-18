@@ -23,15 +23,12 @@ const getTripDateInterval = (tripEvents) => {
 
 export const createTripInfoTemplate = (tripEvents = null) => {
 
-  const tripRoute = tripEvents === null || tripEvents.length === 0 ? `` : getTripRoute(tripEvents);
-  const tripDateInterval = tripEvents === null || tripEvents.length === 0 ? `` : getTripDateInterval(tripEvents);
-
   return (
-    ` <section class="trip-main__trip-info  trip-info">
-      <div class="trip-info__main">
-        <h1 class="trip-info__title">${tripRoute}</h1>
-        <p class="trip-info__dates">${tripDateInterval}</p>
-      </div>
+    `<section class="trip-main__trip-info  trip-info">
+      ${tripEvents === null || tripEvents.length === 0 ? `` : `<div class="trip-info__main">
+        <h1 class="trip-info__title">${getTripRoute(tripEvents)}</h1>
+        <p class="trip-info__dates">${getTripDateInterval(tripEvents)}</p>
+      </div>` }
     </section>`
   );
 };
