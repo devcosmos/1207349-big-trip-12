@@ -3,7 +3,7 @@ import TripInfoView from "./view/trip-info";
 import NavigationControllerView from "./view/nav-controller";
 import EventFiltrationView from "./view/event-filtration";
 import TotalPriceView from "./view/total-price";
-import {createSortingTemplate} from "./view/sorting";
+import SortingView from "./view/sorting";
 import {createEventEditorTemplate} from "./view/event-editor";
 import {createEventOffersTemplate} from "./view/event-offers";
 import {createEventDestinationTemplate} from "./view/event-destination";
@@ -35,7 +35,7 @@ renderElement(tripInfoElement, new TotalPriceView().getElement(), RENDER_POSITIO
 const siteMainElement = document.querySelector(`.page-main`);
 const eventsElement = siteMainElement.querySelector(`.trip-events`);
 
-renderTemplate(eventsElement, createSortingTemplate(), `beforeend`);
+renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
 renderTemplate(eventsElement, createEventEditorTemplate(events[0], DESTINATIONS), `beforeend`);
 renderTemplate(eventsElement, createDaysTemplate(), `beforeend`);
 
