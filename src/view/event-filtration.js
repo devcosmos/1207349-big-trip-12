@@ -1,6 +1,6 @@
 import {createElement} from "../utils";
 
-export const createEventFiltrationTemplate = () => {
+const createEventFiltrationTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
