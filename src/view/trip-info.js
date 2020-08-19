@@ -1,4 +1,5 @@
 import {getDateAtShortFormat} from "../date-formatters";
+import {createElement} from "../utils";
 
 const getTripRoute = (tripEvents) => {
   const cities = tripEvents.map((event) => event.currentDestination);
@@ -16,7 +17,7 @@ const getTripDateInterval = (tripEvents) => {
   return `${start[1]}&nbsp;${start[0]}&nbsp;&mdash;&nbsp;${end[1]}${start[0] === end[0] ? `` : `&nbsp;` + end[0] }`;
 };
 
-export const createTripInfoTemplate = (tripEvents = null) => {
+const createTripInfoTemplate = (tripEvents) => {
 
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -27,3 +28,26 @@ export const createTripInfoTemplate = (tripEvents = null) => {
     </section>`
   );
 };
+
+export default class TripInfo {
+  constructor(tripEvents = null) {
+    this._element = null;
+    this._tripEvents = tripEvents;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._tripEvents);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

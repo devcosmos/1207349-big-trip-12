@@ -1,7 +1,17 @@
-import {EVENT_COUNT} from "./const";
+import {EVENT_COUNT, RENDER_POSITION} from "./const";
+import TripInfoView from "./view/trip-info";
+import {createNavigationControllerTemplate} from "./view/nav-controller";
+import {createEventFiltrationTemplate} from "./view/event-filtration";
+import {createTotalPriceTemplate} from "./view/total-price";
+import {createSortingTemplate} from "./view/sorting";
+import {createEventEditorTemplate} from "./view/event-editor";
+import {createEventOffersTemplate} from "./view/event-offers";
+import {createEventDestinationTemplate} from "./view/event-destination";
+import {createDaysTemplate} from "./view/days";
+import {createDayTemplate} from "./view/day";
+import {createEventTemplate} from "./view/event";
 import {generateEvent, DESTINATIONS} from "./mock/event";
-import {render, filterEventsByDays} from "./utils";
-import * as veiw from "./view/index";
+import {filterEventsByDays, renderTemplate, renderElement} from "./utils";
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
   return a.dateStart - b.dateStart;
@@ -14,33 +24,33 @@ const tripElement = siteHeaderElement.querySelector(`.trip-main`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 
-render(tripElement, veiw.createTripInfoTemplate(events.slice(1)), `afterbegin`);
-render(tripControlsFirstElement, veiw.createNavigationControllerTemplate(), `afterend`);
-render(tripControlsSecondElement, veiw.createEventFiltrationTemplate(), `afterend`);
+renderElement(tripElement, new TripInfoView(events.slice(1)).getElement(), RENDER_POSITION.AFTERBEGIN);
+renderTemplate(tripControlsFirstElement, createNavigationControllerTemplate(), `afterend`);
+renderTemplate(tripControlsSecondElement, createEventFiltrationTemplate(), `afterend`);
 
 const tripInfoElement = tripElement.querySelector(`.trip-info`);
 
-render(tripInfoElement, veiw.createTotalPriceTemplate(), `beforeend`);
+renderTemplate(tripInfoElement, createTotalPriceTemplate(), `beforeend`);
 
 const siteMainElement = document.querySelector(`.page-main`);
 const eventsElement = siteMainElement.querySelector(`.trip-events`);
 
-render(eventsElement, veiw.createSortingTemplate(), `beforeend`);
-render(eventsElement, veiw.createEventEditorTemplate(events[0], DESTINATIONS), `beforeend`);
-render(eventsElement, veiw.createDaysTemplate(), `beforeend`);
+renderTemplate(eventsElement, createSortingTemplate(), `beforeend`);
+renderTemplate(eventsElement, createEventEditorTemplate(events[0], DESTINATIONS), `beforeend`);
+renderTemplate(eventsElement, createDaysTemplate(), `beforeend`);
 
 const eventDetailsElement = eventsElement.querySelector(`.event__details`);
 const daysElement = eventsElement.querySelector(`.trip-days`);
 
-render(eventDetailsElement, veiw.createEventOffersTemplate(events[0]), `beforeend`);
-render(eventDetailsElement, veiw.createEventDestinationTemplate(events[0]), `beforeend`);
+renderTemplate(eventDetailsElement, createEventOffersTemplate(events[0]), `beforeend`);
+renderTemplate(eventDetailsElement, createEventDestinationTemplate(events[0]), `beforeend`);
 
 for (let i = 0; i < tripDays.size; i++) {
   const date = Array.from(tripDays.keys())[i];
 
-  render(daysElement, veiw.createDayTemplate(date, i + 1), `beforeend`);
+  renderTemplate(daysElement, createDayTemplate(date, i + 1), `beforeend`);
 
   const dayElement = daysElement.querySelector(`#trip-events__list-${i + 1}`);
 
-  render(dayElement, tripDays.get(date).map(veiw.createEventTemplate).join(``), `beforeend`);
+  renderTemplate(dayElement, tripDays.get(date).map(createEventTemplate).join(``), `beforeend`);
 }

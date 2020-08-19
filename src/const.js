@@ -15,3 +15,8 @@ export const EVENT_TYPE_ACTIVITY = [
   `Sightseeing`,
   `Restaurant`
 ];
+
+export const RENDER_POSITION = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
