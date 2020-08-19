@@ -1,7 +1,7 @@
 import {EVENT_COUNT, RENDER_POSITION} from "./const";
 import TripInfoView from "./view/trip-info";
 import NavigationControllerView from "./view/nav-controller";
-import {createEventFiltrationTemplate} from "./view/event-filtration";
+import EventFiltrationView from "./view/event-filtration";
 import {createTotalPriceTemplate} from "./view/total-price";
 import {createSortingTemplate} from "./view/sorting";
 import {createEventEditorTemplate} from "./view/event-editor";
@@ -26,7 +26,7 @@ const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2
 
 renderElement(tripElement, new TripInfoView(events.slice(1)).getElement(), RENDER_POSITION.AFTERBEGIN);
 renderElement(tripControlsFirstElement, new NavigationControllerView().getElement(), RENDER_POSITION.AFTEREND);
-renderTemplate(tripControlsSecondElement, createEventFiltrationTemplate(), `afterend`);
+renderElement(tripControlsSecondElement, new EventFiltrationView().getElement(), RENDER_POSITION.AFTEREND);
 
 const tripInfoElement = tripElement.querySelector(`.trip-info`);
 
