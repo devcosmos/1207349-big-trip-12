@@ -40,6 +40,7 @@ const generateDateStart = () => {
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + daysGap);
+  currentDate.setTime(currentDate.getTime() + getRandomInteger(1, 60) * 60 * 1000);
 
   return currentDate;
 };
