@@ -1,5 +1,6 @@
-import {getTimeAtFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 import {EVENT_TYPE_ACTIVITY} from "../const";
+import {createElement} from "../utils";
+import {getTimeAtFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 
 const createAcceptedOffersTemplate = (offers) => {
   return (
@@ -16,7 +17,7 @@ const createAcceptedOffersTemplate = (offers) => {
   );
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
@@ -57,3 +58,26 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+export default class Event {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

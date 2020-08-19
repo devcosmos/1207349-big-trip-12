@@ -9,9 +9,9 @@ import EventOffersView from "./view/event-offers";
 import EventDestinationView from "./view/event-destination";
 import DaysView from "./view/days";
 import DayView from "./view/day";
-import {createEventTemplate} from "./view/event";
+import EventView from "./view/event";
 import {generateEvent, DESTINATIONS} from "./mock/event";
-import {filterEventsByDays, renderTemplate, renderElement} from "./utils";
+import {filterEventsByDays, renderElement} from "./utils";
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
   return a.dateStart - b.dateStart;
@@ -37,20 +37,24 @@ const eventsElement = siteMainElement.querySelector(`.trip-events`);
 
 renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
 renderElement(eventsElement, new EventEditorView(events[0], DESTINATIONS).getElement(), RENDER_POSITION.BEFOREEND);
-renderElement(eventsElement, new DaysView().getElement(), RENDER_POSITION.BEFOREEND);
 
 const eventDetailsElement = eventsElement.querySelector(`.event__details`);
-const daysElement = eventsElement.querySelector(`.trip-days`);
 
 renderElement(eventDetailsElement, new EventOffersView(events[0]).getElement(), RENDER_POSITION.BEFOREEND);
 renderElement(eventDetailsElement, new EventDestinationView(events[0]).getElement(), RENDER_POSITION.BEFOREEND);
 
+const daysComponent = new DaysView().getElement();
+
+renderElement(eventsElement, daysComponent, RENDER_POSITION.BEFOREEND);
+
 for (let i = 0; i < tripDays.size; i++) {
   const date = Array.from(tripDays.keys())[i];
+  const day = new DayView(date, i + 1).getElement();
+  const days = day.querySelector(`#trip-events__list-${i + 1}`);
 
-  renderElement(daysElement, new DayView(date, i + 1).getElement(), RENDER_POSITION.BEFOREEND);
+  for (const event of tripDays.get(date)) {
+    days.append(new EventView(event).getElement());
+  }
 
-  const dayElement = daysElement.querySelector(`#trip-events__list-${i + 1}`);
-
-  renderTemplate(dayElement, tripDays.get(date).map(createEventTemplate).join(``), `beforeend`);
+  daysComponent.append(day);
 }
