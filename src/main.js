@@ -5,7 +5,7 @@ import EventFiltrationView from "./view/event-filtration";
 import TotalPriceView from "./view/total-price";
 import SortingView from "./view/sorting";
 import EventEditorView from "./view/event-editor";
-import {createEventOffersTemplate} from "./view/event-offers";
+import EventOffersView from "./view/event-offers";
 import {createEventDestinationTemplate} from "./view/event-destination";
 import {createDaysTemplate} from "./view/days";
 import {createDayTemplate} from "./view/day";
@@ -37,13 +37,12 @@ const eventsElement = siteMainElement.querySelector(`.trip-events`);
 
 renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
 renderElement(eventsElement, new EventEditorView(events[0], DESTINATIONS).getElement(), RENDER_POSITION.BEFOREEND);
-// renderTemplate(eventsElement, createEventEditorTemplate(events[0], DESTINATIONS), `beforeend`);
 renderTemplate(eventsElement, createDaysTemplate(), `beforeend`);
 
 const eventDetailsElement = eventsElement.querySelector(`.event__details`);
 const daysElement = eventsElement.querySelector(`.trip-days`);
 
-renderTemplate(eventDetailsElement, createEventOffersTemplate(events[0]), `beforeend`);
+renderElement(eventDetailsElement, new EventOffersView(events[0]).getElement(), RENDER_POSITION.BEFOREEND);
 renderTemplate(eventDetailsElement, createEventDestinationTemplate(events[0]), `beforeend`);
 
 for (let i = 0; i < tripDays.size; i++) {

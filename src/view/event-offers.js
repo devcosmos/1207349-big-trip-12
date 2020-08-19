@@ -1,6 +1,7 @@
+import {createElement} from "../utils";
 import {getOffers} from "../mock/event";
 
-export const createEventOffersTemplate = (event) => {
+const createEventOffersTemplate = (event) => {
   const {acceptedOffers, eventType} = event;
   const offers = getOffers(eventType);
 
@@ -27,3 +28,26 @@ export const createEventOffersTemplate = (event) => {
     </section>`
   );
 };
+
+export default class EventOffers {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventOffersTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
