@@ -2,7 +2,7 @@ import {EVENT_COUNT, RENDER_POSITION} from "./const";
 import TripInfoView from "./view/trip-info";
 import NavigationControllerView from "./view/nav-controller";
 import EventFiltrationView from "./view/event-filtration";
-import {createTotalPriceTemplate} from "./view/total-price";
+import TotalPriceView from "./view/total-price";
 import {createSortingTemplate} from "./view/sorting";
 import {createEventEditorTemplate} from "./view/event-editor";
 import {createEventOffersTemplate} from "./view/event-offers";
@@ -30,7 +30,7 @@ renderElement(tripControlsSecondElement, new EventFiltrationView().getElement(),
 
 const tripInfoElement = tripElement.querySelector(`.trip-info`);
 
-renderTemplate(tripInfoElement, createTotalPriceTemplate(), `beforeend`);
+renderElement(tripInfoElement, new TotalPriceView().getElement(), RENDER_POSITION.BEFOREEND);
 
 const siteMainElement = document.querySelector(`.page-main`);
 const eventsElement = siteMainElement.querySelector(`.trip-events`);
