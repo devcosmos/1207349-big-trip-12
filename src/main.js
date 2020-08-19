@@ -7,7 +7,7 @@ import SortingView from "./view/sorting";
 import EventEditorView from "./view/event-editor";
 import EventOffersView from "./view/event-offers";
 import EventDestinationView from "./view/event-destination";
-import {createDaysTemplate} from "./view/days";
+import EventDaysView from "./view/days";
 import {createDayTemplate} from "./view/day";
 import {createEventTemplate} from "./view/event";
 import {generateEvent, DESTINATIONS} from "./mock/event";
@@ -37,7 +37,7 @@ const eventsElement = siteMainElement.querySelector(`.trip-events`);
 
 renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
 renderElement(eventsElement, new EventEditorView(events[0], DESTINATIONS).getElement(), RENDER_POSITION.BEFOREEND);
-renderTemplate(eventsElement, createDaysTemplate(), `beforeend`);
+renderElement(eventsElement, new EventDaysView().getElement(), RENDER_POSITION.BEFOREEND);
 
 const eventDetailsElement = eventsElement.querySelector(`.event__details`);
 const daysElement = eventsElement.querySelector(`.trip-days`);
