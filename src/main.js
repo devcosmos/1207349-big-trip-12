@@ -13,48 +13,60 @@ import EventView from "./view/event";
 import {generateEvent, DESTINATIONS} from "./mock/event";
 import {filterEventsByDays, renderElement} from "./utils";
 
-const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
-  return a.dateStart - b.dateStart;
-});
+const renderEvent = (event) => {
+  const eventComponent = new EventView(event).getElement();
+  const eventEditComponent = new EventEditorView(event, DESTINATIONS).getElement();
 
-const tripDays = filterEventsByDays(events.slice(1));
+  const replacePointToForm = () => {
+    eventComponent.parentElement.replaceChild(eventEditComponent, eventComponent);
+  };
+
+  const replaceFormToPoint = () => {
+    eventEditComponent.parentElement.replaceChild(eventComponent, eventEditComponent);
+  };
+
+  eventComponent
+    .querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, () => {
+      replacePointToForm();
+    });
+
+  eventEditComponent
+    .addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+    });
+
+  return eventComponent;
+};
+
+const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => a.dateStart - b.dateStart);
+const tripDays = filterEventsByDays(events);
+const daysComponent = new DaysView();
+const tripInfoComponent = new TripInfoView(events);
 
 const siteHeaderElement = document.querySelector(`.page-header`);
+const siteMainElement = document.querySelector(`.page-main`);
 const tripElement = siteHeaderElement.querySelector(`.trip-main`);
+const eventsElement = siteMainElement.querySelector(`.trip-events`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 
-renderElement(tripElement, new TripInfoView(events.slice(1)).getElement(), RENDER_POSITION.AFTERBEGIN);
+renderElement(tripElement, tripInfoComponent.getElement(), RENDER_POSITION.AFTERBEGIN);
 renderElement(tripControlsFirstElement, new NavigationControllerView().getElement(), RENDER_POSITION.AFTEREND);
 renderElement(tripControlsSecondElement, new EventFiltrationView().getElement(), RENDER_POSITION.AFTEREND);
-
-const tripInfoElement = tripElement.querySelector(`.trip-info`);
-
-renderElement(tripInfoElement, new TotalPriceView().getElement(), RENDER_POSITION.BEFOREEND);
-
-const siteMainElement = document.querySelector(`.page-main`);
-const eventsElement = siteMainElement.querySelector(`.trip-events`);
-
+renderElement(tripInfoComponent.getElement(), new TotalPriceView().getElement(), RENDER_POSITION.BEFOREEND);
 renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
-renderElement(eventsElement, new EventEditorView(events[0], DESTINATIONS).getElement(), RENDER_POSITION.BEFOREEND);
-
-const eventDetailsElement = eventsElement.querySelector(`.event__details`);
-
-renderElement(eventDetailsElement, new EventOffersView(events[0]).getElement(), RENDER_POSITION.BEFOREEND);
-renderElement(eventDetailsElement, new EventDestinationView(events[0]).getElement(), RENDER_POSITION.BEFOREEND);
-
-const daysComponent = new DaysView().getElement();
-
-renderElement(eventsElement, daysComponent, RENDER_POSITION.BEFOREEND);
+renderElement(eventsElement, daysComponent.getElement(), RENDER_POSITION.BEFOREEND);
 
 for (let i = 0; i < tripDays.size; i++) {
   const date = Array.from(tripDays.keys())[i];
-  const day = new DayView(date, i + 1).getElement();
-  const days = day.querySelector(`#trip-events__list-${i + 1}`);
+  const dayComponent = new DayView(date, i + 1);
+  const days = dayComponent.getElement().querySelector(`#trip-events__list-${i + 1}`);
 
   for (const event of tripDays.get(date)) {
-    days.append(new EventView(event).getElement());
+    days.append(renderEvent(event));
   }
 
-  daysComponent.append(day);
+  daysComponent.getElement().append(dayComponent.getElement());
 }
