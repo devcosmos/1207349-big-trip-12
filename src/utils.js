@@ -29,6 +29,9 @@ export const renderElement = (container, element, place) => {
     case RENDER_POSITION.BEFOREEND:
       container.append(element);
       break;
+    case RENDER_POSITION.AFTEREND:
+      container.insertAdjacentElement(place, element);
+      break;
   }
 };
 

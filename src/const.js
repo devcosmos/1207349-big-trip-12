@@ -18,5 +18,6 @@ export const EVENT_TYPE_ACTIVITY = [
 
 export const RENDER_POSITION = {
   AFTERBEGIN: `afterbegin`,
+  AFTEREND: `afterend`,
   BEFOREEND: `beforeend`,
 };
