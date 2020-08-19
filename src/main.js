@@ -6,7 +6,7 @@ import TotalPriceView from "./view/total-price";
 import SortingView from "./view/sorting";
 import EventEditorView from "./view/event-editor";
 import EventOffersView from "./view/event-offers";
-import {createEventDestinationTemplate} from "./view/event-destination";
+import EventDestinationView from "./view/event-destination";
 import {createDaysTemplate} from "./view/days";
 import {createDayTemplate} from "./view/day";
 import {createEventTemplate} from "./view/event";
@@ -43,7 +43,7 @@ const eventDetailsElement = eventsElement.querySelector(`.event__details`);
 const daysElement = eventsElement.querySelector(`.trip-days`);
 
 renderElement(eventDetailsElement, new EventOffersView(events[0]).getElement(), RENDER_POSITION.BEFOREEND);
-renderTemplate(eventDetailsElement, createEventDestinationTemplate(events[0]), `beforeend`);
+renderElement(eventDetailsElement, new EventDestinationView(events[0]).getElement(), RENDER_POSITION.BEFOREEND);
 
 for (let i = 0; i < tripDays.size; i++) {
   const date = Array.from(tripDays.keys())[i];

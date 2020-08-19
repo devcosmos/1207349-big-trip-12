@@ -1,4 +1,6 @@
-export const createEventDestinationTemplate = ({description}) => {
+import {createElement} from "../utils";
+
+const createEventDestinationTemplate = ({description}) => {
 
   return (
     `<section class="event__section  event__section--destination">
@@ -13,3 +15,26 @@ export const createEventDestinationTemplate = ({description}) => {
     </section>`
   );
 };
+
+export default class EventDestination {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventDestinationTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
