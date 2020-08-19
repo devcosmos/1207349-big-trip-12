@@ -7,19 +7,11 @@ export const getDateAtShortFormat = (date) => {
 };
 
 export const getDateAtSystemFormat = (date) => {
-  const y = date.toLocaleString(`en-US`, {year: `numeric`});
-  const m = date.toLocaleString(`en-US`, {month: `2-digit`});
-  const d = date.toLocaleString(`en-US`, {day: `2-digit`});
-
-  return `${y}-${m}-${d}`;
+  return date.toLocaleString(`en-US`, {year: `numeric`, month: `2-digit`, day: `2-digit`}).split(`/`).reverse().join(`-`);
 };
 
-export const getDateAtEventEditorFormat = (date) => {
-  const y = date.toLocaleString(`en-US`, {year: `2-digit`});
-  const m = date.toLocaleString(`en-US`, {month: `2-digit`});
-  const d = date.toLocaleString(`en-US`, {day: `2-digit`});
-
-  return `${d}/${m}/${y} ${getTimeAtFormat(date)}`;
+export const getDateAtDefaultFormat = (date) => {
+  return date.toLocaleString(`en-US`, {year: `2-digit`, month: `2-digit`, day: `2-digit`});
 };
 
 export const getDurationTime = (start, end) => {

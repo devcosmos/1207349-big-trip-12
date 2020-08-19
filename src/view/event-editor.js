@@ -1,5 +1,5 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import {getDateAtEventEditorFormat} from "../date-formatters";
+import {getDateAtDefaultFormat, getTimeAtFormat} from "../date-formatters";
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -55,8 +55,8 @@ export const createEventEditorTemplate = (event = {}, cities) => {
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
-  const dateStartEventAtFormat = dateStart === null ? `` : getDateAtEventEditorFormat(dateStart);
-  const dateEndEventAtFormat = dateEnd === null ? `` : getDateAtEventEditorFormat(dateEnd);
+  const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtFormat(dateStart)}`;
+  const dateEndEventAtFormat = dateEnd === null ? `` : `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtFormat(dateEnd)}`;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
