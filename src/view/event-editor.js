@@ -1,5 +1,13 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
 import {getDateAtDefaultFormat, getTimeAtFormat} from "../date-formatters";
+import {createElement} from "../utils";
+
+const BLANK_EVENT = {
+  eventType: `Taxi`,
+  dateStart: null,
+  dateEnd: null,
+  cost: null
+};
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -45,13 +53,8 @@ const createEventDestinationTemplate = (eventType, cities) => {
   );
 };
 
-export const createEventEditorTemplate = (event = {}, cities) => {
-  const {
-    eventType = `Taxi`,
-    dateStart = null,
-    dateEnd = null,
-    cost = null
-  } = event;
+const createEventEditorTemplate = (event, cities) => {
+  const {eventType, dateStart, dateEnd, cost} = event;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
@@ -93,3 +96,27 @@ export const createEventEditorTemplate = (event = {}, cities) => {
     </form>`
   );
 };
+
+export default class EventEditor {
+  constructor(event = BLANK_EVENT, cities) {
+    this._element = null;
+    this._event = event;
+    this._cities = cities;
+  }
+
+  getTemplate() {
+    return createEventEditorTemplate(this._event, this._cities);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
