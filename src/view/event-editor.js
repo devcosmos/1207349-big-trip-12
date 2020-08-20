@@ -5,9 +5,15 @@ import {getOffers} from "../mock/event";
 
 const BLANK_EVENT = {
   eventType: `Taxi`,
+  currentDestination: null,
+  acceptedOffers: [],
+  description: {
+    text: ``,
+    images: [],
+  },
   dateStart: null,
   dateEnd: null,
-  cost: null
+  cost: null,
 };
 
 const createEventTypeTemplate = (type) => {
@@ -38,7 +44,7 @@ const createEventTypeTemplate = (type) => {
   );
 };
 
-const createEventDestinationTemplate = (eventType, cities) => {
+const createEventDestinationTemplate = (eventType, cities, currentDestination) => {
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
 
   return (
@@ -46,7 +52,13 @@ const createEventDestinationTemplate = (eventType, cities) => {
       <label class="event__label  event__type-output" for="event-destination-1">
         ${eventType} ${prepositions}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+      <input 
+        class="event__input  event__input--destination" 
+        id="event-destination-1" 
+        type="text" 
+        name="event-destination" 
+        value="${currentDestination === null ? `` : currentDestination}" 
+        list="destination-list-1">
       <datalist id="destination-list-1">  
         ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
       </datalist>
@@ -96,10 +108,10 @@ const createEventDescriptionTemplate = (description) => {
 };
 
 const createEventEditorTemplate = (event, cities) => {
-  const {eventType, dateStart, dateEnd, cost, acceptedOffers, description} = event;
+  const {eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
-  const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
+  const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination);
   const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, eventType);
   const eventDescriptionTemplate = !description.text && description.images.length === 0 ? `` : createEventDescriptionTemplate(description);
   const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtFormat(dateStart)}`;
