@@ -1,0 +1,9 @@
+export {default as TripInfoView} from "./view/trip-info";
+export {default as NavigationControllerView} from "./view/nav-controller";
+export {default as EventFiltrationView} from "./view/event-filtration";
+export {default as TotalPriceView} from "./view/total-price";
+export {default as SortingView} from "./view/sorting";
+export {default as EventEditorView} from "./view/event-editor";
+export {default as DaysView} from "./view/days";
+export {default as DayView} from "./view/day";
+export {default as EventView} from "./view/event";

@@ -42,7 +42,7 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export const filterEventsByDays = (tripPoints) => {
+export const splitEventsByDays = (tripPoints) => {
   const tripDays = new Map();
   for (const event of tripPoints) {
     const date = new Date(event.dateStart).setHours(0, 0, 0, 0);
