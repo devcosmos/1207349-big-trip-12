@@ -5,8 +5,6 @@ import EventFiltrationView from "./view/event-filtration";
 import TotalPriceView from "./view/total-price";
 import SortingView from "./view/sorting";
 import EventEditorView from "./view/event-editor";
-import EventOffersView from "./view/event-offers";
-import EventDestinationView from "./view/event-destination";
 import DaysView from "./view/days";
 import DayView from "./view/day";
 import EventView from "./view/event";
