@@ -82,17 +82,15 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
 };
 
 const createEventDescriptionTemplate = (description) => {
-
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${description.text}</p>
-
-      <div class="event__photos-container">
+      ${description.text ? `<p class="event__destination-description">${description.text}</p>` : `` }
+      ${description.images.length === 0 ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
           ${description.images.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`)}
         </div>
-      </div>
+      </div>`}
     </section>`
   );
 };
@@ -103,7 +101,7 @@ const createEventEditorTemplate = (event, cities) => {
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities);
   const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, eventType);
-  const eventDescriptionTemplate = createEventDescriptionTemplate(description);
+  const eventDescriptionTemplate = !description.text && description.images.length === 0 ? `` : createEventDescriptionTemplate(description);
   const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtFormat(dateStart)}`;
   const dateEndEventAtFormat = dateEnd === null ? `` : `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtFormat(dateEnd)}`;
 

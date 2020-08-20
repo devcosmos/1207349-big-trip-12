@@ -53,19 +53,20 @@ const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
 const getRandomListItem = (list) => list[getRandomInteger(0, list.length - 1)];
 
 export const generateEvent = () => {
-  const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
+  const images = new Array(getRandomInteger(0, 4)).fill().map(generateImage);
   const eventType = getRandomListItem(EVENT_TYPE_TRANSFER.concat(EVENT_TYPE_ACTIVITY));
   const offers = getOffers(eventType);
   const acceptedOffers = getRandomPartialList(offers);
   const dateStart = generateDateStart();
   const dateEnd = generateDateEnd(dateStart);
+  const text = getRandomInteger() ? getRandomListItem(DESCRIPTIONS) : ``;
 
   return {
     eventType,
     currentDestination: getRandomListItem(DESTINATIONS),
     acceptedOffers,
     description: {
-      text: getRandomListItem(DESCRIPTIONS),
+      text,
       images,
     },
     dateStart,
