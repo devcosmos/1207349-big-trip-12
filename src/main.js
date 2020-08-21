@@ -3,9 +3,9 @@ import {TripInfoView, NavigationControllerView, EventFiltrationView, TotalPriceV
 import {generateEvent, DESTINATIONS} from "./mock/event";
 import {splitEventsByDays, renderElement} from "./utils";
 
-const renderEvent = (event) => {
+const renderEvent = (event, eventCount) => {
   const eventComponent = new EventView(event).getElement();
-  const eventEditComponent = new EventEditorView(event, DESTINATIONS).getElement();
+  const eventEditComponent = new EventEditorView(event, eventCount, DESTINATIONS).getElement();
 
   const replacePointToForm = () => {
     eventComponent.parentElement.replaceChild(eventEditComponent, eventComponent);
@@ -49,14 +49,19 @@ renderElement(tripInfoComponent.getElement(), new TotalPriceView().getElement(),
 renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
 renderElement(eventsElement, daysComponent.getElement(), RENDER_POSITION.BEFOREEND);
 
-for (let i = 0; i < eventsByDays.size; i++) {
-  const date = Array.from(eventsByDays.keys())[i];
-  const dayComponent = new DayView(date, i + 1);
-  const eventsListElement = dayComponent.getElement().querySelector(`#trip-events__list-${i + 1}`);
+let dayCount = 0;
+let eventCount = 1;
 
-  for (const event of eventsByDays.get(date)) {
-    eventsListElement.append(renderEvent(event));
-  }
+eventsByDays.forEach(() => {
+  const date = Array.from(eventsByDays.keys())[dayCount];
+  const dayComponent = new DayView(date, dayCount + 1);
+  const eventsListElement = dayComponent.getElement().querySelector(`#trip-events__list-${dayCount + 1}`);
+
+  eventsByDays.get(date).forEach((event) => {
+    eventsListElement.append(renderEvent(event, eventCount));
+    eventCount++;
+  });
 
   daysComponent.getElement().append(dayComponent.getElement());
-}
+  dayCount++;
+});
