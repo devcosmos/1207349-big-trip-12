@@ -7,19 +7,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const getRandomPartialList = (array) => {
-  const newArray = [];
-  const newArrayLength = getRandomInteger(0, array.length - 1);
-
-  while (newArray.length < newArrayLength) {
-    const randomIndex = getRandomInteger(0, array.length - 1);
-    if (!newArray.includes(randomIndex)) {
-      newArray.push(randomIndex);
-    }
-  }
-
-  return newArray.sort((a, b) => a - b).map((index) => array[index]);
-};
+export const getRandomPartialList = (array) => array.filter(() => !!getRandomInteger());
 
 export const renderElement = (container, element, place) => {
   switch (place) {

@@ -1,13 +1,5 @@
 import {EVENT_COUNT, RENDER_POSITION} from "./const";
-import {TripInfoView} from "./index";
-import {NavigationControllerView} from "./index";
-import {EventFiltrationView} from "./index";
-import {TotalPriceView} from "./index";
-import {SortingView} from "./index";
-import {EventEditorView} from "./index";
-import {DaysView} from "./index";
-import {DayView} from "./index";
-import {EventView} from "./index";
+import {TripInfoView, NavigationControllerView, EventFiltrationView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView} from "./index";
 import {generateEvent, DESTINATIONS} from "./mock/event";
 import {splitEventsByDays, renderElement} from "./utils";
 
