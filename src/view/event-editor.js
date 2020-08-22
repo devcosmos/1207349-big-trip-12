@@ -1,5 +1,5 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import {getDateAtDefaultFormat, getTimeAtFormat} from "../date-formatters";
+import {getDateAtFormat} from "../date-formatters";
 import {createElement} from "../utils";
 import {getOffers} from "../mock/event";
 
@@ -114,8 +114,8 @@ const createEventEditorTemplate = (event, count, cities) => {
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination, count);
   const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, eventType, count);
   const eventDescriptionTemplate = !description.text && description.images.length === 0 ? `` : createEventDescriptionTemplate(description);
-  const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtFormat(dateStart)}`;
-  const dateEndEventAtFormat = dateEnd === null ? `` : `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtFormat(dateEnd)}`;
+  const dateStartEventAtFormat = dateStart === null ? `` : dateStart.toLocaleString(`en-US`, {year: `2-digit`, month: `2-digit`, day: `2-digit`}) + ` ` + getDateAtFormat(dateStart, 11, 16);
+  const dateEndEventAtFormat = dateEnd === null ? `` : dateEnd.toLocaleString(`en-US`, {year: `2-digit`, month: `2-digit`, day: `2-digit`}) + ` ` + getDateAtFormat(dateEnd, 11, 16);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">

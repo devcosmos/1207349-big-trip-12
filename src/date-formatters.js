@@ -1,17 +1,5 @@
-export const getTimeAtFormat = (date) => {
-  return date.toLocaleString(`en-US`, {hour12: false, hour: `2-digit`, minute: `2-digit`});
-};
-
 export const getDateAtShortFormat = (date) => {
   return date.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
-};
-
-export const getDateAtSystemFormat = (date) => {
-  return date.toLocaleString(`en-US`, {year: `numeric`, month: `2-digit`, day: `2-digit`}).split(`/`).reverse().join(`-`);
-};
-
-export const getDateAtDefaultFormat = (date) => {
-  return date.toLocaleString(`en-US`, {year: `2-digit`, month: `2-digit`, day: `2-digit`});
 };
 
 export const getDurationTime = (start, end) => {
@@ -34,4 +22,8 @@ export const getDurationTime = (start, end) => {
   }
 
   return durationTime;
+};
+
+export const getDateAtFormat = (date, from, to) => {
+  return new Date(date.getTime() + 10800000).toISOString().substring(from, to);
 };
