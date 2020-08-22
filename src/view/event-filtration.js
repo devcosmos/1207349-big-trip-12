@@ -23,7 +23,7 @@ const createEventFiltrationTemplate = () => {
   );
 };
 
-export default class EventFiltration {
+export class EventFiltration {
   constructor() {
     this._element = null;
   }

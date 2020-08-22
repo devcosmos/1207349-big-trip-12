@@ -36,7 +36,7 @@ const createSortingTemplate = () => {
 };
 
 
-export default class Sorting {
+export class Sorting {
   constructor() {
     this._element = null;
   }

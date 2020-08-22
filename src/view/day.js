@@ -16,7 +16,7 @@ const createDayTemplate = (date, index) => {
   );
 };
 
-export default class Day {
+export class Day {
   constructor(date, index) {
     this._element = null;
     this._date = date;

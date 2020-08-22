@@ -6,7 +6,7 @@ const createDaysTemplate = () => {
   );
 };
 
-export default class Days {
+export class Days {
   constructor() {
     this._element = null;
   }
