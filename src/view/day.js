@@ -1,30 +1,30 @@
 import {createElement} from "../utils";
 import {getDateAtShortFormat, getDateAtFormat} from "../date-formatters";
 
-const createDayTemplate = (date, dayCount) => {
+const createDayTemplate = (date, index) => {
   const dateAtShortFormat = getDateAtShortFormat(new Date(date));
   const dateAtSystemFormat = getDateAtFormat(new Date(date), 0, 10);
 
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${dayCount}</span>
+        <span class="day__counter">${index}</span>
         <time class="day__date" datetime="${dateAtSystemFormat}">${dateAtShortFormat}</time>
       </div>
-      <ul class="trip-events__list" id="trip-events__list-${dayCount}"></ul>
+      <ul class="trip-events__list" id="trip-events__list-${index}"></ul>
     </li>`
   );
 };
 
 export default class Day {
-  constructor(date, dayCount) {
+  constructor(date, index) {
     this._element = null;
     this._date = date;
-    this._dayCount = dayCount;
+    this._index = index;
   }
 
   getTemplate() {
-    return createDayTemplate(this._date, this._dayCount);
+    return createDayTemplate(this._date, this._index);
   }
 
   getElement() {
