@@ -8,7 +8,7 @@ const createTotalPriceTemplate = () => {
   );
 };
 
-export class TotalPrice {
+export class TotalPriceView {
   constructor() {
     this._element = null;
   }

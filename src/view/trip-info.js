@@ -18,7 +18,6 @@ const getTripDateInterval = (tripEvents) => {
 };
 
 const createTripInfoTemplate = (tripEvents) => {
-
   return (
     `<section class="trip-main__trip-info  trip-info">
       ${tripEvents === null || tripEvents.length === 0 ? `` : `<div class="trip-info__main">
@@ -29,7 +28,7 @@ const createTripInfoTemplate = (tripEvents) => {
   );
 };
 
-export class TripInfo {
+export class TripInfoView {
   constructor(tripEvents = null) {
     this._element = null;
     this._tripEvents = tripEvents;

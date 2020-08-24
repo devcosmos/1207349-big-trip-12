@@ -159,7 +159,7 @@ const createEventEditorTemplate = (event, index, cities) => {
   );
 };
 
-export class EventEditor {
+export class EventEditorView {
   constructor(event = BLANK_EVENT, index, cities) {
     this._element = null;
     this._event = event;
