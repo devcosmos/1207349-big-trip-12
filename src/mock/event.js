@@ -23,7 +23,7 @@ export const getOffers = (type) => {
       {name: `Add luggage`, id: `luggage`, cost: 30},
       {name: `Switch to comfort`, id: `comfort`, cost: 100},
       {name: `Add meal`, id: `meal`, cost: 15},
-      {name: `Choose seats`, id: `comfort`, cost: 10},
+      {name: `Choose seats`, id: `seats`, cost: 10},
     ];
   } else {
     return [
