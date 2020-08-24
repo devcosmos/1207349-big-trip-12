@@ -1,3 +1,5 @@
+import {THREE_HOURS_IN_TIMESTAMP} from "./const";
+
 export const getDateAtShortFormat = (date) => {
   return date.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
 };
@@ -25,5 +27,5 @@ export const getDurationTime = (start, end) => {
 };
 
 export const getDateAtFormat = (date, from, to) => {
-  return new Date(date.getTime() + 10800000).toISOString().substring(from, to);
+  return new Date(date.getTime() + THREE_HOURS_IN_TIMESTAMP).toISOString().substring(from, to);
 };
