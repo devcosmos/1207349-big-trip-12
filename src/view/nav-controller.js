@@ -9,7 +9,7 @@ const createNavigationControllerTemplate = () => {
   );
 };
 
-export class NavigationControllerView {
+export default class NavigationControllerView {
   constructor() {
     this._element = null;
   }

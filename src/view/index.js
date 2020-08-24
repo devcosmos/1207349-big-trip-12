@@ -1,9 +1,9 @@
-export * from "./trip-info";
-export * from "./nav-controller";
-export * from "./event-filtration";
-export * from "./total-price";
-export * from "./sorting";
-export * from "./event-editor";
-export * from "./days";
-export * from "./day";
-export * from "./event";
+export {default as TripInfoView} from "./trip-info";
+export {default as NavigationControllerView} from "./nav-controller";
+export {default as EventFiltrationView} from "./event-filtration";
+export {default as TotalPriceView} from "./total-price";
+export {default as SortingView} from "./sorting";
+export {default as EventEditorView} from "./event-editor";
+export {default as DaysView} from "./days";
+export {default as DayView} from "./day";
+export {default as EventView} from "./event";

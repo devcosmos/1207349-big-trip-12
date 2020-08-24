@@ -16,7 +16,7 @@ const createDayTemplate = (date, index) => {
   );
 };
 
-export class DayView {
+export default class DayView {
   constructor(date, index) {
     this._element = null;
     this._date = date;
