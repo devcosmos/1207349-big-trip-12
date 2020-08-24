@@ -30,15 +30,23 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export const splitEventsByDays = (tripPoints) => {
-  const tripDays = new Map();
-  for (const event of tripPoints) {
+export const splitEventsByDays = (events) => {
+  const tripDays = [];
+
+  let dayCount = 0;
+
+  for (const event of events) {
     const date = new Date(event.dateStart).setHours(0, 0, 0, 0);
-    if (tripDays.has(date)) {
-      tripDays.get(date).push(event);
+
+    if (tripDays[dayCount] === undefined) {
+      tripDays.push([date, event]);
+    } else if (tripDays[dayCount].includes(date)) {
+      tripDays[dayCount].push(event);
     } else {
-      tripDays.set(date, [event]);
+      tripDays.push([date, event]);
+      dayCount++;
     }
   }
+
   return tripDays;
 };

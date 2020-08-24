@@ -49,18 +49,15 @@ renderElement(tripInfoComponent.getElement(), new TotalPriceView().getElement(),
 renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
 renderElement(eventsElement, daysComponent.getElement(), RENDER_POSITION.BEFOREEND);
 
-let dayCount = 1;
-let eventCount = 1;
 
-eventsByDays.forEach((eventsByDay, dayDate) => {
-  const dayComponent = new DayView(dayDate, dayCount);
-  const eventsListElement = dayComponent.getElement().querySelector(`#trip-events__list-${dayCount}`);
+eventsByDays.forEach((eventsByDay, index) => {
+  const dayDate = eventsByDay[0];
+  const dayComponent = new DayView(dayDate, index + 1);
+  const eventsListElement = dayComponent.getElement().querySelector(`#trip-events__list-${index + 1}`);
 
-  eventsByDay.forEach((event) => {
-    eventsListElement.append(renderEvent(event, eventCount));
-    eventCount++;
+  eventsByDay.slice(1).forEach((event) => {
+    eventsListElement.append(renderEvent(event));
   });
 
   daysComponent.getElement().append(dayComponent.getElement());
-  dayCount++;
 });
