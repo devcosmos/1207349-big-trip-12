@@ -3,9 +3,9 @@ import {TripInfoView, NavigationControllerView, EventFiltrationView, TotalPriceV
 import {generateEvent, DESTINATIONS} from "./mock/event";
 import {splitEventsByDays, renderElement} from "./utils";
 
-const renderEvent = (event, eventCount) => {
+const renderEvent = (event) => {
   const eventComponent = new EventView(event).getElement();
-  const eventEditComponent = new EventEditorView(event, eventCount, DESTINATIONS).getElement();
+  const eventEditComponent = new EventEditorView(event, DESTINATIONS).getElement();
 
   const replacePointToForm = () => {
     eventComponent.parentElement.replaceChild(eventEditComponent, eventComponent);

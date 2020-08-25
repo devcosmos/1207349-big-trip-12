@@ -16,14 +16,14 @@ const BLANK_EVENT = {
   cost: null,
 };
 
-const createEventTypeTemplate = (type, index) => {
+const createEventTypeTemplate = (type) => {
   return (
     `<div class="event__type-wrapper">
-      <label class="event__type  event__type-btn" for="event-type-toggle-${index}">
+      <label class="event__type  event__type-btn" for="event-type-toggle">
         <span class="visually-hidden">Choose event type</span>
         <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
       </label>
-      <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${index}" type="checkbox">
+      <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Transfer</legend>
@@ -44,29 +44,29 @@ const createEventTypeTemplate = (type, index) => {
   );
 };
 
-const createEventDestinationTemplate = (eventType, cities, currentDestination, index) => {
+const createEventDestinationTemplate = (eventType, cities, currentDestination) => {
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
 
   return (
     `<div class="event__field-group  event__field-group--destination">
-      <label class="event__label  event__type-output" for="event-destination-${index}">
+      <label class="event__label  event__type-output" for="event-destination">
         ${eventType} ${prepositions}
       </label>
       <input 
         class="event__input  event__input--destination" 
-        id="event-destination-${index}" 
+        id="event-destination" 
         type="text" 
         name="event-destination" 
         value="${currentDestination === null ? `` : currentDestination}" 
-        list="destination-list-${index}">
-      <datalist id="destination-list-${index}">  
+        list="destination-list">
+      <datalist id="destination-list">  
         ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
       </datalist>
     </div>`
   );
 };
 
-const createEventOffersTemplate = (acceptedOffers, eventType, index) => {
+const createEventOffersTemplate = (acceptedOffers, eventType) => {
   const offers = getOffers(eventType);
 
   return (
@@ -77,11 +77,11 @@ const createEventOffersTemplate = (acceptedOffers, eventType, index) => {
         ${offers.map((offer) => `<div class="event__offer-selector">
           <input 
             class="event__offer-checkbox  visually-hidden" 
-            id="event-offer-${offer.id}-${index}" 
+            id="event-offer-${offer.id}" 
             type="checkbox" 
             name="event-offer-${offer.id}" 
             ${acceptedOffers.includes(offer) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${offer.id}-${index}">
+          <label class="event__offer-label" for="event-offer-${offer.id}">
             <span class="event__offer-title">${offer.name}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
@@ -107,12 +107,12 @@ const createEventDescriptionTemplate = (description) => {
   );
 };
 
-const createEventEditorTemplate = (event, index, cities) => {
+const createEventEditorTemplate = (event, cities) => {
   const {eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
 
-  const eventTypeTemplate = createEventTypeTemplate(eventType, index);
-  const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination, index);
-  const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, eventType, index);
+  const eventTypeTemplate = createEventTypeTemplate(eventType);
+  const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination);
+  const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, eventType);
   const eventDescriptionTemplate = !description.text && description.images.length === 0 ? `` : createEventDescriptionTemplate(description);
   const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtFormat(dateStart)}`;
   const dateEndEventAtFormat = dateEnd === null ? `` : `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtFormat(dateEnd)}`;
@@ -126,23 +126,23 @@ const createEventEditorTemplate = (event, index, cities) => {
         ${eventDestinationTemplate}
 
         <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-${index}">
+          <label class="visually-hidden" for="event-start-time">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-${index}" type="text" name="event-start-time" value="${dateStartEventAtFormat}">
+          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateStartEventAtFormat}">
           &mdash;
-          <label class="visually-hidden" for="event-end-time-${index}">
+          <label class="visually-hidden" for="event-end-time">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-${index}" type="text" name="event-end-time" value="${dateEndEventAtFormat}">
+          <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateEndEventAtFormat}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-${index}">
+          <label class="event__label" for="event-price">
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-${index}" type="text" name="event-price" value="${cost === null ? `` : cost}">
+          <input class="event__input  event__input--price" id="event-price" type="text" name="event-price" value="${cost === null ? `` : cost}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -160,15 +160,14 @@ const createEventEditorTemplate = (event, index, cities) => {
 };
 
 export default class EventEditorView {
-  constructor(event = BLANK_EVENT, index, cities) {
+  constructor(event = BLANK_EVENT, cities) {
     this._element = null;
     this._event = event;
     this._cities = cities;
-    this._index = index;
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._event, this._index, this._cities);
+    return createEventEditorTemplate(this._event, this._cities);
   }
 
   getElement() {
