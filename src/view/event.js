@@ -1,6 +1,6 @@
 import {EVENT_TYPE_ACTIVITY} from "../const";
 import {createElement} from "../utils";
-import {getDateAtFormat, getDurationTime} from "../date-formatters";
+import {getTimeAtFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 
 const createAcceptedOffersTemplate = (offers) => {
   return (
@@ -19,10 +19,10 @@ const createEventTemplate = (event) => {
   const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
-  const timeStartAtShortFormat = getDateAtFormat(dateStart, 11, 16);
-  const timeEndAtShortFormat = getDateAtFormat(dateEnd, 11, 16);
-  const dateStartAtSystemFormat = getDateAtFormat(dateStart, 0, 16);
-  const dateEndAtSystemFormat = getDateAtFormat(dateEnd, 0, 16);
+  const timeStartAtShortFormat = getTimeAtFormat(dateStart);
+  const timeEndAtShortFormat = getTimeAtFormat(dateEnd);
+  const dateStartAtSystemFormat = getDateAtSystemFormat(dateStart);
+  const dateEndAtSystemFormat = getDateAtSystemFormat(dateEnd);
   const duration = getDurationTime(dateStart, dateEnd);
   const acceptedOffersTemplate = createAcceptedOffersTemplate(acceptedOffers);
 
@@ -36,9 +36,9 @@ const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateStartAtSystemFormat}">${timeStartAtShortFormat}</time>
+            <time class="event__start-time" datetime="${dateStartAtSystemFormat}T${timeStartAtShortFormat}">${timeStartAtShortFormat}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateEndAtSystemFormat}">${timeEndAtShortFormat}</time>
+            <time class="event__end-time" datetime="${dateEndAtSystemFormat}T${timeEndAtShortFormat}">${timeEndAtShortFormat}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>

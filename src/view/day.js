@@ -1,9 +1,9 @@
 import {createElement} from "../utils";
-import {getDateAtShortFormat, getDateAtFormat} from "../date-formatters";
+import {getDateAtShortFormat, getDateAtSystemFormat} from "../date-formatters";
 
 const createDayTemplate = (date, index) => {
   const dateAtShortFormat = getDateAtShortFormat(new Date(date));
-  const dateAtSystemFormat = getDateAtFormat(new Date(date), 0, 10);
+  const dateAtSystemFormat = getDateAtSystemFormat(new Date(date));
 
   return (
     `<li class="trip-days__item  day">

@@ -1,7 +1,19 @@
-import {THREE_HOURS_IN_TIMESTAMP} from "./const";
+export const getTimeAtFormat = (date) => {
+  return date.toLocaleString(`en-US`, {hour12: false, hour: `2-digit`, minute: `2-digit`});
+};
 
 export const getDateAtShortFormat = (date) => {
   return date.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
+};
+
+export const getDateAtSystemFormat = (date) => {
+  const [m, d, y] = date.toLocaleString(`en-US`, {year: `numeric`, month: `2-digit`, day: `2-digit`}).split(`/`);
+  return `${y}-${m}-${d}`;
+};
+
+export const getDateAtDefaultFormat = (date) => {
+  const [m, d, y] = date.toLocaleString(`en-US`, {year: `2-digit`, month: `2-digit`, day: `2-digit`}).split(`/`);
+  return `${d}/${m}/${y}`;
 };
 
 export const getDurationTime = (start, end) => {
@@ -24,8 +36,4 @@ export const getDurationTime = (start, end) => {
   }
 
   return durationTime;
-};
-
-export const getDateAtFormat = (date, from, to) => {
-  return new Date(date.getTime() + THREE_HOURS_IN_TIMESTAMP).toISOString().substring(from, to);
 };
