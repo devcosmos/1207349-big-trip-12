@@ -36,7 +36,7 @@ export const splitEventsByDays = (events) => {
   let dayCount = 0;
 
   for (const event of events) {
-    const date = new Date(event.dateStart).setHours(0, 0, 0, 0);
+    const date = event.dateStart.setHours(0, 0, 0, 0);
 
     if (tripDays[dayCount] === undefined) {
       tripDays.push([date, event]);
