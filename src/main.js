@@ -15,16 +15,25 @@ const renderEvent = (event) => {
     eventEditComponent.parentElement.replaceChild(eventComponent, eventEditComponent);
   };
 
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape`) {
+      replaceFormToPoint();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   eventComponent
     .querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, () => {
       replacePointToForm();
+      document.addEventListener(`keydown`, onEscKeyDown);
     });
 
   eventEditComponent
     .addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       replaceFormToPoint();
+      document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
   return eventComponent;
