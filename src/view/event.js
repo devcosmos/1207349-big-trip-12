@@ -1,27 +1,26 @@
-import {getTimeAtFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 import {EVENT_TYPE_ACTIVITY} from "../const";
+import {createElement} from "../utils";
+import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 
 const createAcceptedOffersTemplate = (offers) => {
   return (
-    offers !== 0
-      ? `<h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-          ${offers.map((offer) => `<li class="event__offer">
-            <span class="event__offer-title">${offer.name}</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
-          </li>`).join(``)}
-        </ul>`
-      : ``
+    offers.length === 0 ? `` : `<h4 class="visually-hidden">Offers:</h4>
+      <ul class="event__selected-offers">
+        ${offers.map((offer) => `<li class="event__offer">
+          <span class="event__offer-title">${offer.name}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
+        </li>`).join(``)}
+      </ul>`
   );
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
-  const timeStartAtShortFormat = getTimeAtFormat(dateStart);
-  const timeEndAtShortFormat = getTimeAtFormat(dateEnd);
+  const timeStartAtShortFormat = getTimeAtDefaultFormat(dateStart);
+  const timeEndAtShortFormat = getTimeAtDefaultFormat(dateEnd);
   const dateStartAtSystemFormat = getDateAtSystemFormat(dateStart);
   const dateEndAtSystemFormat = getDateAtSystemFormat(dateEnd);
   const duration = getDurationTime(dateStart, dateEnd);
@@ -57,3 +56,26 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+export default class EventView {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

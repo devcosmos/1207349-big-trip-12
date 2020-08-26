@@ -1,46 +1,63 @@
-import {EVENT_COUNT} from "./const";
+import {EVENT_COUNT, RENDER_POSITION} from "./const";
+import {TripInfoView, NavigationControllerView, EventFiltrationView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView} from "./view/index";
 import {generateEvent, DESTINATIONS} from "./mock/event";
-import {render, filterEventsByDays} from "./utils";
-import * as veiw from "./view/index";
+import {splitEventsByDays, renderElement} from "./utils";
 
-const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => {
-  return a.dateStart - b.dateStart;
-});
+const renderEvent = (event) => {
+  const eventComponent = new EventView(event).getElement();
+  const eventEditComponent = new EventEditorView(event, DESTINATIONS).getElement();
 
-const tripDays = filterEventsByDays(events.slice(1));
+  const replacePointToForm = () => {
+    eventComponent.parentElement.replaceChild(eventEditComponent, eventComponent);
+  };
+
+  const replaceFormToPoint = () => {
+    eventEditComponent.parentElement.replaceChild(eventComponent, eventEditComponent);
+  };
+
+  eventComponent
+    .querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, () => {
+      replacePointToForm();
+    });
+
+  eventEditComponent
+    .addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+    });
+
+  return eventComponent;
+};
+
+const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => a.dateStart - b.dateStart);
+const eventsByDays = splitEventsByDays(events);
+const daysComponent = new DaysView();
+const tripInfoComponent = new TripInfoView(events);
 
 const siteHeaderElement = document.querySelector(`.page-header`);
+const siteMainElement = document.querySelector(`.page-main`);
 const tripElement = siteHeaderElement.querySelector(`.trip-main`);
+const eventsElement = siteMainElement.querySelector(`.trip-events`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 
-render(tripElement, veiw.createTripInfoTemplate(events.slice(1)), `afterbegin`);
-render(tripControlsFirstElement, veiw.createNavigationControllerTemplate(), `afterend`);
-render(tripControlsSecondElement, veiw.createEventFiltrationTemplate(), `afterend`);
+renderElement(tripElement, tripInfoComponent.getElement(), RENDER_POSITION.AFTERBEGIN);
+renderElement(tripControlsFirstElement, new NavigationControllerView().getElement(), RENDER_POSITION.AFTEREND);
+renderElement(tripControlsSecondElement, new EventFiltrationView().getElement(), RENDER_POSITION.AFTEREND);
+renderElement(tripInfoComponent.getElement(), new TotalPriceView().getElement(), RENDER_POSITION.BEFOREEND);
+renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
+renderElement(eventsElement, daysComponent.getElement(), RENDER_POSITION.BEFOREEND);
 
-const tripInfoElement = tripElement.querySelector(`.trip-info`);
 
-render(tripInfoElement, veiw.createTotalPriceTemplate(), `beforeend`);
+eventsByDays.forEach((eventsByDay, index) => {
+  const dayDate = eventsByDay[0];
+  const dayComponent = new DayView(dayDate, index + 1);
+  const eventsListElement = dayComponent.getElement().querySelector(`#trip-events__list-${index + 1}`);
 
-const siteMainElement = document.querySelector(`.page-main`);
-const eventsElement = siteMainElement.querySelector(`.trip-events`);
+  eventsByDay.slice(1).forEach((event) => {
+    eventsListElement.append(renderEvent(event));
+  });
 
-render(eventsElement, veiw.createSortingTemplate(), `beforeend`);
-render(eventsElement, veiw.createEventEditorTemplate(events[0], DESTINATIONS), `beforeend`);
-render(eventsElement, veiw.createDaysTemplate(), `beforeend`);
-
-const eventDetailsElement = eventsElement.querySelector(`.event__details`);
-const daysElement = eventsElement.querySelector(`.trip-days`);
-
-render(eventDetailsElement, veiw.createEventOffersTemplate(events[0]), `beforeend`);
-render(eventDetailsElement, veiw.createEventDestinationTemplate(events[0]), `beforeend`);
-
-for (let i = 0; i < tripDays.size; i++) {
-  const date = Array.from(tripDays.keys())[i];
-
-  render(daysElement, veiw.createDayTemplate(date, i + 1), `beforeend`);
-
-  const dayElement = daysElement.querySelector(`#trip-events__list-${i + 1}`);
-
-  render(dayElement, tripDays.get(date).map(veiw.createEventTemplate).join(``), `beforeend`);
-}
+  daysComponent.getElement().append(dayComponent.getElement());
+});

@@ -1,7 +1,31 @@
-export const createTotalPriceTemplate = () => {
+import {createElement} from "../utils";
+
+const createTotalPriceTemplate = () => {
   return (
     `<p class="trip-info__cost">
       Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
     </p>`
   );
 };
+
+export default class TotalPriceView {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTotalPriceTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

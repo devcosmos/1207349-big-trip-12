@@ -23,7 +23,7 @@ export const getOffers = (type) => {
       {name: `Add luggage`, id: `luggage`, cost: 30},
       {name: `Switch to comfort`, id: `comfort`, cost: 100},
       {name: `Add meal`, id: `meal`, cost: 15},
-      {name: `Choose seats`, id: `comfort`, cost: 10},
+      {name: `Choose seats`, id: `seats`, cost: 10},
     ];
   } else {
     return [
@@ -40,6 +40,7 @@ const generateDateStart = () => {
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + daysGap);
+  currentDate.setTime(currentDate.getTime() + getRandomInteger(1, 60) * 60 * 1000);
 
   return currentDate;
 };
@@ -52,19 +53,20 @@ const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
 const getRandomListItem = (list) => list[getRandomInteger(0, list.length - 1)];
 
 export const generateEvent = () => {
-  const images = new Array(getRandomInteger(1, 4)).fill().map(generateImage);
+  const images = new Array(getRandomInteger(0, 4)).fill().map(generateImage);
   const eventType = getRandomListItem(EVENT_TYPE_TRANSFER.concat(EVENT_TYPE_ACTIVITY));
   const offers = getOffers(eventType);
   const acceptedOffers = getRandomPartialList(offers);
   const dateStart = generateDateStart();
   const dateEnd = generateDateEnd(dateStart);
+  const text = getRandomInteger() ? getRandomListItem(DESCRIPTIONS) : ``;
 
   return {
     eventType,
     currentDestination: getRandomListItem(DESTINATIONS),
     acceptedOffers,
     description: {
-      text: getRandomListItem(DESCRIPTIONS),
+      text,
       images,
     },
     dateStart,
