@@ -21,5 +21,3 @@ export const RENDER_POSITION = {
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`,
 };
-
-export const THREE_HOURS_IN_TIMESTAMP = 10800000;

@@ -1,4 +1,4 @@
-export const getTimeAtFormat = (date) => {
+export const getTimeAtDefaultFormat = (date) => {
   return date.toLocaleString(`en-US`, {hour12: false, hour: `2-digit`, minute: `2-digit`});
 };
 
