@@ -35,12 +35,16 @@ export const splitEventsByDays = (events) => {
 
   let dayCount = 0;
 
-  for (const event of events) {
-    const date = event.dateStart.setHours(0, 0, 0, 0);
+  const isSameDate = (element, date) => {
+    return element instanceof Date ? element.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0) : false;
+  };
 
-    if (tripDays[dayCount] === undefined) {
+  for (const event of events) {
+    const date = event.dateStart;
+
+    if (tripDays.length === 0) {
       tripDays.push([date, event]);
-    } else if (tripDays[dayCount].includes(date)) {
+    } else if (tripDays[dayCount].some((dayElements) => isSameDate(dayElements, date))) {
       tripDays[dayCount].push(event);
     } else {
       tripDays.push([date, event]);
