@@ -1,5 +1,5 @@
 import {EVENT_COUNT, RENDER_POSITION} from "./const";
-import {TripInfoView, NavigationControllerView, EventFiltrationView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView} from "./view/index";
+import {TripInfoView, NavigationControllerView, EventFiltrationView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView, NoEventView} from "./view/index";
 import {generateEvent, DESTINATIONS} from "./mock/event";
 import {splitEventsByDays, renderElement} from "./utils";
 
@@ -55,9 +55,13 @@ renderElement(tripElement, tripInfoComponent.getElement(), RENDER_POSITION.AFTER
 renderElement(tripControlsFirstElement, new NavigationControllerView().getElement(), RENDER_POSITION.AFTEREND);
 renderElement(tripControlsSecondElement, new EventFiltrationView().getElement(), RENDER_POSITION.AFTEREND);
 renderElement(tripInfoComponent.getElement(), new TotalPriceView().getElement(), RENDER_POSITION.BEFOREEND);
-renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
-renderElement(eventsElement, daysComponent.getElement(), RENDER_POSITION.BEFOREEND);
 
+if (events.length === 0) {
+  renderElement(eventsElement, new NoEventView().getElement(), RENDER_POSITION.BEFOREEND);
+} else {
+  renderElement(eventsElement, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
+  renderElement(eventsElement, daysComponent.getElement(), RENDER_POSITION.BEFOREEND);
+}
 
 eventsByDays.forEach((eventsByDay, index) => {
   const dayDate = eventsByDay[0];
