@@ -7,3 +7,4 @@ export {default as EventEditorView} from "./event-editor";
 export {default as DaysView} from "./days";
 export {default as DayView} from "./day";
 export {default as EventView} from "./event";
+export {default as NoEventView} from "./no-event";
