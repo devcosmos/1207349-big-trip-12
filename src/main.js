@@ -75,6 +75,6 @@ const renderBoard = (container, boardEvents) => {
   });
 };
 
-renderElement(tripControlsFirstElement, new NavigationControllerView(), RENDER_POSITION.AFTERBEGIN);
-renderElement(tripControlsSecondElement, new EventFiltrationView(), RENDER_POSITION.AFTERBEGIN);
+renderElement(tripControlsFirstElement, new NavigationControllerView(), RENDER_POSITION.AFTEREND);
+renderElement(tripControlsSecondElement, new EventFiltrationView(), RENDER_POSITION.AFTEREND);
 renderBoard(eventsElement, events);
