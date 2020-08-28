@@ -4,10 +4,10 @@ import {renderElement, replaceElement} from "../utils/render";
 import {RENDER_POSITION} from "../const";
 import {DESTINATIONS} from "../mock/event";
 
-export default class Board {
-  constructor(boardContainer, tripMainContainer) {
-    this._boardContainer = boardContainer;
-    this._tripMainContainer = tripMainContainer;
+export default class TripPresenter {
+  constructor(eventsContainer, tripContainer) {
+    this._eventsContainer = eventsContainer;
+    this._tripContainer = tripContainer;
 
     this._totalPriceComponent = new TotalPriceView();
     this._sortingComponent = new SortingView();
@@ -21,7 +21,7 @@ export default class Board {
     this._boardEvent = boardEvent.slice();
     this._tripInfoComponent = new TripInfoView(boardEvent);
 
-    renderElement(this._tripMainContainer, this._tripInfoComponent, RENDER_POSITION.AFTERBEGIN);
+    renderElement(this._tripContainer, this._tripInfoComponent, RENDER_POSITION.AFTERBEGIN);
     renderElement(this._tripInfoComponent, this._totalPriceComponent, RENDER_POSITION.BEFOREEND);
 
     this._renderBoard();
@@ -64,7 +64,7 @@ export default class Board {
   }
 
   _renderDays() {
-    renderElement(this._boardContainer, this._daysComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._eventsContainer, this._daysComponent, RENDER_POSITION.BEFOREEND);
 
     splitEventsByDays(this._boardEvent).forEach((eventsByDay, index) => {
       this._dayDate = eventsByDay[0];
@@ -80,11 +80,11 @@ export default class Board {
   }
 
   _renderSorting() {
-    renderElement(this._boardContainer, this._sortingComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._eventsContainer, this._sortingComponent, RENDER_POSITION.BEFOREEND);
   }
 
   _renderNoEdit() {
-    renderElement(this._boardContainer, this._noEventComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._eventsContainer, this._noEventComponent, RENDER_POSITION.BEFOREEND);
   }
 
   _renderBoard() {
