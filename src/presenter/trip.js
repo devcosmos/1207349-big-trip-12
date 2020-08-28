@@ -12,8 +12,6 @@ export default class TripPresenter {
     this._totalPriceComponent = new TotalPriceView();
     this._sortingComponent = new SortingView();
     this._daysComponent = new DaysView();
-    this._eventComponent = new EventView();
-    this._eventEditComponent = new EventEditorView();
     this._noEventComponent = new NoEventView();
   }
 
