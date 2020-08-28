@@ -1,4 +1,4 @@
-import {getDateAtShortFormat} from "../date-formatters";
+import {getDateAtShortFormat} from "../utils/date-formatters";
 import AbstractView from "./abstract";
 
 const getTripRoute = (tripEvents) => {
