@@ -48,19 +48,19 @@ const renderEvent = (event) => {
 const renderBoard = (container, boardEvents) => {
   const tripInfoComponent = new TripInfoView(boardEvents);
 
-  renderElement(tripElement, tripInfoComponent.getElement(), RENDER_POSITION.AFTERBEGIN);
-  renderElement(tripInfoComponent.getElement(), new TotalPriceView().getElement(), RENDER_POSITION.BEFOREEND);
+  renderElement(tripElement, tripInfoComponent, RENDER_POSITION.AFTERBEGIN);
+  renderElement(tripInfoComponent, new TotalPriceView(), RENDER_POSITION.BEFOREEND);
 
   if (boardEvents.length === 0) {
-    renderElement(container, new NoEventView().getElement(), RENDER_POSITION.BEFOREEND);
+    renderElement(container, new NoEventView(), RENDER_POSITION.BEFOREEND);
     return;
   }
 
   const daysComponent = new DaysView();
   const eventsByDays = splitEventsByDays(boardEvents);
 
-  renderElement(container, new SortingView().getElement(), RENDER_POSITION.BEFOREEND);
-  renderElement(container, daysComponent.getElement(), RENDER_POSITION.BEFOREEND);
+  renderElement(container, new SortingView(), RENDER_POSITION.BEFOREEND);
+  renderElement(container, daysComponent, RENDER_POSITION.BEFOREEND);
 
   eventsByDays.forEach((eventsByDay, index) => {
     const dayDate = eventsByDay[0];
@@ -68,13 +68,13 @@ const renderBoard = (container, boardEvents) => {
     const eventsListElement = dayComponent.getElement().querySelector(`#trip-events__list-${index + 1}`);
 
     eventsByDay.slice(1).forEach((event) => {
-      eventsListElement.append(renderEvent(event));
+      renderElement(eventsListElement, renderEvent(event), RENDER_POSITION.BEFOREEND);
     });
 
-    daysComponent.getElement().append(dayComponent.getElement());
+    renderElement(daysComponent, dayComponent, RENDER_POSITION.BEFOREEND);
   });
 };
 
-renderElement(tripControlsFirstElement, new NavigationControllerView().getElement(), RENDER_POSITION.AFTEREND);
-renderElement(tripControlsSecondElement, new EventFiltrationView().getElement(), RENDER_POSITION.AFTEREND);
+renderElement(tripControlsFirstElement, new NavigationControllerView(), RENDER_POSITION.AFTERBEGIN);
+renderElement(tripControlsSecondElement, new EventFiltrationView(), RENDER_POSITION.AFTERBEGIN);
 renderBoard(eventsElement, events);
