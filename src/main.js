@@ -2,7 +2,7 @@ import {EVENT_COUNT, RENDER_POSITION} from "./const";
 import {TripInfoView, NavigationControllerView, EventFiltrationView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView, NoEventView} from "./view/index";
 import {generateEvent, DESTINATIONS} from "./mock/event";
 import {splitEventsByDays} from "./utils/event";
-import {renderElement} from "./utils/render";
+import {renderElement, replaceElement} from "./utils/render";
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => a.dateStart - b.dateStart);
 
@@ -18,11 +18,11 @@ const renderEvent = (event) => {
   const eventEditComponent = new EventEditorView(event, DESTINATIONS);
 
   const replacePointToForm = () => {
-    eventComponent.getElement().parentElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    replaceElement(eventEditComponent, eventComponent);
   };
 
   const replaceFormToPoint = () => {
-    eventEditComponent.getElement().parentElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    replaceElement(eventComponent, eventEditComponent);
   };
 
   const onEscKeyDown = (evt) => {
