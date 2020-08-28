@@ -164,9 +164,21 @@ export default class EventEditorView extends AbstractView {
     super();
     this._event = event;
     this._cities = cities;
+    this._callback = {};
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return createEventEditorTemplate(this._event, this._cities);
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 }

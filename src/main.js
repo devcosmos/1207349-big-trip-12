@@ -13,15 +13,15 @@ const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 
 const renderEvent = (event) => {
-  const eventComponent = new EventView(event).getElement();
-  const eventEditComponent = new EventEditorView(event, DESTINATIONS).getElement();
+  const eventComponent = new EventView(event);
+  const eventEditComponent = new EventEditorView(event, DESTINATIONS);
 
   const replacePointToForm = () => {
-    eventComponent.parentElement.replaceChild(eventEditComponent, eventComponent);
+    eventComponent.getElement().parentElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
   };
 
   const replaceFormToPoint = () => {
-    eventEditComponent.parentElement.replaceChild(eventComponent, eventEditComponent);
+    eventEditComponent.getElement().parentElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
   };
 
   const onEscKeyDown = (evt) => {
@@ -31,21 +31,17 @@ const renderEvent = (event) => {
     }
   };
 
-  eventComponent
-    .querySelector(`.event__rollup-btn`)
-    .addEventListener(`click`, () => {
-      replacePointToForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
+  eventComponent.setEditClickHandler(() => {
+    replacePointToForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
 
-  eventEditComponent
-    .addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
+  eventEditComponent.setFormSubmitHandler(() => {
+    replaceFormToPoint();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
 
-  return eventComponent;
+  return eventComponent.getElement();
 };
 
 const renderBoard = (container, boardEvents) => {
