@@ -1,5 +1,5 @@
 import {EVENT_TYPE_ACTIVITY} from "../const";
-import AbstractView from "./abstract.js";
+import AbstractView from "./abstract";
 import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 
 const createAcceptedOffersTemplate = (offers) => {

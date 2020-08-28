@@ -1,5 +1,5 @@
 import {getDateAtShortFormat} from "../date-formatters";
-import AbstractView from "./abstract.js";
+import AbstractView from "./abstract";
 
 const getTripRoute = (tripEvents) => {
   const cities = tripEvents.map((event) => event.currentDestination);

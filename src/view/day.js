@@ -1,4 +1,4 @@
-import AbstractView from "./abstract.js";
+import AbstractView from "./abstract";
 import {getDateAtShortFormat, getDateAtSystemFormat} from "../date-formatters";
 
 const createDayTemplate = (date, index) => {
