@@ -1,5 +1,5 @@
 import {EVENT_TYPE_ACTIVITY} from "../const";
-import {createElement} from "../utils";
+import AbstractView from "./abstract.js";
 import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
 
 const createAcceptedOffersTemplate = (offers) => {
@@ -57,25 +57,13 @@ const createEventTemplate = (event) => {
   );
 };
 
-export default class EventView {
+export default class EventView extends AbstractView {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
   }
 
   getTemplate() {
     return createEventTemplate(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

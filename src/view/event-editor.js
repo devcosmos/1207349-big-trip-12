@@ -1,6 +1,6 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
+import AbstractView from "./abstract.js";
 import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../date-formatters";
-import {createElement} from "../utils";
 import {getOffers} from "../mock/event";
 
 const BLANK_EVENT = {
@@ -159,26 +159,14 @@ const createEventEditorTemplate = (event, cities) => {
   );
 };
 
-export default class EventEditorView {
+export default class EventEditorView extends AbstractView {
   constructor(event = BLANK_EVENT, cities) {
-    this._element = null;
+    super();
     this._event = event;
     this._cities = cities;
   }
 
   getTemplate() {
     return createEventEditorTemplate(this._event, this._cities);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
