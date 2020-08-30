@@ -66,10 +66,11 @@ export default class TripPresenter {
 
     splitEventsByDays(this._boardEvent).forEach((eventsByDay, index) => {
       this._dayDate = eventsByDay[0];
+      this._dayEvent = eventsByDay[1];
       this._dayComponent = new DayView(this._dayDate, index + 1);
       this._eventsListElement = this._dayComponent.getElement().querySelector(`#trip-events__list-${index + 1}`);
 
-      eventsByDay.slice(1).forEach((event) => {
+      this._dayEvent.forEach((event) => {
         this._renderEvent(event);
       });
 
