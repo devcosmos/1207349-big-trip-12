@@ -16,7 +16,7 @@ export default class TripPresenter {
   }
 
   init(boardEvent) {
-    this._boardEvent = boardEvent.slice();
+    this._boardEvent = boardEvent;
     this._tripInfoComponent = new TripInfoView(boardEvent);
 
     renderElement(this._tripContainer, this._tripInfoComponent, RENDER_POSITION.AFTERBEGIN);
