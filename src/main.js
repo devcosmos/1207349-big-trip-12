@@ -1,4 +1,4 @@
-import {EVENT_COUNT, RENDER_POSITION} from "./const";
+import {EVENT_COUNT, RenderPosition} from "./const";
 import {NavigationControllerView, EventFiltrationView} from "./view/index";
 import {generateEvent} from "./mock/event";
 import {renderElement} from "./utils/render";
@@ -15,7 +15,7 @@ const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2
 
 const tripPresenter = new TripPresenter(eventsElement, tripElement);
 
-renderElement(tripControlsFirstElement, new NavigationControllerView(), RENDER_POSITION.AFTEREND);
-renderElement(tripControlsSecondElement, new EventFiltrationView(), RENDER_POSITION.AFTEREND);
+renderElement(tripControlsFirstElement, new NavigationControllerView(), RenderPosition.AFTEREND);
+renderElement(tripControlsSecondElement, new EventFiltrationView(), RenderPosition.AFTEREND);
 
 tripPresenter.init(events);

@@ -1,7 +1,7 @@
 import {TripInfoView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView, NoEventView} from "../view/index";
 import {splitEventsByDays} from "../utils/event";
 import {renderElement, replaceElement} from "../utils/render";
-import {RENDER_POSITION} from "../const";
+import {RenderPosition} from "../const";
 import {DESTINATIONS} from "../mock/event";
 
 export default class TripPresenter {
@@ -19,8 +19,8 @@ export default class TripPresenter {
     this._boardEvent = boardEvent;
     this._tripInfoComponent = new TripInfoView(boardEvent);
 
-    renderElement(this._tripContainer, this._tripInfoComponent, RENDER_POSITION.AFTERBEGIN);
-    renderElement(this._tripInfoComponent, this._totalPriceComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._tripContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
+    renderElement(this._tripInfoComponent, this._totalPriceComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
   }
@@ -54,15 +54,15 @@ export default class TripPresenter {
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    renderElement(this._eventsListElement, eventComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._eventsListElement, eventComponent, RenderPosition.BEFOREEND);
   }
 
   _renderDay() {
-    renderElement(this._daysComponent, this._dayComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._daysComponent, this._dayComponent, RenderPosition.BEFOREEND);
   }
 
   _renderDays() {
-    renderElement(this._eventsContainer, this._daysComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._eventsContainer, this._daysComponent, RenderPosition.BEFOREEND);
 
     splitEventsByDays(this._boardEvent).forEach((eventsByDay, index) => {
       this._dayDate = eventsByDay[0];
@@ -79,11 +79,11 @@ export default class TripPresenter {
   }
 
   _renderSorting() {
-    renderElement(this._eventsContainer, this._sortingComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._eventsContainer, this._sortingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderNoEdit() {
-    renderElement(this._eventsContainer, this._noEventComponent, RENDER_POSITION.BEFOREEND);
+    renderElement(this._eventsContainer, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
   _renderBoard() {

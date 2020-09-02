@@ -1,4 +1,4 @@
-import {RENDER_POSITION} from "../const";
+import {RenderPosition} from "../const";
 import Abstract from "../view/abstract.js";
 
 export const renderElement = (container, child, place) => {
@@ -11,13 +11,13 @@ export const renderElement = (container, child, place) => {
   }
 
   switch (place) {
-    case RENDER_POSITION.AFTERBEGIN:
+    case RenderPosition.AFTERBEGIN:
       container.prepend(child);
       break;
-    case RENDER_POSITION.BEFOREEND:
+    case RenderPosition.BEFOREEND:
       container.append(child);
       break;
-    case RENDER_POSITION.AFTEREND:
+    case RenderPosition.AFTEREND:
       container.insertAdjacentElement(place, child);
       break;
   }
