@@ -3,18 +3,18 @@ export const splitEventsByDays = (events) => {
 
   let dayCount = 0;
 
-  for (const event of events) {
+  events.forEach((event) => {
     const date = event.dateStart;
 
     if (tripDays.length === 0) {
       tripDays.push([date, [event]]);
-    } else if (tripDays[dayCount][0].setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)) {
+    } else if (tripDays[dayCount][0].toDateString() === date.toDateString()) {
       tripDays[dayCount][1].push(event);
     } else {
       tripDays.push([date, [event]]);
       dayCount++;
     }
-  }
+  });
 
   return tripDays;
 };
