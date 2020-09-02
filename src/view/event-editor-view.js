@@ -1,5 +1,5 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import AbstractView from "./abstract";
+import AbstractView from "./abstract-view";
 import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-formatters";
 import {getOffers} from "../mock/event";
 

@@ -1,12 +1,12 @@
 import {RenderPosition} from "../const";
-import Abstract from "../view/abstract.js";
+import AbstractView from "../view/abstract-view";
 
 export const renderElement = (container, child, place) => {
-  if (container instanceof Abstract) {
+  if (container instanceof AbstractView) {
     container = container.getElement();
   }
 
-  if (child instanceof Abstract) {
+  if (child instanceof AbstractView) {
     child = child.getElement();
   }
 
@@ -25,7 +25,7 @@ export const renderElement = (container, child, place) => {
 
 export const replaceElement = (newChild, oldChild) => {
 
-  if (!(oldChild instanceof Abstract) || !(newChild instanceof Abstract)) {
+  if (!(oldChild instanceof AbstractView) || !(newChild instanceof AbstractView)) {
     throw new Error(`Can't replace unexisting elements`);
   }
 

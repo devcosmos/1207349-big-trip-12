@@ -2,7 +2,7 @@ import {EVENT_COUNT, RenderPosition} from "./const";
 import {NavigationControllerView, EventFiltrationView} from "./view/index";
 import {generateEvent} from "./mock/event";
 import {renderElement} from "./utils/render";
-import TripPresenter from "./presenter/trip.js";
+import {TripPresenter} from "./presenter/index";
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => a.dateStart - b.dateStart);
 
