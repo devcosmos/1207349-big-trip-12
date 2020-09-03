@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract-view";
 
 const createEventFiltrationTemplate = () => {
   return (
@@ -23,25 +23,8 @@ const createEventFiltrationTemplate = () => {
   );
 };
 
-export default class EventFiltrationView {
-  constructor() {
-    this._element = null;
-  }
-
+export default class EventFiltrationView extends AbstractView {
   getTemplate() {
     return createEventFiltrationTemplate();
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
-

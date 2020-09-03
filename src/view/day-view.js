@@ -1,5 +1,5 @@
-import {createElement} from "../utils";
-import {getDateAtShortFormat, getDateAtSystemFormat} from "../date-formatters";
+import AbstractView from "./abstract-view";
+import {getDateAtShortFormat, getDateAtSystemFormat} from "../utils/date-formatters";
 
 const createDayTemplate = (date, index) => {
   const dateAtShortFormat = getDateAtShortFormat(date);
@@ -16,26 +16,14 @@ const createDayTemplate = (date, index) => {
   );
 };
 
-export default class DayView {
+export default class DayView extends AbstractView {
   constructor(date, index) {
-    this._element = null;
+    super();
     this._date = date;
     this._index = index;
   }
 
   getTemplate() {
     return createDayTemplate(this._date, this._index);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

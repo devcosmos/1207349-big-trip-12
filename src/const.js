@@ -16,7 +16,7 @@ export const EVENT_TYPE_ACTIVITY = [
   `Restaurant`
 ];
 
-export const RENDER_POSITION = {
+export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`,

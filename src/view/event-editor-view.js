@@ -1,6 +1,6 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../date-formatters";
-import {createElement} from "../utils";
+import AbstractView from "./abstract-view";
+import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-formatters";
 import {getOffers} from "../mock/event";
 
 const BLANK_EVENT = {
@@ -159,26 +159,26 @@ const createEventEditorTemplate = (event, cities) => {
   );
 };
 
-export default class EventEditorView {
+export default class EventEditorView extends AbstractView {
   constructor(event = BLANK_EVENT, cities) {
-    this._element = null;
+    super();
     this._event = event;
     this._cities = cities;
+    this._callback = {};
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return createEventEditorTemplate(this._event, this._cities);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 }

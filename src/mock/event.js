@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomPartialList} from "../utils";
+import {getRandomInteger, getRandomPartialList} from "../utils/common";
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
 
 const DESCRIPTIONS = [

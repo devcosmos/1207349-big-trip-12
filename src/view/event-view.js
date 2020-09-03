@@ -1,6 +1,6 @@
 import {EVENT_TYPE_ACTIVITY} from "../const";
-import {createElement} from "../utils";
-import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../date-formatters";
+import AbstractView from "./abstract-view";
+import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../utils/date-formatters";
 
 const createAcceptedOffersTemplate = (offers) => {
   return (
@@ -57,25 +57,25 @@ const createEventTemplate = (event) => {
   );
 };
 
-export default class EventView {
+export default class EventView extends AbstractView {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
+    this._callback = {};
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEventTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler() {
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }
+

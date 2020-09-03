@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract-view";
 
 const createNavigationControllerTemplate = () => {
   return (
@@ -9,24 +9,8 @@ const createNavigationControllerTemplate = () => {
   );
 };
 
-export default class NavigationControllerView {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NavigationControllerView extends AbstractView {
   getTemplate() {
     return createNavigationControllerTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

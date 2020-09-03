@@ -1,5 +1,5 @@
-import {getDateAtShortFormat} from "../date-formatters";
-import {createElement} from "../utils";
+import {getDateAtShortFormat} from "../utils/date-formatters";
+import AbstractView from "./abstract-view";
 
 const getTripRoute = (tripEvents) => {
   const cities = tripEvents.map((event) => event.currentDestination);
@@ -28,25 +28,13 @@ const createTripInfoTemplate = (tripEvents) => {
   );
 };
 
-export default class TripInfoView {
+export default class TripInfoView extends AbstractView {
   constructor(tripEvents = null) {
-    this._element = null;
+    super();
     this._tripEvents = tripEvents;
   }
 
   getTemplate() {
     return createTripInfoTemplate(this._tripEvents);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
