@@ -58,10 +58,12 @@ export default class TripPresenter {
   }
 
   _renderDay() {
-    renderElement(this._daysComponent, this._dayComponent, RenderPosition.BEFOREEND);
+    renderElement(this._boardFragment, this._dayComponent, RenderPosition.BEFOREEND);
   }
 
   _renderDays() {
+    this._boardFragment = document.createDocumentFragment();
+
     renderElement(this._eventsContainer, this._daysComponent, RenderPosition.BEFOREEND);
 
     splitEventsByDays(this._boardEvent).forEach((eventsByDay, index) => {
@@ -76,6 +78,8 @@ export default class TripPresenter {
 
       this._renderDay();
     });
+
+    renderElement(this._daysComponent, this._boardFragment, RenderPosition.BEFOREEND);
   }
 
   _renderSorting() {
