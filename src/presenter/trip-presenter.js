@@ -9,32 +9,32 @@ export default class TripPresenter {
     this._eventsContainer = eventsContainer;
     this._tripContainer = tripContainer;
 
-    this._totalPriceComponent = new TotalPriceView();
-    this._sortingComponent = new SortingView();
-    this._daysComponent = new DaysView();
-    this._noEventComponent = new NoEventView();
+    this._totalPriceView = new TotalPriceView();
+    this._sortingView = new SortingView();
+    this._daysView = new DaysView();
+    this._noEventView = new NoEventView();
   }
 
   init(boardEvent) {
     this._boardEvent = boardEvent;
-    this._tripInfoComponent = new TripInfoView(boardEvent);
+    this._tripInfoView = new TripInfoView(boardEvent);
 
-    renderElement(this._tripContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
-    renderElement(this._tripInfoComponent, this._totalPriceComponent, RenderPosition.BEFOREEND);
+    renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
+    renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
 
     this._renderBoard();
   }
 
   _renderEvent(event) {
-    const eventComponent = new EventView(event);
-    const eventEditComponent = new EventEditorView(event, DESTINATIONS);
+    const eventView = new EventView(event);
+    const eventEditView = new EventEditorView(event, DESTINATIONS);
 
     const replacePointToForm = () => {
-      replaceElement(eventEditComponent, eventComponent);
+      replaceElement(eventEditView, eventView);
     };
 
     const replaceFormToPoint = () => {
-      replaceElement(eventComponent, eventEditComponent);
+      replaceElement(eventView, eventEditView);
     };
 
     const onEscKeyDown = (evt) => {
@@ -44,33 +44,33 @@ export default class TripPresenter {
       }
     };
 
-    eventComponent.setEditClickHandler(() => {
+    eventView.setEditClickHandler(() => {
       replacePointToForm();
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    eventEditComponent.setFormSubmitHandler(() => {
+    eventEditView.setFormSubmitHandler(() => {
       replaceFormToPoint();
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    renderElement(this._eventsListElement, eventComponent, RenderPosition.BEFOREEND);
+    renderElement(this._eventsListElement, eventView, RenderPosition.BEFOREEND);
   }
 
   _renderDay() {
-    renderElement(this._boardFragment, this._dayComponent, RenderPosition.BEFOREEND);
+    renderElement(this._boardFragment, this._dayView, RenderPosition.BEFOREEND);
   }
 
   _renderDays() {
     this._boardFragment = document.createDocumentFragment();
 
-    renderElement(this._eventsContainer, this._daysComponent, RenderPosition.BEFOREEND);
+    renderElement(this._eventsContainer, this._daysView, RenderPosition.BEFOREEND);
 
     splitEventsByDays(this._boardEvent).forEach((eventsByDay, index) => {
       this._dayDate = eventsByDay[0];
       this._dayEvents = eventsByDay[1];
-      this._dayComponent = new DayView(this._dayDate, index + 1);
-      this._eventsListElement = this._dayComponent.getElement().querySelector(`#trip-events__list-${index + 1}`);
+      this._dayView = new DayView(this._dayDate, index + 1);
+      this._eventsListElement = this._dayView.getElement().querySelector(`#trip-events__list-${index + 1}`);
 
       this._dayEvents.forEach((event) => {
         this._renderEvent(event);
@@ -79,15 +79,15 @@ export default class TripPresenter {
       this._renderDay();
     });
 
-    renderElement(this._daysComponent, this._boardFragment, RenderPosition.BEFOREEND);
+    renderElement(this._daysView, this._boardFragment, RenderPosition.BEFOREEND);
   }
 
   _renderSorting() {
-    renderElement(this._eventsContainer, this._sortingComponent, RenderPosition.BEFOREEND);
+    renderElement(this._eventsContainer, this._sortingView, RenderPosition.BEFOREEND);
   }
 
   _renderNoEdit() {
-    renderElement(this._eventsContainer, this._noEventComponent, RenderPosition.BEFOREEND);
+    renderElement(this._eventsContainer, this._noEventView, RenderPosition.BEFOREEND);
   }
 
   _renderBoard() {
