@@ -21,3 +21,9 @@ export const RenderPosition = {
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`,
 };
+
+export const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};
