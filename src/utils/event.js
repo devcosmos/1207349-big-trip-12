@@ -23,11 +23,11 @@ export const sortEventsByTime = (a, b) => {
   const durationA = (Date.parse(a.dateEnd) - Date.parse(a.dateStart));
   const durationB = (Date.parse(b.dateEnd) - Date.parse(b.dateStart));
 
-  if (durationA < durationB) {
+  if (durationA > durationB) {
     return -1;
   }
 
-  if (durationA > durationB) {
+  if (durationA < durationB) {
     return 1;
   }
 
@@ -35,5 +35,5 @@ export const sortEventsByTime = (a, b) => {
 };
 
 export const sortEventsByPrice = (a, b) => {
-  return a.cost - b.cost;
+  return b.cost - a.cost;
 };
