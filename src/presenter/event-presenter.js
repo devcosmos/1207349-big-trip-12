@@ -1,5 +1,5 @@
 import {EventEditorView, EventView} from "../view/index";
-import {renderElement, replaceElement} from "../utils/render";
+import {renderElement, replaceElement, removeElement} from "../utils/render";
 import {RenderPosition} from "../const";
 import {DESTINATIONS} from "../mock/event";
 
@@ -16,13 +16,35 @@ export default class EventPresenter {
   }
 
   init(event) {
+    const prevEventView = this._eventView;
+    const prevEventEditView = this._eventEditView;
+
     this._eventView = new EventView(event);
     this._eventEditView = new EventEditorView(event, DESTINATIONS);
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditView.setFormSubmitHandler(this._handleFormSubmit);
 
-    renderElement(this._eventListContainer, this._eventView, RenderPosition.BEFOREEND);
+    if (prevEventView === null || prevEventEditView === null) {
+      renderElement(this._eventListContainer, this._eventView, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._eventListContainer.getElement().contains(prevEventView.getElement())) {
+      replaceElement(this._eventView, prevEventView);
+    }
+
+    if (this._eventListContainer.getElement().contains(prevEventEditView.getElement())) {
+      replaceElement(this._eventEditView, prevEventEditView);
+    }
+
+    removeElement(prevEventView);
+    removeElement(prevEventEditView);
+  }
+
+  destroy() {
+    removeElement(this._eventView);
+    removeElement(this._eventEditView);
   }
 
   _replacePointToForm() {
