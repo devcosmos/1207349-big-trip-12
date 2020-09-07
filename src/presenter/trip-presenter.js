@@ -1,6 +1,7 @@
 import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice} from "../utils/event";
 import {renderElement, removeElement} from "../utils/render";
+import {updateItem} from "../utils/common";
 import {RenderPosition, SortType} from "../const";
 import {EventPresenter} from "./index";
 
@@ -16,6 +17,7 @@ export default class TripPresenter {
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
 
+    this._handleEventChange = this._handleEventChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
@@ -32,7 +34,7 @@ export default class TripPresenter {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListElement);
+    const eventPresenter = new EventPresenter(this._eventListElement, this._handleEventChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -96,6 +98,12 @@ export default class TripPresenter {
     }
 
     this._currentSortType = sortType;
+  }
+
+  _handleEventChange(updatedEvent) {
+    this._events = updateItem(this._events, updatedEvent);
+    this._sourcedEvents = updateItem(this._sourcedEvents, updatedEvent);
+    this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
   _handleSortTypeChange(sortType) {

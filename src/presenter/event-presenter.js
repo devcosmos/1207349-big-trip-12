@@ -4,8 +4,9 @@ import {RenderPosition} from "../const";
 import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {
-  constructor(eventListContainer) {
+  constructor(eventListContainer, changeData) {
     this._eventListContainer = eventListContainer;
+    this._changeData = changeData;
 
     this._eventView = null;
     this._eventEditView = null;
@@ -16,6 +17,8 @@ export default class EventPresenter {
   }
 
   init(event) {
+    this._event = event;
+
     const prevEventView = this._eventView;
     const prevEventEditView = this._eventEditView;
 
@@ -30,11 +33,11 @@ export default class EventPresenter {
       return;
     }
 
-    if (this._eventListContainer.getElement().contains(prevEventView.getElement())) {
+    if (this._eventListContainer.contains(prevEventView.getElement())) {
       replaceElement(this._eventView, prevEventView);
     }
 
-    if (this._eventListContainer.getElement().contains(prevEventEditView.getElement())) {
+    if (this._eventListContainer.contains(prevEventEditView.getElement())) {
       replaceElement(this._eventEditView, prevEventEditView);
     }
 
@@ -67,7 +70,8 @@ export default class EventPresenter {
     this._replacePointToForm();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(event) {
+    this._changeData(event);
     this._replaceFormToPoint();
   }
 }
