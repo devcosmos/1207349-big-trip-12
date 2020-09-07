@@ -1,6 +1,6 @@
 import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice} from "../utils/event";
-import {renderElement} from "../utils/render";
+import {renderElement, removeElement} from "../utils/render";
 import {RenderPosition, SortType} from "../const";
 import {EventPresenter} from "./index";
 
@@ -9,6 +9,7 @@ export default class TripPresenter {
     this._eventsContainer = eventsContainer;
     this._tripContainer = tripContainer;
     this._currentSortType = SortType.EVENT;
+    this._eventPresenter = {};
 
     this._totalPriceView = new TotalPriceView();
     this._sortingView = new SortingView();
@@ -33,6 +34,7 @@ export default class TripPresenter {
   _renderEvent(event) {
     const eventPresenter = new EventPresenter(this._eventListElement);
     eventPresenter.init(event);
+    this._eventPresenter[event.id] = eventPresenter;
   }
 
   _renderDay(events) {
@@ -76,7 +78,9 @@ export default class TripPresenter {
   }
 
   _clearEventList() {
-    this._daysView.getElement().innerHTML = ``;
+    Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
+    removeElement(this._daysView);
+    this._eventPresenter = {};
   }
 
   _sortEvent(sortType) {
