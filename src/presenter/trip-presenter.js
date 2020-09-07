@@ -1,8 +1,8 @@
-import {TripInfoView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView, NoEventView} from "../view/index";
+import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice} from "../utils/event";
-import {renderElement, replaceElement} from "../utils/render";
+import {renderElement} from "../utils/render";
 import {RenderPosition, SortType} from "../const";
-import {DESTINATIONS} from "../mock/event";
+import {EventPresenter} from "./index";
 
 export default class TripPresenter {
   constructor(eventsContainer, tripContainer) {
@@ -31,35 +31,8 @@ export default class TripPresenter {
   }
 
   _renderEvent(event) {
-    const eventView = new EventView(event);
-    const eventEditView = new EventEditorView(event, DESTINATIONS);
-
-    const replacePointToForm = () => {
-      replaceElement(eventEditView, eventView);
-    };
-
-    const replaceFormToPoint = () => {
-      replaceElement(eventView, eventEditView);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape`) {
-        replaceFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    eventView.setEditClickHandler(() => {
-      replacePointToForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    eventEditView.setFormSubmitHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    renderElement(this._eventListElement, eventView, RenderPosition.BEFOREEND);
+    const eventPresenter = new EventPresenter(this._eventListElement);
+    eventPresenter.init(event);
   }
 
   _renderDay(events) {
