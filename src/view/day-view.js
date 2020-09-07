@@ -2,14 +2,11 @@ import AbstractView from "./abstract-view";
 import {getDateAtShortFormat, getDateAtSystemFormat} from "../utils/date-formatters";
 
 const createDayTemplate = (date, index) => {
-  const dateAtShortFormat = getDateAtShortFormat(date);
-  const dateAtSystemFormat = getDateAtSystemFormat(date);
-
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${index}</span>
-        <time class="day__date" datetime="${dateAtSystemFormat}">${dateAtShortFormat}</time>
+        ${date === null ? `` : `<span class="day__counter">${index}</span>
+        <time class="day__date" datetime="${getDateAtSystemFormat(date)}">${getDateAtShortFormat(date)}</time>`}
       </div>
       <ul class="trip-events__list" id="trip-events__list-${index}"></ul>
     </li>`
@@ -17,7 +14,7 @@ const createDayTemplate = (date, index) => {
 };
 
 export default class DayView extends AbstractView {
-  constructor(date, index) {
+  constructor(date = null, index = 1) {
     super();
     this._date = date;
     this._index = index;

@@ -18,3 +18,22 @@ export const splitEventsByDays = (events) => {
 
   return tripDays;
 };
+
+export const sortEventsByDuration = (a, b) => {
+  const durationA = (Date.parse(a.dateEnd) - Date.parse(a.dateStart));
+  const durationB = (Date.parse(b.dateEnd) - Date.parse(b.dateStart));
+
+  if (durationA > durationB) {
+    return -1;
+  }
+
+  if (durationA < durationB) {
+    return 1;
+  }
+
+  return 0;
+};
+
+export const sortEventsByPrice = (a, b) => {
+  return b.cost - a.cost;
+};
