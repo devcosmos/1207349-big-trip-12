@@ -62,7 +62,11 @@ export default class TripPresenter {
     renderElement(this._eventListElement, eventView, RenderPosition.BEFOREEND);
   }
 
-  _renderDay() {
+  _renderDay(events) {
+    events.forEach((event) => {
+      this._renderEvent(event);
+    });
+
     renderElement(this._tripFragment, this._dayView, RenderPosition.BEFOREEND);
   }
 
@@ -73,11 +77,7 @@ export default class TripPresenter {
       this._dayView = new DayView(this._dayDate, index + 1);
       this._eventListElement = this._dayView.getElement().querySelector(`#trip-events__list-${index + 1}`);
 
-      this._dayEvents.forEach((event) => {
-        this._renderEvent(event);
-      });
-
-      this._renderDay();
+      this._renderDay(this._dayEvents);
     });
   }
 
@@ -85,11 +85,7 @@ export default class TripPresenter {
     this._dayView = new DayView();
     this._eventListElement = this._dayView.getElement().querySelector(`#trip-events__list-1`);
 
-    this._events.forEach((event) => {
-      this._renderEvent(event);
-    });
-
-    this._renderDay();
+    this._renderDay(this._events);
   }
 
   _renderEventList() {
