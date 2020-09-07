@@ -1,5 +1,5 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import AbstractView from "./abstract-view";
+import SmartView from "./smart-view";
 import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-formatters";
 import {getOffers} from "../mock/event";
 
@@ -159,22 +159,43 @@ const createEventEditorTemplate = (event, cities) => {
   );
 };
 
-export default class EventEditorView extends AbstractView {
+export default class EventEditorView extends SmartView {
   constructor(event = BLANK_EVENT, cities) {
     super();
-    this._event = event;
+    this._data = Object.assign({}, event);
+
     this._cities = cities;
     this._callback = {};
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._event, this._cities);
+    return createEventEditorTemplate(this._data, this._cities);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._priceInputHandler);
+  }
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      cost: evt.target.value
+    }, true);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._event);
+    this._callback.formSubmit(this._data);
   }
 
   setFormSubmitHandler(callback) {
