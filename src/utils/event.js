@@ -19,7 +19,7 @@ export const splitEventsByDays = (events) => {
   return tripDays;
 };
 
-export const sortEventsByTime = (a, b) => {
+export const sortEventsByDuration = (a, b) => {
   const durationA = (Date.parse(a.dateEnd) - Date.parse(a.dateStart));
   const durationB = (Date.parse(b.dateEnd) - Date.parse(b.dateStart));
 

@@ -1,5 +1,5 @@
 import {TripInfoView, TotalPriceView, SortingView, EventEditorView, DaysView, DayView, EventView, NoEventView} from "../view/index";
-import {splitEventsByDays, sortEventsByTime, sortEventsByPrice} from "../utils/event";
+import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice} from "../utils/event";
 import {renderElement, replaceElement} from "../utils/render";
 import {RenderPosition, SortType} from "../const";
 import {DESTINATIONS} from "../mock/event";
@@ -18,16 +18,16 @@ export default class TripPresenter {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(boardEvent) {
-    this._boardEvent = boardEvent.slice();
-    this._sourcedBoardEvent = boardEvent.slice();
+  init(events) {
+    this._events = events.slice();
+    this._sourcedEvents = events.slice();
 
-    this._tripInfoView = new TripInfoView(boardEvent);
+    this._tripInfoView = new TripInfoView(events);
 
     renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
     renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
 
-    this._renderBoard();
+    this._renderTrip();
   }
 
   _renderEvent(event) {
@@ -63,11 +63,11 @@ export default class TripPresenter {
   }
 
   _renderDay() {
-    renderElement(this._boardFragment, this._dayView, RenderPosition.BEFOREEND);
+    renderElement(this._tripFragment, this._dayView, RenderPosition.BEFOREEND);
   }
 
   _renderDays() {
-    splitEventsByDays(this._boardEvent).forEach((eventsByDay, index) => {
+    splitEventsByDays(this._events).forEach((eventsByDay, index) => {
       this._dayDate = eventsByDay[0];
       this._dayEvents = eventsByDay[1];
       this._dayView = new DayView(this._dayDate, index + 1);
@@ -85,7 +85,7 @@ export default class TripPresenter {
     this._dayView = new DayView();
     this._eventListElement = this._dayView.getElement().querySelector(`#trip-events__list-1`);
 
-    this._boardEvent.forEach((event) => {
+    this._events.forEach((event) => {
       this._renderEvent(event);
     });
 
@@ -93,7 +93,7 @@ export default class TripPresenter {
   }
 
   _renderEventList() {
-    this._boardFragment = document.createDocumentFragment();
+    this._tripFragment = document.createDocumentFragment();
 
     renderElement(this._eventsContainer, this._daysView, RenderPosition.BEFOREEND);
 
@@ -103,7 +103,7 @@ export default class TripPresenter {
       this._renderEvents();
     }
 
-    renderElement(this._daysView, this._boardFragment, RenderPosition.BEFOREEND);
+    renderElement(this._daysView, this._tripFragment, RenderPosition.BEFOREEND);
   }
 
   _clearEventList() {
@@ -113,13 +113,13 @@ export default class TripPresenter {
   _sortEvent(sortType) {
     switch (sortType) {
       case SortType.TIME:
-        this._boardEvent.sort(sortEventsByTime);
+        this._events.sort(sortEventsByDuration);
         break;
       case SortType.PRICE:
-        this._boardEvent.sort(sortEventsByPrice);
+        this._events.sort(sortEventsByPrice);
         break;
       default:
-        this._boardEvent = this._sourcedBoardEvent.slice();
+        this._events = this._sourcedEvents.slice();
     }
 
     this._currentSortType = sortType;
@@ -144,8 +144,8 @@ export default class TripPresenter {
     renderElement(this._eventsContainer, this._noEventView, RenderPosition.BEFOREEND);
   }
 
-  _renderBoard() {
-    if (this._boardEvent.length === 0) {
+  _renderTrip() {
+    if (this._events.length === 0) {
       this._renderNoEdit();
       return;
     }
