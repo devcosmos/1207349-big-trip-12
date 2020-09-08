@@ -4,6 +4,8 @@ import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-form
 import {getOffers} from "../mock/event";
 
 const BLANK_EVENT = {
+  id: 1,
+  isFavorite: false,
   eventType: `Taxi`,
   currentDestination: null,
   acceptedOffers: [],
@@ -108,7 +110,7 @@ const createEventDescriptionTemplate = (description) => {
 };
 
 const createEventEditorTemplate = (event, cities) => {
-  const {eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
+  const {isFavorite, eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination);
@@ -147,6 +149,16 @@ const createEventEditorTemplate = (event, cities) => {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+        <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
+        <label class="event__favorite-btn" for="event-favorite">
+          <span class="visually-hidden">Add to favorite</span>
+          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
+          </svg>
+        </label>
+        <button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>
       </header>
       <section class="event__details">
 
@@ -172,6 +184,7 @@ export default class EventEditorView extends SmartView {
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
+    this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -190,6 +203,8 @@ export default class EventEditorView extends SmartView {
       .addEventListener(`input`, this._priceInputHandler);
     this.getElement().querySelector(`.event__input--destination`)
       .addEventListener(`input`, this._destinationInputHandler);
+    this.getElement().querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`input`, this._favoriteChangeHandler);
     this.getElement().querySelector(`.event__type-list`)
       .addEventListener(`click`, this._eventTypeChangeHandler);
     this.getElement().querySelector(`.event__available-offers`)
@@ -197,16 +212,20 @@ export default class EventEditorView extends SmartView {
   }
 
   _priceInputHandler(evt) {
-    evt.preventDefault();
     this.updateData({
       cost: evt.target.value
     }, true);
   }
 
   _destinationInputHandler(evt) {
-    evt.preventDefault();
     this.updateData({
       currentDestination: evt.target.value
+    }, true);
+  }
+
+  _favoriteChangeHandler() {
+    this.updateData({
+      isFavorite: !this._data.isFavorite
     }, true);
   }
 

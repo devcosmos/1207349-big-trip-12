@@ -64,6 +64,7 @@ export const generateEvent = () => {
 
   return {
     id: generateId(),
+    isFavorite: getRandomInteger(),
     eventType,
     currentDestination: getRandomListItem(DESTINATIONS),
     acceptedOffers,
