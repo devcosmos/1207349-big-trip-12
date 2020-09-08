@@ -62,6 +62,7 @@ export default class EventPresenter {
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape`) {
+      this._eventEditView.reset(this._event);
       this._replaceFormToPoint();
     }
   }

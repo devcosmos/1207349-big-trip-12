@@ -189,6 +189,10 @@ export default class EventEditorView extends SmartView {
     this._setInnerHandlers();
   }
 
+  reset(event) {
+    this.updateData(event);
+  }
+
   getTemplate() {
     return createEventEditorTemplate(this._data, this._cities);
   }
@@ -244,7 +248,7 @@ export default class EventEditorView extends SmartView {
     //   newAcceptedOffers.push(offer)
     // }
 
-    let newAcceptedOffers = this._data.acceptedOffers;
+    let newAcceptedOffers = this._data.acceptedOffers.slice();
 
     if (evt.target.checked) {
       newAcceptedOffers.push(offer);
