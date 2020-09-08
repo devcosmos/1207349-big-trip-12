@@ -79,7 +79,7 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
             class="event__offer-checkbox  visually-hidden" 
             id="event-offer-${i}" 
             type="checkbox" 
-            name="event-offer-${offer.name.split(` `).join(`-`).toLocaleLowerCase()}"
+            name="${offer.name}"
             ${acceptedOffers.some((acceptedOffer) => acceptedOffer.name === offer.name) ? `checked` : ``}>
           <label class="event__offer-label" for="event-offer-${i}">
             <span class="event__offer-title">${offer.name}</span>
@@ -171,6 +171,7 @@ export default class EventEditorView extends SmartView {
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -191,6 +192,8 @@ export default class EventEditorView extends SmartView {
       .addEventListener(`input`, this._destinationInputHandler);
     this.getElement().querySelector(`.event__type-list`)
       .addEventListener(`click`, this._eventTypeChangeHandler);
+    this.getElement().querySelector(`.event__available-offers`)
+      .addEventListener(`click`, this._offersChangeHandler);
   }
 
   _priceInputHandler(evt) {
@@ -204,6 +207,34 @@ export default class EventEditorView extends SmartView {
     evt.preventDefault();
     this.updateData({
       currentDestination: evt.target.value
+    }, true);
+  }
+
+  _offersChangeHandler(evt) {
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+
+    const offers = getOffers(this._data.eventType);
+    const offer = offers.find((element) => element.name === evt.target.name);
+
+    // const newAcceptedOffers = evt.target.checked
+    //   ? this._data.acceptedOffers
+    //   : this._data.acceptedOffers.filter((item) => item.name !== offer.name);
+    // if (evt.target.checked) {
+    //   newAcceptedOffers.push(offer)
+    // }
+
+    let newAcceptedOffers = this._data.acceptedOffers;
+
+    if (evt.target.checked) {
+      newAcceptedOffers.push(offer);
+    } else {
+      newAcceptedOffers = newAcceptedOffers.filter((item) => item.name !== offer.name);
+    }
+
+    this.updateData({
+      acceptedOffers: newAcceptedOffers
     }, true);
   }
 
