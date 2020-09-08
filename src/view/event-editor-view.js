@@ -74,14 +74,14 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-        ${offers.map((offer) => `<div class="event__offer-selector">
+        ${offers.map((offer, i) => `<div class="event__offer-selector">
           <input 
             class="event__offer-checkbox  visually-hidden" 
-            id="event-offer-${offer.id}" 
+            id="event-offer-${i}" 
             type="checkbox" 
-            name="event-offer-${offer.id}" 
-            ${acceptedOffers.includes(offer) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${offer.id}">
+            name="event-offer-${offer.name.split(` `).join(`-`).toLocaleLowerCase()}"
+            ${acceptedOffers.some((acceptedOffer) => acceptedOffer.name === offer.name) ? `checked` : ``}>
+          <label class="event__offer-label" for="event-offer-${i}">
             <span class="event__offer-title">${offer.name}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
