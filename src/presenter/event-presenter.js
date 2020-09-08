@@ -1,15 +1,17 @@
 import {EventEditorView, EventView} from "../view/index";
 import {renderElement, replaceElement, removeElement} from "../utils/render";
-import {RenderPosition} from "../const";
+import {RenderPosition, Mode} from "../const";
 import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {
-  constructor(eventListContainer, changeData) {
+  constructor(eventListContainer, changeData, changeMode) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._eventView = null;
     this._eventEditView = null;
+    this._mode = Mode.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
@@ -33,16 +35,23 @@ export default class EventPresenter {
       return;
     }
 
-    if (this._eventListContainer.contains(prevEventView.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replaceElement(this._eventView, prevEventView);
     }
 
-    if (this._eventListContainer.contains(prevEventEditView.getElement())) {
+    if (this._mode === Mode.EDITING) {
       replaceElement(this._eventEditView, prevEventEditView);
     }
 
     removeElement(prevEventView);
     removeElement(prevEventEditView);
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._eventEditView.reset(this._event);
+      this._replaceFormToPoint();
+    }
   }
 
   destroy() {
@@ -53,11 +62,14 @@ export default class EventPresenter {
   _replacePointToForm() {
     replaceElement(this._eventEditView, this._eventView);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
   _replaceFormToPoint() {
     replaceElement(this._eventView, this._eventEditView);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
   }
 
   _escKeyDownHandler(evt) {
