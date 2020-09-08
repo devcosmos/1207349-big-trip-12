@@ -6,24 +6,6 @@ export default class SmartView extends AbstractView {
     this._data = {};
   }
 
-  updateDate(updatedData, justDataUpdating) {
-    if (!updatedData) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        updatedData
-    );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
   updateElement() {
     let prevElement = this.getElement();
     const parent = prevElement.parentElement;
@@ -35,6 +17,25 @@ export default class SmartView extends AbstractView {
     prevElement = null;
 
     this.restoreHandlers();
+  }
+
+  updateData(update, justDataUpdating) {
+
+    if (!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+        {},
+        this._data,
+        update
+    );
+
+    if (justDataUpdating) {
+      return;
+    }
+
+    this.updateElement();
   }
 
   restoreHandlers() {
