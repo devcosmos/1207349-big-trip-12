@@ -20,17 +20,17 @@ export const DESTINATIONS = [
 export const getOffers = (type) => {
   if (type === `Flight` || type === `Ship` || type === `Bus`) {
     return [
-      {name: `Add luggage`, id: `luggage`, cost: 30},
-      {name: `Switch to comfort`, id: `comfort`, cost: 100},
-      {name: `Add meal`, id: `meal`, cost: 15},
-      {name: `Choose seats`, id: `seats`, cost: 10},
+      {name: `Add luggage`, cost: 30},
+      {name: `Switch to comfort`, cost: 100},
+      {name: `Add meal`, cost: 15},
+      {name: `Choose seats`, cost: 10},
     ];
   } else {
     return [
-      {name: `Travel by train`, id: `train`, cost: 30},
-      {name: `Rent a car`, id: `car`, cost: 100},
-      {name: `Add meal`, id: `meal`, cost: 15},
-      {name: `Order Uber`, id: `uber`, cost: 10},
+      {name: `Travel by train`, cost: 30},
+      {name: `Rent a car`, cost: 100},
+      {name: `Add meal`, cost: 15},
+      {name: `Order Uber`, cost: 10},
     ];
   }
 };
