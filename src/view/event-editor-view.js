@@ -163,11 +163,14 @@ export default class EventEditorView extends SmartView {
   constructor(event = BLANK_EVENT, cities) {
     super();
     this._data = Object.assign({}, event);
-
     this._cities = cities;
+
     this._callback = {};
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -184,6 +187,10 @@ export default class EventEditorView extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__input--price`)
       .addEventListener(`input`, this._priceInputHandler);
+    this.getElement().querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
+    this.getElement().querySelector(`.event__type-list`)
+      .addEventListener(`click`, this._eventTypeChangeHandler);
   }
 
   _priceInputHandler(evt) {
@@ -191,6 +198,25 @@ export default class EventEditorView extends SmartView {
     this.updateData({
       cost: evt.target.value
     }, true);
+  }
+
+  _destinationInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      currentDestination: evt.target.value
+    }, true);
+  }
+
+  _eventTypeChangeHandler(evt) {
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+
+    this.getElement().querySelector(`.event__type-toggle`).checked = false;
+
+    this.updateData({
+      eventType: evt.target.value
+    });
   }
 
   _formSubmitHandler(evt) {
