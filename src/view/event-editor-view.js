@@ -245,8 +245,13 @@ export default class EventEditorView extends SmartView {
 
     this.getElement().querySelector(`.event__type-toggle`).checked = false;
 
+    const newAcceptedOffers = evt.target.value === this._data.eventType
+      ? this._data.acceptedOffers
+      : [];
+
     this.updateData({
-      eventType: evt.target.value
+      eventType: evt.target.value,
+      acceptedOffers: newAcceptedOffers
     });
   }
 
