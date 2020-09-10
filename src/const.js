@@ -28,7 +28,7 @@ export const SortType = {
   PRICE: `price`
 };
 
-export const Mode = {
+export const EventStatus = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`
 };

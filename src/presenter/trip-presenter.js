@@ -18,7 +18,7 @@ export default class TripPresenter {
     this._noEventView = new NoEventView();
 
     this._handleEventChange = this._handleEventChange.bind(this);
-    this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleEventStatusChange = this._handleEventStatusChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
@@ -35,7 +35,7 @@ export default class TripPresenter {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListElement, this._handleEventChange, this._handleModeChange);
+    const eventPresenter = new EventPresenter(this._eventListElement, this._handleEventChange, this._handleEventStatusChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -101,7 +101,7 @@ export default class TripPresenter {
     this._currentSortType = sortType;
   }
 
-  _handleModeChange() {
+  _handleEventStatusChange() {
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.resetView());

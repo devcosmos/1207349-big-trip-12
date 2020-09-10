@@ -1,17 +1,17 @@
 import {EventEditorView, EventView} from "../view/index";
 import {renderElement, replaceElement, removeElement} from "../utils/render";
-import {RenderPosition, Mode} from "../const";
+import {RenderPosition, EventStatus} from "../const";
 import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {
-  constructor(eventListContainer, changeData, changeMode) {
+  constructor(eventListContainer, changeData, changeEventStatus) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
-    this._changeMode = changeMode;
+    this._changeEventStatus = changeEventStatus;
 
     this._eventView = null;
     this._eventEditorView = null;
-    this._mode = Mode.DEFAULT;
+    this._eventStatus = EventStatus.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
@@ -35,11 +35,11 @@ export default class EventPresenter {
       return;
     }
 
-    if (this._mode === Mode.DEFAULT) {
+    if (this._eventStatus === EventStatus.DEFAULT) {
       replaceElement(this._eventView, prevEventView);
     }
 
-    if (this._mode === Mode.EDITING) {
+    if (this._eventStatus === EventStatus.EDITING) {
       replaceElement(this._eventEditorView, prevEventEditorView);
     }
 
@@ -48,7 +48,7 @@ export default class EventPresenter {
   }
 
   resetView() {
-    if (this._mode !== Mode.DEFAULT) {
+    if (this._eventStatus !== EventStatus.DEFAULT) {
       this._eventEditorView.reset(this._event);
       this._replaceFormEditorToEvent();
     }
@@ -62,14 +62,14 @@ export default class EventPresenter {
   _replaceEventToFormEditor() {
     replaceElement(this._eventEditorView, this._eventView);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
-    this._changeMode();
-    this._mode = Mode.EDITING;
+    this._changeEventStatus();
+    this._eventStatus = EventStatus.EDITING;
   }
 
   _replaceFormEditorToEvent() {
     replaceElement(this._eventView, this._eventEditorView);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    this._mode = Mode.DEFAULT;
+    this._eventStatus = EventStatus.DEFAULT;
   }
 
   _escKeyDownHandler(evt) {
