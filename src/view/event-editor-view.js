@@ -240,20 +240,13 @@ export default class EventEditorView extends SmartView {
 
     const offers = getOffers(this._data.eventType);
     const offer = offers.find((element) => element.name === evt.target.name);
-
-    // const newAcceptedOffers = evt.target.checked
-    //   ? this._data.acceptedOffers
-    //   : this._data.acceptedOffers.filter((item) => item.name !== offer.name);
-    // if (evt.target.checked) {
-    //   newAcceptedOffers.push(offer)
-    // }
-
-    let newAcceptedOffers = this._data.acceptedOffers.slice();
+    const newAcceptedOffers = this._data.acceptedOffers.slice();
+    const index = newAcceptedOffers.findIndex((item) => item.name === offer.name);
 
     if (evt.target.checked) {
       newAcceptedOffers.push(offer);
     } else {
-      newAcceptedOffers = newAcceptedOffers.filter((item) => item.name !== offer.name);
+      newAcceptedOffers.splice(index, 1);
     }
 
     this.updateData({
