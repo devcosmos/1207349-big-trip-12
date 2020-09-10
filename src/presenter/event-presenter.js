@@ -50,7 +50,7 @@ export default class EventPresenter {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._eventEditorView.reset(this._event);
-      this._replaceFormToPoint();
+      this._replaceFormEditorToEvent();
     }
   }
 
@@ -59,14 +59,14 @@ export default class EventPresenter {
     removeElement(this._eventEditorView);
   }
 
-  _replacePointToForm() {
+  _replaceEventToFormEditor() {
     replaceElement(this._eventEditorView, this._eventView);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
-  _replaceFormToPoint() {
+  _replaceFormEditorToEvent() {
     replaceElement(this._eventView, this._eventEditorView);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
@@ -75,16 +75,16 @@ export default class EventPresenter {
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape`) {
       this._eventEditorView.reset(this._event);
-      this._replaceFormToPoint();
+      this._replaceFormEditorToEvent();
     }
   }
 
   _handleEditClick() {
-    this._replacePointToForm();
+    this._replaceEventToFormEditor();
   }
 
   _handleFormSubmit(event) {
     this._changeData(event);
-    this._replaceFormToPoint();
+    this._replaceFormEditorToEvent();
   }
 }
