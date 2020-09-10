@@ -10,7 +10,7 @@ export default class EventPresenter {
     this._changeMode = changeMode;
 
     this._eventView = null;
-    this._eventEditView = null;
+    this._eventEditorView = null;
     this._mode = Mode.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);
@@ -22,15 +22,15 @@ export default class EventPresenter {
     this._event = event;
 
     const prevEventView = this._eventView;
-    const prevEventEditView = this._eventEditView;
+    const prevEventEditorView = this._eventEditorView;
 
     this._eventView = new EventView(event);
-    this._eventEditView = new EventEditorView(event, DESTINATIONS);
+    this._eventEditorView = new EventEditorView(event, DESTINATIONS);
 
     this._eventView.setEditClickHandler(this._handleEditClick);
-    this._eventEditView.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
 
-    if (prevEventView === null || prevEventEditView === null) {
+    if (prevEventView === null || prevEventEditorView === null) {
       renderElement(this._eventListContainer, this._eventView, RenderPosition.BEFOREEND);
       return;
     }
@@ -40,41 +40,41 @@ export default class EventPresenter {
     }
 
     if (this._mode === Mode.EDITING) {
-      replaceElement(this._eventEditView, prevEventEditView);
+      replaceElement(this._eventEditorView, prevEventEditorView);
     }
 
     removeElement(prevEventView);
-    removeElement(prevEventEditView);
+    removeElement(prevEventEditorView);
   }
 
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._eventEditView.reset(this._event);
+      this._eventEditorView.reset(this._event);
       this._replaceFormToPoint();
     }
   }
 
   destroy() {
     removeElement(this._eventView);
-    removeElement(this._eventEditView);
+    removeElement(this._eventEditorView);
   }
 
   _replacePointToForm() {
-    replaceElement(this._eventEditView, this._eventView);
+    replaceElement(this._eventEditorView, this._eventView);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _replaceFormToPoint() {
-    replaceElement(this._eventView, this._eventEditView);
+    replaceElement(this._eventView, this._eventEditorView);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape`) {
-      this._eventEditView.reset(this._event);
+      this._eventEditorView.reset(this._event);
       this._replaceFormToPoint();
     }
   }
