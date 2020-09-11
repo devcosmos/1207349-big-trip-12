@@ -2,6 +2,9 @@ import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
 import SmartView from "./smart-view";
 import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-formatters";
 import {getOffers} from "../mock/event";
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
   id: 1,
@@ -176,17 +179,22 @@ export default class EventEditorView extends SmartView {
     super();
     this._data = Object.assign({}, event);
     this._cities = cities;
+    this._dateStartDatepicker = null;
+    this._dateEndDatepicker = null;
 
     this._callback = {};
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._dateStartChangeHandler = this._dateStartChangeHandler.bind(this);
+    this._dateEndChangeHandler = this._dateEndChangeHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
     this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   reset(event) {
@@ -199,7 +207,43 @@ export default class EventEditorView extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setDatepicker() {
+    if (this._dateStartDatepicker) {
+      this._dateStartDatepicker.destroy();
+      this._dateStartDatepicker = null;
+    }
+
+    if (this._dateEndDatepicker) {
+      this._dateEndDatepicker.destroy();
+      this._dateEndDatepicker = null;
+    }
+
+    this._dateStartDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time`),
+        {
+          'dateFormat': `d/m/y H:i`,
+          'enableTime': true,
+          'time_24hr': true,
+          'defaultDate': this._data.dateStart,
+          'onChange': this._dateStartChangeHandler
+        }
+    );
+
+    this._dateEndDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time`),
+        {
+          'dateFormat': `d/m/y H:i`,
+          'enableTime': true,
+          'time_24hr': true,
+          'minDate': this._data.dateStart,
+          'defaultDate': this._data.dateEnd,
+          'onChange': this._dateEndChangeHandler
+        }
+    );
   }
 
   _setInnerHandlers() {
@@ -213,6 +257,27 @@ export default class EventEditorView extends SmartView {
       .addEventListener(`click`, this._eventTypeChangeHandler);
     this.getElement().querySelector(`.event__available-offers`)
       .addEventListener(`click`, this._offersChangeHandler);
+  }
+
+  _dateStartChangeHandler([userDate]) {
+    this.updateData({
+      dateStart: userDate
+    }, true);
+
+    this._dateEndDatepicker.set(`minDate`, userDate);
+
+    if (userDate > this._data.dateEnd) {
+      this._dateEndDatepicker.setDate(userDate);
+      this.updateData({
+        dateEnd: userDate
+      }, true);
+    }
+  }
+
+  _dateEndChangeHandler([userDate]) {
+    this.updateData({
+      dateEnd: userDate
+    }, true);
   }
 
   _priceInputHandler(evt) {
