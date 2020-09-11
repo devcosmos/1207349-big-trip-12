@@ -27,3 +27,8 @@ export const SortType = {
   TIME: `time`,
   PRICE: `price`
 };
+
+export const EventStatus = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};

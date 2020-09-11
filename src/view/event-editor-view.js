@@ -1,9 +1,11 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import AbstractView from "./abstract-view";
+import SmartView from "./smart-view";
 import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-formatters";
 import {getOffers} from "../mock/event";
 
 const BLANK_EVENT = {
+  id: 1,
+  isFavorite: false,
   eventType: `Taxi`,
   currentDestination: null,
   acceptedOffers: [],
@@ -74,14 +76,14 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-        ${offers.map((offer) => `<div class="event__offer-selector">
+        ${offers.map((offer, i) => `<div class="event__offer-selector">
           <input 
             class="event__offer-checkbox  visually-hidden" 
-            id="event-offer-${offer.id}" 
+            id="event-offer-${i}" 
             type="checkbox" 
-            name="event-offer-${offer.id}" 
-            ${acceptedOffers.includes(offer) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${offer.id}">
+            name="${offer.name}"
+            ${acceptedOffers.some((acceptedOffer) => acceptedOffer.name === offer.name) ? `checked` : ``}>
+          <label class="event__offer-label" for="event-offer-${i}">
             <span class="event__offer-title">${offer.name}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
@@ -108,7 +110,7 @@ const createEventDescriptionTemplate = (description) => {
 };
 
 const createEventEditorTemplate = (event, cities) => {
-  const {eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
+  const {isFavorite, eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination);
@@ -147,6 +149,16 @@ const createEventEditorTemplate = (event, cities) => {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+        <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
+        <label class="event__favorite-btn" for="event-favorite">
+          <span class="visually-hidden">Add to favorite</span>
+          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
+          </svg>
+        </label>
+        <button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>
       </header>
       <section class="event__details">
 
@@ -159,22 +171,109 @@ const createEventEditorTemplate = (event, cities) => {
   );
 };
 
-export default class EventEditorView extends AbstractView {
+export default class EventEditorView extends SmartView {
   constructor(event = BLANK_EVENT, cities) {
     super();
-    this._event = event;
+    this._data = Object.assign({}, event);
     this._cities = cities;
+
     this._callback = {};
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
+    this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
+
+    this._setInnerHandlers();
+  }
+
+  reset(event) {
+    this.updateData(event);
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._event, this._cities);
+    return createEventEditorTemplate(this._data, this._cities);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._priceInputHandler);
+    this.getElement().querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
+    this.getElement().querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`input`, this._favoriteChangeHandler);
+    this.getElement().querySelector(`.event__type-list`)
+      .addEventListener(`click`, this._eventTypeChangeHandler);
+    this.getElement().querySelector(`.event__available-offers`)
+      .addEventListener(`click`, this._offersChangeHandler);
+  }
+
+  _priceInputHandler(evt) {
+    this.updateData({
+      cost: evt.target.value
+    }, true);
+  }
+
+  _destinationInputHandler(evt) {
+    this.updateData({
+      currentDestination: evt.target.value
+    }, true);
+  }
+
+  _favoriteChangeHandler() {
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    }, true);
+  }
+
+  _offersChangeHandler(evt) {
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+
+    const offers = getOffers(this._data.eventType);
+    const offer = offers.find((element) => element.name === evt.target.name);
+    const newAcceptedOffers = this._data.acceptedOffers.slice();
+    const index = newAcceptedOffers.findIndex((item) => item.name === offer.name);
+
+    if (evt.target.checked) {
+      newAcceptedOffers.push(offer);
+    } else {
+      newAcceptedOffers.splice(index, 1);
+    }
+
+    this.updateData({
+      acceptedOffers: newAcceptedOffers
+    }, true);
+  }
+
+  _eventTypeChangeHandler(evt) {
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+
+    this.getElement().querySelector(`.event__type-toggle`).checked = false;
+
+    const newAcceptedOffers = evt.target.value === this._data.eventType
+      ? this._data.acceptedOffers
+      : [];
+
+    this.updateData({
+      eventType: evt.target.value,
+      acceptedOffers: newAcceptedOffers
+    });
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._data);
   }
 
   setFormSubmitHandler(callback) {
