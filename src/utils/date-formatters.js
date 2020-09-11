@@ -1,21 +1,19 @@
 import moment from "moment";
 
 export const getTimeAtDefaultFormat = (date) => {
-  return date.toLocaleString(`en-US`, {hour12: false, hour: `2-digit`, minute: `2-digit`});
+  return date instanceof Date ? moment(date).format(`HH:MM`) : ``;
 };
 
 export const getDateAtShortFormat = (date) => {
-  return date.toLocaleString(`en-US`, {month: `short`, day: `2-digit`});
+  return date instanceof Date ? moment(date).format(`MMM DD`) : ``;
 };
 
 export const getDateAtSystemFormat = (date) => {
-  const [m, d, y] = date.toLocaleString(`en-US`, {year: `numeric`, month: `2-digit`, day: `2-digit`}).split(`/`);
-  return `${y}-${m}-${d}`;
+  return date instanceof Date ? moment(date).format(`YYYY-MM-DD`) : ``;
 };
 
 export const getDateAtDefaultFormat = (date) => {
-  const [m, d, y] = date.toLocaleString(`en-US`, {year: `2-digit`, month: `2-digit`, day: `2-digit`}).split(`/`);
-  return `${d}/${m}/${y}`;
+  return date instanceof Date ? moment(date).format(`DD/MM/YY`) : ``;
 };
 
 export const getDurationTime = (start, end) => {
