@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const getTimeAtDefaultFormat = (date) => {
   return date.toLocaleString(`en-US`, {hour12: false, hour: `2-digit`, minute: `2-digit`});
 };
@@ -17,23 +19,11 @@ export const getDateAtDefaultFormat = (date) => {
 };
 
 export const getDurationTime = (start, end) => {
-  const difference = (Date.parse(end) - Date.parse(start));
+  const duration = moment.duration(Date.parse(end) - Date.parse(start));
 
-  let minuts = difference / (1000 * 60);
-  let hours = Math.floor(minuts / 60);
-  let days = Math.floor(hours / 24);
-  let durationTime;
-
-  if (days > 0) {
-    minuts = Math.floor(minuts % (hours * 60));
-    hours = Math.floor(hours % (days * 24));
-    durationTime = `${days}D${hours === 0 ? `` : ` ${hours}H`}${minuts === 0 ? `` : ` ${minuts}M` }`;
-  } else if (hours > 0) {
-    minuts = Math.floor(minuts % (hours * 60));
-    durationTime = minuts === 0 ? `${hours}H` : `${hours}H ${minuts}M`;
-  } else {
-    durationTime = `${minuts}M`;
-  }
-
-  return durationTime;
+  return (
+    `${duration.days() === 0 ? `` : `${String(duration.days()).padStart(2, `0`)}D`}
+    ${duration.hours() === 0 ? `` : ` ${String(duration.hours()).padStart(2, `0`)}H`}
+    ${duration.minutes() === 0 ? `` : ` ${String(duration.minutes()).padStart(2, `0`)}M`}`
+  );
 };
