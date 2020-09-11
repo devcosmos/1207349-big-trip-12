@@ -20,8 +20,8 @@ export const getDurationTime = (start, end) => {
   const duration = moment.duration(Date.parse(end) - Date.parse(start));
 
   return (
-    `${duration.days() === 0 ? `` : `${String(duration.days()).padStart(2, `0`)}D`}
-    ${duration.hours() === 0 ? `` : ` ${String(duration.hours()).padStart(2, `0`)}H`}
-    ${duration.minutes() === 0 ? `` : ` ${String(duration.minutes()).padStart(2, `0`)}M`}`
+    `${duration.days() === 0 ? `` : `${moment(duration.days()).format(`DD`)}D`}
+    ${duration.hours() === 0 ? `` : ` ${moment(duration.hours()).format(`HH`)}H`}
+    ${duration.minutes() === 0 ? `` : ` ${moment(duration.minutes()).format(`MM`)}M`}`
   );
 };
