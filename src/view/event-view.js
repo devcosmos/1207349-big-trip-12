@@ -1,6 +1,6 @@
 import {EVENT_TYPE_ACTIVITY} from "../const";
+import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../utils/index";
 import AbstractView from "./abstract-view";
-import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../utils/date-formatters";
 
 const createAcceptedOffersTemplate = (offers) => {
   return (

@@ -1,8 +1,7 @@
-import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
-import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice} from "../utils/event";
-import {renderElement, removeElement} from "../utils/render";
 import {RenderPosition, SortType} from "../const";
-import {EventPresenter} from "./index";
+import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, renderElement, removeElement} from "../utils/index";
+import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
+import {EventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
   constructor(eventsContainer, tripContainer, eventsModel) {

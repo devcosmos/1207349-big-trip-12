@@ -1,6 +1,6 @@
-import {EventEditorView, EventView} from "../view/index";
-import {renderElement, replaceElement, removeElement} from "../utils/render";
 import {RenderPosition, EventStatus} from "../const";
+import {renderElement, replaceElement, removeElement} from "../utils/index";
+import {EventEditorView, EventView} from "../view/index";
 import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {

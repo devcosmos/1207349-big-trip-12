@@ -1,4 +1,4 @@
-import Observer from "../utils/observer";
+import {Observer} from "../utils/index";
 
 export default class EventsModel extends Observer {
   constructor() {

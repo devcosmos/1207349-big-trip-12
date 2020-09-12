@@ -1,8 +1,8 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
+import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/index";
 import SmartView from "./smart-view";
-import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-formatters";
-import {getOffers} from "../mock/event";
 import flatpickr from "flatpickr";
+import {getOffers} from "../mock/event";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
