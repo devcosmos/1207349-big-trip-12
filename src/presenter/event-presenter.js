@@ -89,7 +89,7 @@ export default class EventPresenter {
     const isOnlyEventUpdate = true;
 
     this._changeData(
-        UserAction.UPDATED_EVENT,
+        UserAction.UPDATE_EVENT,
         isOnlyEventUpdate ? UpdateType.EVENT : UpdateType.TRIP,
         update
     );

@@ -179,6 +179,7 @@ export default class EventEditorView extends SmartView {
     super();
     this._data = Object.assign({}, event);
     this._cities = cities;
+
     this._dateStartDatepicker = null;
     this._dateEndDatepicker = null;
 
@@ -356,7 +357,7 @@ export default class EventEditorView extends SmartView {
     evt.preventDefault();
     this._callback.deleteClick(this._data);
   }
-  
+
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);

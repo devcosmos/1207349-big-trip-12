@@ -36,7 +36,7 @@ export const getOffers = (type) => {
 };
 
 const generateDateStart = () => {
-  const maxDaysGap = 7;
+  const maxDaysGap = 2;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + daysGap);
