@@ -1,4 +1,4 @@
-import {RenderPosition, EventStatus} from "../const";
+import {RenderPosition, EventStatus, UserAction, UpdateType} from "../const";
 import {renderElement, replaceElement, removeElement} from "../utils/index";
 import {EventEditorView, EventView} from "../view/index";
 import {DESTINATIONS} from "../mock/event";
@@ -15,6 +15,7 @@ export default class EventPresenter {
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
@@ -29,6 +30,7 @@ export default class EventPresenter {
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevEventView === null || prevEventEditorView === null) {
       renderElement(this._eventListContainer, this._eventView, RenderPosition.BEFOREEND);
@@ -83,8 +85,23 @@ export default class EventPresenter {
     this._replaceEventToFormEditor();
   }
 
-  _handleFormSubmit(event) {
-    this._changeData(event);
+  _handleFormSubmit(update) {
+    const isOnlyEventUpdate = true;
+
+    this._changeData(
+        UserAction.UPDATED_EVENT,
+        isOnlyEventUpdate ? UpdateType.EVENT : UpdateType.TRIP,
+        update
+    );
+
     this._replaceFormEditorToEvent();
+  }
+
+  _handleDeleteClick(event) {
+    this._changeData(
+        UserAction.DELETE_EVENT,
+        UpdateType.TRIP,
+        event
+    );
   }
 }
