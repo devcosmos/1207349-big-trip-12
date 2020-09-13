@@ -6,21 +6,6 @@ import {getOffers} from "../mock/event";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
-const BLANK_EVENT = {
-  id: 1,
-  isFavorite: false,
-  eventType: `Taxi`,
-  currentDestination: null,
-  acceptedOffers: [],
-  description: {
-    text: ``,
-    images: [],
-  },
-  dateStart: null,
-  dateEnd: null,
-  cost: null,
-};
-
 const createEventTypeTemplate = (type) => {
   return (
     `<div class="event__type-wrapper">
@@ -175,7 +160,7 @@ const createEventEditorTemplate = (event, cities) => {
 };
 
 export default class EventEditorView extends SmartView {
-  constructor(event = BLANK_EVENT, cities) {
+  constructor(event, cities) {
     super();
     this._data = Object.assign({}, event);
     this._cities = cities;

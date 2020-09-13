@@ -51,7 +51,7 @@ const generateDateEnd = (date) => {
 
 const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
 const getRandomListItem = (list) => list[getRandomInteger(0, list.length - 1)];
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const generateEvent = () => {
   const images = new Array(getRandomInteger(0, 4)).fill().map(generateImage);

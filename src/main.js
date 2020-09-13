@@ -26,3 +26,7 @@ const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterMod
 
 filterPresenter.init();
 tripPresenter.init();
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
+  tripPresenter.createEvent();
+});
