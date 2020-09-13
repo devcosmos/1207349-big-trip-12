@@ -1,13 +1,15 @@
 import {RenderPosition, SortType, UserAction, UpdateType} from "../const";
-import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, renderElement, removeElement} from "../utils/index";
+import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
 import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
 import {EventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
-  constructor(eventsContainer, tripContainer, eventsModel) {
+  constructor(eventsContainer, tripContainer, eventsModel, filterModel) {
     this._eventsContainer = eventsContainer;
     this._tripContainer = tripContainer;
     this._eventsModel = eventsModel;
+    this._filterModel = filterModel;
+
     this._currentSortType = SortType.EVENT;
     this._eventPresenter = {};
 
@@ -22,6 +24,7 @@ export default class TripPresenter {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._eventsModel.addObserver(this._handleModelChange);
+    this._filterModel.addObserver(this._handleModelChange);
   }
 
   init() {
@@ -34,24 +37,29 @@ export default class TripPresenter {
   }
 
   _getEvents() {
-    const events = this._eventsModel.getEvents().slice();
+    const filterType = this._filterModel.getFilter();
+    const events = this._eventsModel.getEvents();
+    const filtredEvents = filter[filterType](events);
 
     switch (this._currentSortType) {
       case SortType.TIME:
-        events.sort(sortEventsByDuration);
+        filtredEvents.sort(sortEventsByDuration);
         break;
       case SortType.PRICE:
-        events.sort(sortEventsByPrice);
+        filtredEvents.sort(sortEventsByPrice);
+        break;
+      default:
+        filtredEvents.sort(sortEventsByDate);
         break;
     }
 
-    return events;
+    return filtredEvents;
   }
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._eventsModel.updatedEvent(updateType, update);
+        this._eventsModel.updateEvent(updateType, update);
         break;
       case UserAction.ADD_EVENT:
         this._eventsModel.addEvent(updateType, update);
@@ -84,8 +92,14 @@ export default class TripPresenter {
     this._renderEventList();
   }
 
+  _handleEventStatusChange() {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListElement,  this._handleViewAction, this._handleEventStatusChange);
+    const eventPresenter = new EventPresenter(this._eventListElement, this._handleViewAction, this._handleEventStatusChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -134,12 +148,6 @@ export default class TripPresenter {
     Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
     removeElement(this._daysView);
     this._eventPresenter = {};
-  }
-
-  _handleEventStatusChange() {
-    Object
-      .values(this._eventPresenter)
-      .forEach((presenter) => presenter.resetView());
   }
 
   _renderSorting() {
