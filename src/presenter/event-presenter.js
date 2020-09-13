@@ -1,13 +1,14 @@
-import {RenderPosition, EventStatus, UserAction, UpdateType} from "../const";
+import {RenderPosition, EventStatus, UserAction, UpdateType, SortType} from "../const";
 import {renderElement, replaceElement, removeElement} from "../utils/index";
 import {EventEditorView, EventView} from "../view/index";
 import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {
-  constructor(eventListContainer, changeData, changeEventStatus) {
+  constructor(eventListContainer, changeData, changeEventStatus, currentSortType) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
     this._changeEventStatus = changeEventStatus;
+    this._currentSortType = currentSortType;
 
     this._eventView = null;
     this._eventEditorView = null;
@@ -86,7 +87,10 @@ export default class EventPresenter {
   }
 
   _handleFormSubmit(update) {
-    const isOnlyEventUpdate = true;
+    const isOnlyEventUpdate =
+      (this._currentSortType !== SortType.PRICE || this._event.cost === update.cost) &&
+      (this._currentSortType === SortType.PRICE || this._event.dateStart === update.dateStart) &&
+      (this._currentSortType !== SortType.TIME || this._event.dateEnd === update.dateEnd);
 
     this._changeData(
         UserAction.UPDATE_EVENT,

@@ -99,7 +99,7 @@ export default class TripPresenter {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListElement, this._handleViewAction, this._handleEventStatusChange);
+    const eventPresenter = new EventPresenter(this._eventListElement, this._handleViewAction, this._handleEventStatusChange, this._currentSortType);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
