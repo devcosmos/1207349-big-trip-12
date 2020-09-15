@@ -83,7 +83,7 @@ export default class TripPresenter {
         this._eventPresenter[data.id].init(data);
         break;
       case UpdateType.TRIP:
-        this._clearTrip({resetSortType: true});
+        this._clearTrip();
         this._renderTrip();
         break;
     }
@@ -163,7 +163,7 @@ export default class TripPresenter {
     renderElement(this._eventsContainer, this._noEventView, RenderPosition.BEFOREEND);
   }
 
-  _clearTrip({resetSortType = false} = {}) {
+  _clearTrip() {
     Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
     this._newEventPresenter.destroy();
@@ -171,10 +171,6 @@ export default class TripPresenter {
     removeElement(this._sortingView);
     removeElement(this._daysView);
     removeElement(this._noEventView);
-
-    if (resetSortType) {
-      this._currentSortType = SortType.EVENT;
-    }
   }
 
   _renderTrip() {
