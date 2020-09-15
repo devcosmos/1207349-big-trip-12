@@ -1,10 +1,11 @@
 import {EVENT_COUNT, RenderPosition} from "./const";
-import {NavigationControllerView, EventFiltrationView} from "./view/index";
+import {renderElement} from "./utils/index";
+import {EventsModel, FilterModel} from "./model/index";
+import {NavigationControllerView} from "./view/index";
+import {TripPresenter, FilterPresenter} from "./presenter/index";
 import {generateEvent} from "./mock/event";
-import {renderElement} from "./utils/render";
-import {TripPresenter} from "./presenter/index";
 
-const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((a, b) => a.dateStart - b.dateStart);
+const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
@@ -13,9 +14,19 @@ const eventsElement = siteMainElement.querySelector(`.trip-events`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 
-const tripPresenter = new TripPresenter(eventsElement, tripElement);
-
 renderElement(tripControlsFirstElement, new NavigationControllerView(), RenderPosition.AFTEREND);
-renderElement(tripControlsSecondElement, new EventFiltrationView(), RenderPosition.AFTEREND);
 
-tripPresenter.init(events);
+const eventsModel = new EventsModel();
+eventsModel.setEvents(events);
+
+const filterModel = new FilterModel();
+
+const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel);
+const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
+
+filterPresenter.init();
+tripPresenter.init();
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
+  tripPresenter.createEvent();
+});

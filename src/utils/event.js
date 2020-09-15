@@ -37,3 +37,7 @@ export const sortEventsByDuration = (a, b) => {
 export const sortEventsByPrice = (a, b) => {
   return b.cost - a.cost;
 };
+
+export const sortEventsByDate = (a, b) => {
+  return a.dateStart - b.dateStart;
+};

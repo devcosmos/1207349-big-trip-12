@@ -1,13 +1,14 @@
+import {RenderPosition, EventStatus, UserAction, UpdateType, SortType} from "../const";
+import {renderElement, replaceElement, removeElement} from "../utils/index";
 import {EventEditorView, EventView} from "../view/index";
-import {renderElement, replaceElement, removeElement} from "../utils/render";
-import {RenderPosition, EventStatus} from "../const";
 import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {
-  constructor(eventListContainer, changeData, changeEventStatus) {
+  constructor(eventListContainer, changeData, changeEventStatus, currentSortType) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
     this._changeEventStatus = changeEventStatus;
+    this._currentSortType = currentSortType;
 
     this._eventView = null;
     this._eventEditorView = null;
@@ -15,6 +16,7 @@ export default class EventPresenter {
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
@@ -29,6 +31,7 @@ export default class EventPresenter {
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevEventView === null || prevEventEditorView === null) {
       renderElement(this._eventListContainer, this._eventView, RenderPosition.BEFOREEND);
@@ -83,8 +86,26 @@ export default class EventPresenter {
     this._replaceEventToFormEditor();
   }
 
-  _handleFormSubmit(event) {
-    this._changeData(event);
+  _handleFormSubmit(update) {
+    const isOnlyEventUpdate =
+      (this._currentSortType !== SortType.PRICE || this._event.cost === update.cost) &&
+      (this._currentSortType === SortType.PRICE || this._event.dateStart === update.dateStart) &&
+      (this._currentSortType !== SortType.TIME || this._event.dateEnd === update.dateEnd);
+
+    this._changeData(
+        UserAction.UPDATE_EVENT,
+        isOnlyEventUpdate ? UpdateType.EVENT : UpdateType.TRIP,
+        update
+    );
+
     this._replaceFormEditorToEvent();
+  }
+
+  _handleDeleteClick(event) {
+    this._changeData(
+        UserAction.DELETE_EVENT,
+        UpdateType.TRIP,
+        event
+    );
   }
 }

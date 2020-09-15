@@ -1,22 +1,21 @@
 import AbstractView from "./abstract-view";
 
-const createEventFiltrationTemplate = () => {
+const createEventFiltrationTemplate = (filters, currentFilter) => {
   return (
     `<form class="trip-filters" action="#" method="get">
-      <div class="trip-filters__filter">
-        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-        <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-        <label class="trip-filters__filter-label" for="filter-future">Future</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-        <label class="trip-filters__filter-label" for="filter-past">Past</label>
-      </div>
+      ${Object.values(filters).map((filter) => `<div class="trip-filters__filter">
+        <input
+          id="filter-${filter}"
+          class="trip-filters__filter-input visually-hidden"
+          type="radio"
+          name="trip-filter"
+          value="${filter}"
+          ${filter === currentFilter ? `checked` : ``}
+        >
+        <label class="trip-filters__filter-label" for="filter-${filter}">
+          ${filter}
+        </label>
+      </div>`).join(``)}
 
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`
@@ -24,7 +23,26 @@ const createEventFiltrationTemplate = () => {
 };
 
 export default class EventFiltrationView extends AbstractView {
+  constructor(filters, currentFilterType) {
+    super();
+    this._filters = filters;
+    this._currentFilter = currentFilterType;
+
+    this._callback = {};
+
+    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+  }
+
   getTemplate() {
-    return createEventFiltrationTemplate();
+    return createEventFiltrationTemplate(this._filters, this._currentFilter);
+  }
+
+  _filterTypeChangeHandler(evt) {
+    this._callback.filterTypeChange(evt.target.value);
+  }
+
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
   }
 }

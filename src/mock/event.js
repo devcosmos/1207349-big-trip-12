@@ -1,5 +1,5 @@
-import {getRandomInteger, getRandomPartialList} from "../utils/common";
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
+import {getRandomInteger, getRandomPartialList} from "../utils/index";
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -36,7 +36,7 @@ export const getOffers = (type) => {
 };
 
 const generateDateStart = () => {
-  const maxDaysGap = 7;
+  const maxDaysGap = 2;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + daysGap);
@@ -51,7 +51,7 @@ const generateDateEnd = (date) => {
 
 const generateImage = () => `http://picsum.photos/248/152?r=${Math.random()}`;
 const getRandomListItem = (list) => list[getRandomInteger(0, list.length - 1)];
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const generateEvent = () => {
   const images = new Array(getRandomInteger(0, 4)).fill().map(generateImage);

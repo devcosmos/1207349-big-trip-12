@@ -1,25 +1,11 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
+import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/index";
 import SmartView from "./smart-view";
-import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/date-formatters";
-import {getOffers} from "../mock/event";
 import flatpickr from "flatpickr";
+import he from "he";
+import {getOffers} from "../mock/event";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-
-const BLANK_EVENT = {
-  id: 1,
-  isFavorite: false,
-  eventType: `Taxi`,
-  currentDestination: null,
-  acceptedOffers: [],
-  description: {
-    text: ``,
-    images: [],
-  },
-  dateStart: null,
-  dateEnd: null,
-  cost: null,
-};
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -62,7 +48,7 @@ const createEventDestinationTemplate = (eventType, cities, currentDestination) =
         id="event-destination" 
         type="text" 
         name="event-destination" 
-        value="${currentDestination === null ? `` : currentDestination}" 
+        value="${he.encode(currentDestination)}" 
         list="destination-list">
       <datalist id="destination-list">  
         ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
@@ -147,7 +133,7 @@ const createEventEditorTemplate = (event, cities) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="text" name="event-price" value="${cost === null ? `` : cost}">
+          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${cost === null ? `` : cost}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -175,16 +161,18 @@ const createEventEditorTemplate = (event, cities) => {
 };
 
 export default class EventEditorView extends SmartView {
-  constructor(event = BLANK_EVENT, cities) {
+  constructor(event, cities) {
     super();
     this._data = Object.assign({}, event);
     this._cities = cities;
+
     this._dateStartDatepicker = null;
     this._dateEndDatepicker = null;
 
     this._callback = {};
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._dateStartChangeHandler = this._dateStartChangeHandler.bind(this);
     this._dateEndChangeHandler = this._dateEndChangeHandler.bind(this);
@@ -195,6 +183,15 @@ export default class EventEditorView extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset(event) {
@@ -209,6 +206,7 @@ export default class EventEditorView extends SmartView {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setDatepicker() {
@@ -287,6 +285,13 @@ export default class EventEditorView extends SmartView {
   }
 
   _destinationInputHandler(evt) {
+    if (this._cities.includes(evt.target.value)) {
+      evt.target.setCustomValidity(``);
+    } else {
+      evt.target.setCustomValidity(`The selected city is not in the list`);
+      return;
+    }
+
     this.updateData({
       currentDestination: evt.target.value
     }, true);
@@ -341,8 +346,18 @@ export default class EventEditorView extends SmartView {
     this._callback.formSubmit(this._data);
   }
 
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(this._data);
+  }
+
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 }
