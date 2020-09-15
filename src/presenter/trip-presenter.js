@@ -152,7 +152,7 @@ export default class TripPresenter {
     renderElement(this._daysView, this._tripFragment, RenderPosition.BEFOREEND);
   }
 
-  _renderSorting() {    
+  _renderSorting() {
     this._sortingView = new SortingView(this._currentSortType);
     this._sortingView.setSortTypeChangeHandler(this._handleSortTypeChange);
 
