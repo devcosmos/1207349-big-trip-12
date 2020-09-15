@@ -2,6 +2,7 @@ import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
 import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/index";
 import SmartView from "./smart-view";
 import flatpickr from "flatpickr";
+import he from "he";
 import {getOffers} from "../mock/event";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
@@ -47,7 +48,7 @@ const createEventDestinationTemplate = (eventType, cities, currentDestination) =
         id="event-destination" 
         type="text" 
         name="event-destination" 
-        value="${currentDestination === null ? `` : currentDestination}" 
+        value="${he.encode(currentDestination)}" 
         list="destination-list">
       <datalist id="destination-list">  
         ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
@@ -132,7 +133,7 @@ const createEventEditorTemplate = (event, cities) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="text" name="event-price" value="${cost === null ? `` : cost}">
+          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${cost === null ? `` : cost}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -284,6 +285,13 @@ export default class EventEditorView extends SmartView {
   }
 
   _destinationInputHandler(evt) {
+    if (this._cities.includes(evt.target.value)) {
+      evt.target.setCustomValidity(``);
+    } else {
+      evt.target.setCustomValidity(`The selected city is not in the list`);
+      return;
+    }
+
     this.updateData({
       currentDestination: evt.target.value
     }, true);
