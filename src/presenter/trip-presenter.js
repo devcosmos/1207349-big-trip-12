@@ -1,4 +1,4 @@
-import {RenderPosition, SortType, UserAction, UpdateType, FilterType} from "../const";
+import {RenderPosition, SortType, UserAction, UpdateType} from "../const";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
 import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
@@ -22,9 +22,6 @@ export default class TripPresenter {
     this._handleEventStatusChange = this._handleEventStatusChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._eventsModel.addObserver(this._handleModelChange);
-    this._filterModel.addObserver(this._handleModelChange);
-
     this._newEventPresenter = new NewEventPresenter(this._handleViewAction);
   }
 
@@ -34,13 +31,25 @@ export default class TripPresenter {
     renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
     renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
 
+    this._eventsModel.addObserver(this._handleModelChange);
+    this._filterModel.addObserver(this._handleModelChange);
+
     this._renderTrip();
   }
 
-  createEvent() {
-    this._currentSortType = SortType.EVENT;
-    this._filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
-    this._newEventPresenter.init(this._sortingView);
+  createEvent(callback) {
+    this._newEventPresenter.init(this._sortingView, callback);
+  }
+
+  destroy() {
+    this._clearTrip();
+
+    removeElement(this._tripInfoView);
+    removeElement(this._totalPriceView);
+
+    this._eventsModel.removeObserver(this._handleModelChange);
+    this._filterModel.removeObserver(this._handleModelChange);
+
   }
 
   _getEvents() {

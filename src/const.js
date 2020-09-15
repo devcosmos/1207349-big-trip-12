@@ -49,3 +49,9 @@ export const UpdateType = {
   EVENT: `EVENT`,
   TRIP: `TRIP`,
 };
+
+export const TripControlsItem = {
+  NEW_EVENT: `New event`,
+  TABLE: `Table`,
+  STATS: `Stats`
+};

@@ -1,4 +1,4 @@
-import {EVENT_COUNT, RenderPosition} from "./const";
+import {EVENT_COUNT, RenderPosition, TripControlsItem, UpdateType, FilterType} from "./const";
 import {renderElement} from "./utils/index";
 import {EventsModel, FilterModel} from "./model/index";
 import {NavigationControllerView} from "./view/index";
@@ -13,8 +13,42 @@ const tripElement = siteHeaderElement.querySelector(`.trip-main`);
 const eventsElement = siteMainElement.querySelector(`.trip-events`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
+const newEventButton = tripElement.querySelector(`.trip-main__event-add-btn`);
 
-renderElement(tripControlsFirstElement, new NavigationControllerView(), RenderPosition.AFTEREND);
+const newEventButtonClickHandler = (evt) => {
+  evt.preventDefault();
+  navControllerClickHandler(TripControlsItem.NEW_EVENT);
+  navControllerView.setNavControllerItem(TripControlsItem.TABLE);
+};
+
+const newEventFormCloseHandler = () => {
+  newEventButton.disabled = false;
+};
+
+const navControllerClickHandler = (tripControlsItem) => {
+  switch (tripControlsItem) {
+    case TripControlsItem.NEW_EVENT:
+      tripPresenter.destroy();
+      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
+      tripPresenter.init();
+      tripPresenter.createEvent(newEventFormCloseHandler);
+      newEventButton.disabled = true;
+      break;
+    case TripControlsItem.TABLE:
+      tripPresenter.init();
+      break;
+    case TripControlsItem.STATS:
+      tripPresenter.destroy();
+      break;
+  }
+};
+
+const navControllerView = new NavigationControllerView();
+
+renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
+
+newEventButton.addEventListener(`click`, newEventButtonClickHandler);
+navControllerView.setNavControllerClickHandler(navControllerClickHandler);
 
 const eventsModel = new EventsModel();
 eventsModel.setEvents(events);
@@ -26,7 +60,3 @@ const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterMod
 
 filterPresenter.init();
 tripPresenter.init();
-
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
-  tripPresenter.createEvent();
-});

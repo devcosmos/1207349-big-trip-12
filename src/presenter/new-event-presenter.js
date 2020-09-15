@@ -22,17 +22,20 @@ export default class NewEventPresenter {
     this._changeData = changeData;
 
     this._eventEditorView = null;
+    this._destroyCallback = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(eventListContainer) {
+  init(eventListContainer, callback) {
     if (this._eventEditorView !== null) {
       return;
     }
+
     this._eventListContainer = eventListContainer;
+    this._destroyCallback = callback;
 
     this._eventEditorView = new EventEditorView(BLANK_EVENT, DESTINATIONS);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
@@ -46,6 +49,10 @@ export default class NewEventPresenter {
   destroy() {
     if (this._eventEditorView === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     removeElement(this._eventEditorView);
