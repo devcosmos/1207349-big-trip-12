@@ -13,7 +13,9 @@ export default class TripPresenter {
     this._currentSortType = SortType.EVENT;
     this._eventPresenter = {};
 
-    this._totalPriceView = new TotalPriceView();
+    this._tripInfoView = null;
+    this._totalPriceView = null;
+
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
 
@@ -26,10 +28,13 @@ export default class TripPresenter {
   }
 
   init() {
-    this._tripInfoView = new TripInfoView(this._eventsModel.getEvents());
+    if (this._tripInfoView === null || this._totalPriceView === null) {
+      this._tripInfoView = new TripInfoView(this._getEvents());
+      this._totalPriceView = new TotalPriceView();
 
-    renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
-    renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
+      renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
+      renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
+    }
 
     this._eventsModel.addObserver(this._handleModelChange);
     this._filterModel.addObserver(this._handleModelChange);
@@ -41,11 +46,16 @@ export default class TripPresenter {
     this._newEventPresenter.init(this._sortingView, callback);
   }
 
-  destroy() {
+  destroy({removeHeader = true} = {}) {
     this._clearTrip();
 
-    removeElement(this._tripInfoView);
-    removeElement(this._totalPriceView);
+    if (removeHeader) {
+      removeElement(this._tripInfoView);
+      removeElement(this._totalPriceView);
+
+      this._tripInfoView = null;
+      this._totalPriceView = null;
+    }
 
     this._eventsModel.removeObserver(this._handleModelChange);
     this._filterModel.removeObserver(this._handleModelChange);

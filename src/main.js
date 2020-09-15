@@ -38,7 +38,7 @@ const navControllerClickHandler = (tripControlsItem) => {
       tripPresenter.init();
       break;
     case TripControlsItem.STATS:
-      tripPresenter.destroy();
+      tripPresenter.destroy({removeHeader: false});
       break;
   }
 };
