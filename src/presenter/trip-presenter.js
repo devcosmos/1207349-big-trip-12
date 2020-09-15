@@ -14,7 +14,6 @@ export default class TripPresenter {
     this._eventPresenter = {};
 
     this._totalPriceView = new TotalPriceView();
-    this._sortingView = new SortingView();
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
 
@@ -26,7 +25,7 @@ export default class TripPresenter {
     this._eventsModel.addObserver(this._handleModelChange);
     this._filterModel.addObserver(this._handleModelChange);
 
-    this._newEventPresenter = new NewEventPresenter(this._sortingView, this._handleViewAction);
+    this._newEventPresenter = new NewEventPresenter(this._handleViewAction);
   }
 
   init() {
@@ -41,7 +40,7 @@ export default class TripPresenter {
   createEvent() {
     this._currentSortType = SortType.EVENT;
     this._filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
-    this._newEventPresenter.init();
+    this._newEventPresenter.init(this._sortingView);
   }
 
   _getEvents() {
@@ -84,8 +83,8 @@ export default class TripPresenter {
         this._eventPresenter[data.id].init(data);
         break;
       case UpdateType.TRIP:
-        this._clearEventList();
-        this._renderEventList();
+        this._clearTrip({resetSortType: true});
+        this._renderTrip();
         break;
     }
   }
@@ -96,8 +95,8 @@ export default class TripPresenter {
     }
 
     this._currentSortType = sortType;
-    this._clearEventList();
-    this._renderEventList();
+    this._clearTrip();
+    this._renderTrip();
   }
 
   _handleEventStatusChange() {
@@ -153,20 +152,29 @@ export default class TripPresenter {
     renderElement(this._daysView, this._tripFragment, RenderPosition.BEFOREEND);
   }
 
-  _clearEventList() {
-    this._newEventPresenter.destroy();
-    Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
-    removeElement(this._daysView);
-    this._eventPresenter = {};
-  }
-
-  _renderSorting() {
-    renderElement(this._eventsContainer, this._sortingView, RenderPosition.BEFOREEND);
+  _renderSorting() {    
+    this._sortingView = new SortingView(this._currentSortType);
     this._sortingView.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    renderElement(this._eventsContainer, this._sortingView, RenderPosition.BEFOREEND);
   }
 
   _renderNoEdit() {
     renderElement(this._eventsContainer, this._noEventView, RenderPosition.BEFOREEND);
+  }
+
+  _clearTrip({resetSortType = false} = {}) {
+    Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
+    this._eventPresenter = {};
+    this._newEventPresenter.destroy();
+
+    removeElement(this._sortingView);
+    removeElement(this._daysView);
+    removeElement(this._noEventView);
+
+    if (resetSortType) {
+      this._currentSortType = SortType.EVENT;
+    }
   }
 
   _renderTrip() {

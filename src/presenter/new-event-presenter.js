@@ -18,8 +18,7 @@ const BLANK_EVENT = {
 };
 
 export default class NewEventPresenter {
-  constructor(eventListContainer, changeData) {
-    this._eventListContainer = eventListContainer;
+  constructor(changeData) {
     this._changeData = changeData;
 
     this._eventEditorView = null;
@@ -29,10 +28,11 @@ export default class NewEventPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init() {
+  init(eventListContainer) {
     if (this._eventEditorView !== null) {
       return;
     }
+    this._eventListContainer = eventListContainer;
 
     this._eventEditorView = new EventEditorView(BLANK_EVENT, DESTINATIONS);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
