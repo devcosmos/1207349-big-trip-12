@@ -117,10 +117,6 @@ export default class StatisticsView extends SmartView {
 
     this._data = events;
 
-    this._moneyCart = null;
-    this._transportCart = null;
-    this._spendCart = null;
-
     this._setCharts();
   }
 
@@ -129,12 +125,6 @@ export default class StatisticsView extends SmartView {
   }
 
   _setCharts() {
-    if (this._moneyCart !== null || this._transportCart !== null || this._spendCart !== null) {
-      this._moneyCart = null;
-      this._transportCart = null;
-      this._spendCart = null;
-    }
-
     const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
     const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
     const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
