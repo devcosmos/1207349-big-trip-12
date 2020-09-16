@@ -926,7 +926,7 @@ main {
 
 .statistics {
   padding-top: 47px;
-  padding-left: 37px; }
+  padding-left: 80px; }
 
 .statistics__item:not(:last-child) {
   margin-bottom: 78px; }
