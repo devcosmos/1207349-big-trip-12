@@ -35,10 +35,14 @@ const navControllerClickHandler = (tripControlsItem) => {
       newEventButton.disabled = true;
       break;
     case TripControlsItem.TABLE:
+      tripPresenter.removeStats();
+      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
       tripPresenter.init();
       break;
     case TripControlsItem.STATS:
       tripPresenter.destroy({removeHeader: false});
+      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
+      tripPresenter.createStats();
       break;
   }
 };
