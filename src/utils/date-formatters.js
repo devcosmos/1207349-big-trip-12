@@ -31,3 +31,7 @@ export const getDurationInHourhs = (start, end) => {
 
   return Math.round(duration.asHours());
 };
+
+export const getCurrentDate = () => {
+  return new Date();
+};

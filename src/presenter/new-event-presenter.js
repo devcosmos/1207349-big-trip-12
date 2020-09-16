@@ -1,5 +1,5 @@
 import {RenderPosition, UserAction, UpdateType} from "../const";
-import {renderElement, removeElement} from "../utils/index";
+import {renderElement, removeElement, getCurrentDate} from "../utils/index";
 import {EventEditorView} from "../view/index";
 import {DESTINATIONS, generateId} from "../mock/event";
 
@@ -12,8 +12,8 @@ const BLANK_EVENT = {
     text: ``,
     images: [],
   },
-  dateStart: new Date(),
-  dateEnd: new Date(),
+  dateStart: getCurrentDate(),
+  dateEnd: getCurrentDate(),
   cost: 0,
 };
 
