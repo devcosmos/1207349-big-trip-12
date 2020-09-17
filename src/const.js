@@ -49,3 +49,29 @@ export const UpdateType = {
   EVENT: `EVENT`,
   TRIP: `TRIP`,
 };
+
+export const TripControlsItem = {
+  NEW_EVENT: `New event`,
+  TABLE: `Table`,
+  STATS: `Stats`
+};
+
+export const ChartType = {
+  MONEY: `MONEY`,
+  TRANSPORT: `TRANSPORT`,
+  TIME_SPENT: `TIME SPENT`,
+};
+
+export const ActionIcon = {
+  'Taxi': `🚕`,
+  'Bus': `🚌`,
+  'Train': `🚂`,
+  'Ship': `🚢`,
+  'Transport': `🚙`,
+  'Drive': `🚗`,
+  'Flight': `✈️`,
+  'Check-in': `🏨`,
+  'Sightseeing': `🏛`,
+  'Restaurant': `🍴`
+};
+

@@ -280,7 +280,7 @@ export default class EventEditorView extends SmartView {
 
   _priceInputHandler(evt) {
     this.updateData({
-      cost: evt.target.value
+      cost: parseInt(evt.target.value, 10)
     }, true);
   }
 

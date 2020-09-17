@@ -25,3 +25,13 @@ export const getDurationTime = (start, end) => {
     ${duration.minutes() === 0 ? `` : ` ${moment(duration.minutes(), `m`).format(`mm`)}M`}`
   );
 };
+
+export const getDurationInHourhs = (start, end) => {
+  const duration = moment.duration(Date.parse(end) - Date.parse(start));
+
+  return Math.round(duration.asHours());
+};
+
+export const getCurrentDate = () => {
+  return new Date();
+};

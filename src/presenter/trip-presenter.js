@@ -1,6 +1,6 @@
-import {RenderPosition, SortType, UserAction, UpdateType, FilterType} from "../const";
+import {RenderPosition, SortType, UserAction, UpdateType} from "../const";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
-import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView} from "../view/index";
+import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, StatisticsView} from "../view/index";
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
@@ -13,7 +13,10 @@ export default class TripPresenter {
     this._currentSortType = SortType.EVENT;
     this._eventPresenter = {};
 
-    this._totalPriceView = new TotalPriceView();
+    this._tripInfoView = null;
+    this._totalPriceView = null;
+    this._statisticsView = null;
+
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
 
@@ -22,25 +25,51 @@ export default class TripPresenter {
     this._handleEventStatusChange = this._handleEventStatusChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._eventsModel.addObserver(this._handleModelChange);
-    this._filterModel.addObserver(this._handleModelChange);
-
     this._newEventPresenter = new NewEventPresenter(this._handleViewAction);
   }
 
   init() {
-    this._tripInfoView = new TripInfoView(this._eventsModel.getEvents());
+    if (this._tripInfoView === null || this._totalPriceView === null) {
+      this._tripInfoView = new TripInfoView(this._getEvents());
+      this._totalPriceView = new TotalPriceView();
 
-    renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
-    renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
+      renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
+      renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
+    }
+
+    this._eventsModel.addObserver(this._handleModelChange);
+    this._filterModel.addObserver(this._handleModelChange);
 
     this._renderTrip();
   }
 
-  createEvent() {
-    this._currentSortType = SortType.EVENT;
-    this._filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
-    this._newEventPresenter.init(this._sortingView);
+  createEvent(callback) {
+    this._newEventPresenter.init(this._sortingView, callback);
+  }
+
+  removeStats() {
+    removeElement(this._statisticsView);
+  }
+
+  createStats() {
+    this._statisticsView = new StatisticsView(this._getEvents());
+    renderElement(this._eventsContainer, this._statisticsView, RenderPosition.AFTEREND);
+  }
+
+  destroy({removeHeader = true} = {}) {
+    this._clearTrip();
+
+    if (removeHeader) {
+      removeElement(this._tripInfoView);
+      removeElement(this._totalPriceView);
+
+      this._tripInfoView = null;
+      this._totalPriceView = null;
+    }
+
+    this._eventsModel.removeObserver(this._handleModelChange);
+    this._filterModel.removeObserver(this._handleModelChange);
+
   }
 
   _getEvents() {
