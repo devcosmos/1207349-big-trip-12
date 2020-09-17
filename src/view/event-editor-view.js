@@ -91,7 +91,7 @@ const createEventDescriptionTemplate = (description) => {
       ${description.text ? `<p class="event__destination-description">${description.text}</p>` : `` }
       ${description.images.length === 0 ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
-          ${description.images.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`)}
+          ${description.images.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
         </div>
       </div>`}
     </section>`
