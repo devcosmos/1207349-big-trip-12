@@ -66,6 +66,10 @@ renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTERE
 filterPresenter.init();
 tripPresenter.init();
 
-api.getEvents().then((events) => {
-  eventsModel.setEvents(events);
-});
+api.getEvents()
+  .then((events) => {
+    eventsModel.setEvents(UpdateType.INIT, events);
+  })
+  .catch(() => {
+    eventsModel.setEvents(UpdateType.INIT, []);
+  });

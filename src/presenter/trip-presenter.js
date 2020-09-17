@@ -1,6 +1,6 @@
 import {RenderPosition, SortType, UserAction, UpdateType} from "../const";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
-import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, StatisticsView} from "../view/index";
+import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, StatisticsView, LoadingView} from "../view/index";
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
@@ -12,6 +12,7 @@ export default class TripPresenter {
 
     this._currentSortType = SortType.EVENT;
     this._eventPresenter = {};
+    this._isLoading = true;
 
     this._tripInfoView = null;
     this._totalPriceView = null;
@@ -19,6 +20,7 @@ export default class TripPresenter {
 
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
+    this._loadingView = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelChange = this._handleModelChange.bind(this);
@@ -115,6 +117,11 @@ export default class TripPresenter {
         this._clearTrip();
         this._renderTrip();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        removeElement(this._loadingView);
+        this._renderTrip();
+        break;
     }
   }
 
@@ -192,6 +199,10 @@ export default class TripPresenter {
     renderElement(this._eventsContainer, this._noEventView, RenderPosition.BEFOREEND);
   }
 
+  _renderLoading() {
+    renderElement(this._eventsContainer, this._loadingView, RenderPosition.BEFOREEND);
+  }
+
   _clearTrip() {
     Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
@@ -203,6 +214,11 @@ export default class TripPresenter {
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     if (this._getEvents().length === 0) {
       this._renderNoEdit();
       return;
