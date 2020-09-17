@@ -4,11 +4,12 @@ import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventVie
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
-  constructor(eventsContainer, tripContainer, eventsModel, filterModel) {
+  constructor(eventsContainer, tripContainer, eventsModel, filterModel, api) {
     this._eventsContainer = eventsContainer;
     this._tripContainer = tripContainer;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
+    this._api = api;
 
     this._currentSortType = SortType.EVENT;
     this._eventPresenter = {};
@@ -97,7 +98,9 @@ export default class TripPresenter {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._eventsModel.updateEvent(updateType, update);
+        this._api.updateEvent(update).then((response) => {
+          this._eventsModel.updateEvent(updateType, response);
+        });
         break;
       case UserAction.ADD_EVENT:
         this._eventsModel.addEvent(updateType, update);

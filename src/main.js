@@ -23,7 +23,7 @@ const filterModel = new FilterModel();
 
 const navControllerView = new NavigationControllerView();
 
-const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel);
+const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
 
 const newEventButtonClickHandler = (evt) => {
@@ -59,9 +59,6 @@ const navControllerClickHandler = (tripControlsItem) => {
 };
 
 newEventButton.addEventListener(`click`, newEventButtonClickHandler);
-navControllerView.setNavControllerClickHandler(navControllerClickHandler);
-
-renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
 
 filterPresenter.init();
 tripPresenter.init();
@@ -69,7 +66,11 @@ tripPresenter.init();
 api.getEvents()
   .then((events) => {
     eventsModel.setEvents(UpdateType.INIT, events);
+    renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
+    navControllerView.setNavControllerClickHandler(navControllerClickHandler);
   })
   .catch(() => {
+    renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
+    navControllerView.setNavControllerClickHandler(navControllerClickHandler);
     eventsModel.setEvents(UpdateType.INIT, []);
   });

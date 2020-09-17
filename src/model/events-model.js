@@ -91,7 +91,7 @@ export default class EventsModel extends Observer {
         {},
         event,
         {
-          "type": event.eventType[0].toUpperCase() + event.eventType.slice(1),
+          "type": event.eventType.toLowerCase(),
           "destination": {
             "name": event.currentDestination,
             "description": event.description.text,
