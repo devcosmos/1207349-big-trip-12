@@ -4,8 +4,18 @@ import {EventsModel, FilterModel} from "./model/index";
 import {NavigationControllerView} from "./view/index";
 import {TripPresenter, FilterPresenter} from "./presenter/index";
 import {generateEvent} from "./mock/event";
+import Api from "./api";
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
+
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+const AUTHORIZATION = `Basic k3jsk3sdfjk4ns1d45kbj`;
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getEvents().then((events) => {
+  console.log(events);
+});
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
