@@ -26,12 +26,6 @@ export const getDurationTime = (start, end) => {
   );
 };
 
-export const getDurationInHourhs = (start, end) => {
-  const duration = moment.duration(Date.parse(end) - Date.parse(start));
-
-  return Math.round(duration.asHours());
-};
-
-export const getCurrentDate = () => {
-  return new Date();
+export const getDurationInHours = (start, end) => {
+  return Math.round(moment.duration(Date.parse(end) - Date.parse(start)).asHours());
 };

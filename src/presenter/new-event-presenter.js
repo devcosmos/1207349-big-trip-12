@@ -1,5 +1,5 @@
 import {RenderPosition, UserAction, UpdateType} from "../const";
-import {renderElement, removeElement, getCurrentDate} from "../utils/index";
+import {renderElement, removeElement} from "../utils/index";
 import {EventEditorView} from "../view/index";
 import {DESTINATIONS, generateId} from "../mock/event";
 
@@ -12,8 +12,8 @@ const BLANK_EVENT = {
     text: ``,
     images: [],
   },
-  dateStart: getCurrentDate(),
-  dateEnd: getCurrentDate(),
+  dateStart: new Date(),
+  dateEnd: new Date(),
   cost: 0,
 };
 
@@ -29,13 +29,13 @@ export default class NewEventPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(eventListContainer, callback) {
+  init(eventListContainer, destroyCallback) {
     if (this._eventEditorView !== null) {
       return;
     }
 
     this._eventListContainer = eventListContainer;
-    this._destroyCallback = callback;
+    this._destroyCallback = destroyCallback;
 
     this._eventEditorView = new EventEditorView(BLANK_EVENT, DESTINATIONS);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);

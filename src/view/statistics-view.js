@@ -1,5 +1,5 @@
 import {ChartType} from "../const";
-import {splitEventsByTypeAndPrice, splitEventsByTransportTypeAndRepeats, splitEventsByTypeAndTimeSpend} from "../utils/index";
+import {splitEventsByChartType} from "../utils/index";
 import SmartView from "./smart-view";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
@@ -129,9 +129,9 @@ export default class StatisticsView extends SmartView {
     const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
     const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
 
-    const eventsByTypeAndPrice = splitEventsByTypeAndPrice(this._data);
-    const eventsByTransportTypeAndRepeats = splitEventsByTransportTypeAndRepeats(this._data);
-    const eventsByTypeAndTimeSpend = splitEventsByTypeAndTimeSpend(this._data);
+    const eventsByTypeAndPrice = splitEventsByChartType(ChartType.MONEY, this._data);
+    const eventsByTransportTypeAndRepeats = splitEventsByChartType(ChartType.TRANSPORT, this._data);
+    const eventsByTypeAndTimeSpend = splitEventsByChartType(ChartType.TIME_SPENT, this._data);
 
     const BAR_HEIGHT = 55;
 
