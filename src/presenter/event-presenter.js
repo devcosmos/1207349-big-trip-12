@@ -1,7 +1,6 @@
 import {RenderPosition, EventStatus, UserAction, UpdateType, SortType} from "../const";
 import {renderElement, replaceElement, removeElement} from "../utils/index";
 import {EventEditorView, EventView} from "../view/index";
-import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {
   constructor(eventListContainer, changeData, changeEventStatus, currentSortType) {
@@ -20,14 +19,14 @@ export default class EventPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(event) {
+  init(event, destinations, offers) {
     this._event = event;
 
     const prevEventView = this._eventView;
     const prevEventEditorView = this._eventEditorView;
 
     this._eventView = new EventView(event);
-    this._eventEditorView = new EventEditorView(event, DESTINATIONS);
+    this._eventEditorView = new EventEditorView(event, destinations, offers);
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);

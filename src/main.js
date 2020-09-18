@@ -1,11 +1,12 @@
-import {EVENT_COUNT, RenderPosition, TripControlsItem, UpdateType, FilterType} from "./const";
+import {RenderPosition, TripControlsItem, UpdateType, FilterType} from "./const";
 import {renderElement} from "./utils/index";
 import {EventsModel, FilterModel} from "./model/index";
 import {NavigationControllerView} from "./view/index";
 import {TripPresenter, FilterPresenter} from "./presenter/index";
-import {generateEvent} from "./mock/event";
+import Api from "./api";
 
-const events = new Array(EVENT_COUNT).fill().map(generateEvent);
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+const AUTHORIZATION = `Basic k3jsk3sdfjk4ns1d45k1b2`;
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
@@ -14,6 +15,16 @@ const eventsElement = siteMainElement.querySelector(`.trip-events`);
 const tripControlsFirstElement = tripElement.querySelector(`.trip-controls > h2:first-child`);
 const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2:last-child`);
 const newEventButton = tripElement.querySelector(`.trip-main__event-add-btn`);
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+const eventsModel = new EventsModel();
+const filterModel = new FilterModel();
+
+const navControllerView = new NavigationControllerView();
+
+const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel, api);
+const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
 
 const newEventButtonClickHandler = (evt) => {
   evt.preventDefault();
@@ -47,20 +58,28 @@ const navControllerClickHandler = (tripControlsItem) => {
   }
 };
 
-const navControllerView = new NavigationControllerView();
-
-renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
-
 newEventButton.addEventListener(`click`, newEventButtonClickHandler);
-navControllerView.setNavControllerClickHandler(navControllerClickHandler);
-
-const eventsModel = new EventsModel();
-eventsModel.setEvents(events);
-
-const filterModel = new FilterModel();
-
-const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel);
-const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
 
 filterPresenter.init();
 tripPresenter.init();
+
+Promise
+  .all([
+    api.getOffers(),
+    api.getDestinations(),
+    api.getEvents(),
+  ])
+  .then(([offers, destinations, events]) => {
+    eventsModel.setOffers(offers);
+    eventsModel.setDestinations(destinations);
+    eventsModel.setEvents(UpdateType.INIT, events);
+    renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
+    navControllerView.setNavControllerClickHandler(navControllerClickHandler);
+  })
+  .catch(() => {
+    eventsModel.setOffers([]);
+    eventsModel.setDestinations([]);
+    eventsModel.setEvents(UpdateType.INIT, []);
+    renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
+    navControllerView.setNavControllerClickHandler(navControllerClickHandler);
+  });

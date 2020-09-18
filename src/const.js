@@ -1,5 +1,3 @@
-export const EVENT_COUNT = 15;
-
 export const EVENT_TYPE_TRANSFER = [
   `Taxi`,
   `Bus`,
@@ -48,6 +46,7 @@ export const UserAction = {
 export const UpdateType = {
   EVENT: `EVENT`,
   TRIP: `TRIP`,
+  INIT: `INIT`
 };
 
 export const TripControlsItem = {
@@ -59,7 +58,7 @@ export const TripControlsItem = {
 export const ChartType = {
   MONEY: `MONEY`,
   TRANSPORT: `TRANSPORT`,
-  TIME_SPENT: `TIME SPENT`,
+  TIME_SPENT: `TIME SPENT`
 };
 
 export const ActionIcon = {

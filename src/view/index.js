@@ -9,3 +9,4 @@ export {default as DayView} from "./day-view";
 export {default as EventView} from "./event-view";
 export {default as NoEventView} from "./no-event-view";
 export {default as StatisticsView} from "./statistics-view.js";
+export {default as LoadingView} from "./loading-view.js";

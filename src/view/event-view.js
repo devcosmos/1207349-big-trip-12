@@ -7,9 +7,9 @@ const createAcceptedOffersTemplate = (offers) => {
     offers.length === 0 ? `` : `<h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
         ${offers.map((offer) => `<li class="event__offer">
-          <span class="event__offer-title">${offer.name}</span>
+          <span class="event__offer-title">${offer.title}</span>
           &plus;
-          &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
+          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
         </li>`).join(``)}
       </ul>`
   );

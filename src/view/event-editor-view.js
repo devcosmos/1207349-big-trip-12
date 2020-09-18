@@ -3,7 +3,6 @@ import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/index";
 import SmartView from "./smart-view";
 import flatpickr from "flatpickr";
 import he from "he";
-import {getOffers} from "../mock/event";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -51,15 +50,13 @@ const createEventDestinationTemplate = (eventType, cities, currentDestination) =
         value="${he.encode(currentDestination)}" 
         list="destination-list">
       <datalist id="destination-list">  
-        ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
+        ${cities.map((city) => `<option value="${city.name}"></option>`).join(``)}
       </datalist>
     </div>`
   );
 };
 
-const createEventOffersTemplate = (acceptedOffers, eventType) => {
-  const offers = getOffers(eventType);
-
+const createEventOffersTemplate = (acceptedOffers, offers) => {
   return (
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -70,12 +67,12 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
             class="event__offer-checkbox  visually-hidden" 
             id="event-offer-${i}" 
             type="checkbox" 
-            name="${offer.name}"
-            ${acceptedOffers.some((acceptedOffer) => acceptedOffer.name === offer.name) ? `checked` : ``}>
+            name="${offer.title}"
+            ${acceptedOffers.some((acceptedOffer) => acceptedOffer.title === offer.title) ? `checked` : ``}>
           <label class="event__offer-label" for="event-offer-${i}">
-            <span class="event__offer-title">${offer.name}</span>
+            <span class="event__offer-title">${offer.title}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
+            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
           </label>
         </div>`).join(``)}
 
@@ -84,27 +81,30 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
   );
 };
 
-const createEventDescriptionTemplate = (description) => {
+const createEventDescriptionTemplate = (city) => {
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      ${description.text ? `<p class="event__destination-description">${description.text}</p>` : `` }
-      ${description.images.length === 0 ? `` : `<div class="event__photos-container">
+      ${city.description ? `<p class="event__destination-description">${city.description}</p>` : `` }
+      ${city.pictures.length === 0 ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
-          ${description.images.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`)}
+          ${city.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
         </div>
       </div>`}
     </section>`
   );
 };
 
-const createEventEditorTemplate = (event, cities) => {
-  const {isFavorite, eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
+const createEventEditorTemplate = (event, destinations, allOffers) => {
+  const {isFavorite, eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
+
+  const city = destinations.find((destination) => destination.name === currentDestination);
+  const offers = allOffers.find((offer) => offer.type === event.eventType.toLowerCase()).offers;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
-  const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination);
-  const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, eventType);
-  const eventDescriptionTemplate = !description.text && description.images.length === 0 ? `` : createEventDescriptionTemplate(description);
+  const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations, currentDestination);
+  const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, offers);
+  const eventDescriptionTemplate = createEventDescriptionTemplate(city);
   const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtDefaultFormat(dateStart)}`;
   const dateEndEventAtFormat = dateEnd === null ? `` : `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtDefaultFormat(dateEnd)}`;
 
@@ -137,7 +137,7 @@ const createEventEditorTemplate = (event, cities) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">Delete</button>
         <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite">
           <span class="visually-hidden">Add to favorite</span>
@@ -161,10 +161,11 @@ const createEventEditorTemplate = (event, cities) => {
 };
 
 export default class EventEditorView extends SmartView {
-  constructor(event, cities) {
+  constructor(event, destinations, offers) {
     super();
     this._data = Object.assign({}, event);
-    this._cities = cities;
+    this._destinations = destinations;
+    this._offers = offers;
 
     this._dateStartDatepicker = null;
     this._dateEndDatepicker = null;
@@ -199,7 +200,7 @@ export default class EventEditorView extends SmartView {
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._data, this._cities);
+    return createEventEditorTemplate(this._data, this._destinations, this._offers);
   }
 
   restoreHandlers() {
@@ -285,7 +286,13 @@ export default class EventEditorView extends SmartView {
   }
 
   _destinationInputHandler(evt) {
-    if (this._cities.includes(evt.target.value)) {
+    const cities = [];
+
+    this._destinations.forEach((city) => {
+      cities.push(city.name);
+    });
+
+    if (cities.includes(evt.target.value)) {
       evt.target.setCustomValidity(``);
     } else {
       evt.target.setCustomValidity(`The selected city is not in the list`);
@@ -294,7 +301,7 @@ export default class EventEditorView extends SmartView {
 
     this.updateData({
       currentDestination: evt.target.value
-    }, true);
+    });
   }
 
   _favoriteChangeHandler() {
@@ -308,10 +315,10 @@ export default class EventEditorView extends SmartView {
       return;
     }
 
-    const offers = getOffers(this._data.eventType);
-    const offer = offers.find((element) => element.name === evt.target.name);
+    const offers = this._offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
+    const offer = offers.find((element) => element.title === evt.target.name);
     const newAcceptedOffers = this._data.acceptedOffers.slice();
-    const index = newAcceptedOffers.findIndex((item) => item.name === offer.name);
+    const index = newAcceptedOffers.findIndex((item) => item.title === offer.title);
 
     if (evt.target.checked) {
       newAcceptedOffers.push(offer);

@@ -1,5 +1,5 @@
-import {getDurationInHourhs} from "./index";
-import {ActionIcon, EVENT_TYPE_TRANSFER} from "../const";
+import {getDurationInHours} from "./index";
+import {ActionIcon, EVENT_TYPE_TRANSFER, ChartType} from "../const";
 
 export const splitEventsByDays = (events) => {
   const tripDays = [];
@@ -45,47 +45,25 @@ export const sortEventsByDate = (a, b) => {
   return a.dateStart - b.dateStart;
 };
 
-export const splitEventsByTypeAndPrice = (events) => {
+export const splitEventsByChartType = (chartType, data) => {
+  const events = chartType === ChartType.TRANSPORT
+    ? data.filter((event) => EVENT_TYPE_TRANSFER.includes(event.eventType))
+    : data;
   const eventTypes = {};
 
   events.forEach((event) => {
     const eventType = `${ActionIcon[event.eventType]} ${event.eventType.toUpperCase()}`;
-    if (eventTypes[eventType]) {
-      eventTypes[eventType] += event.cost;
-    } else {
-      eventTypes[eventType] = event.cost;
-    }
-  });
-
-  return Object.entries(eventTypes);
-};
-
-export const splitEventsByTransportTypeAndRepeats = (events) => {
-  const eventTypes = {};
-
-  events
-    .filter((event) => EVENT_TYPE_TRANSFER.includes(event.eventType))
-    .forEach((event) => {
-      const eventType = `${ActionIcon[event.eventType]} ${event.eventType.toUpperCase()}`;
-      if (eventTypes[eventType]) {
-        eventTypes[eventType]++;
-      } else {
-        eventTypes[eventType] = 1;
-      }
-    });
-
-  return Object.entries(eventTypes);
-};
-
-export const splitEventsByTypeAndTimeSpend = (events) => {
-  const eventTypes = {};
-
-  events.forEach((event) => {
-    const eventType = `${ActionIcon[event.eventType]} ${event.eventType.toUpperCase()}`;
-    if (eventTypes[eventType]) {
-      eventTypes[eventType] += getDurationInHourhs(event.dateStart, event.dateEnd);
-    } else {
-      eventTypes[eventType] = getDurationInHourhs(event.dateStart, event.dateEnd);
+    switch (chartType) {
+      case (ChartType.MONEY):
+        eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + event.cost : event.cost;
+        break;
+      case (ChartType.TRANSPORT):
+        eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + 1 : 1;
+        break;
+      case (ChartType.TIME_SPENT):
+        const duration = getDurationInHours(event.dateStart, event.dateEnd);
+        eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + duration : duration;
+        break;
     }
   });
 

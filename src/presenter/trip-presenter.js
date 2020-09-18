@@ -1,24 +1,28 @@
 import {RenderPosition, SortType, UserAction, UpdateType} from "../const";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
-import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, StatisticsView} from "../view/index";
+import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, StatisticsView, LoadingView} from "../view/index";
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
-  constructor(eventsContainer, tripContainer, eventsModel, filterModel) {
+  constructor(eventsContainer, tripContainer, eventsModel, filterModel, api) {
     this._eventsContainer = eventsContainer;
     this._tripContainer = tripContainer;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
+    this._api = api;
 
     this._currentSortType = SortType.EVENT;
     this._eventPresenter = {};
+    this._isLoading = true;
 
+    this._sortingView = null;
     this._tripInfoView = null;
     this._totalPriceView = null;
     this._statisticsView = null;
 
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
+    this._loadingView = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelChange = this._handleModelChange.bind(this);
@@ -44,7 +48,7 @@ export default class TripPresenter {
   }
 
   createEvent(callback) {
-    this._newEventPresenter.init(this._sortingView, callback);
+    this._newEventPresenter.init(this._sortingView, callback, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
   }
 
   removeStats() {
@@ -95,7 +99,9 @@ export default class TripPresenter {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._eventsModel.updateEvent(updateType, update);
+        this._api.updateEvent(update).then((response) => {
+          this._eventsModel.updateEvent(updateType, response);
+        });
         break;
       case UserAction.ADD_EVENT:
         this._eventsModel.addEvent(updateType, update);
@@ -109,10 +115,15 @@ export default class TripPresenter {
   _handleModelChange(updateType, data) {
     switch (updateType) {
       case UpdateType.EVENT:
-        this._eventPresenter[data.id].init(data);
+        this._eventPresenter[data.id].init(data, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
         break;
       case UpdateType.TRIP:
         this._clearTrip();
+        this._renderTrip();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        removeElement(this._loadingView);
         this._renderTrip();
         break;
     }
@@ -137,7 +148,7 @@ export default class TripPresenter {
 
   _renderEvent(event) {
     const eventPresenter = new EventPresenter(this._eventListElement, this._handleViewAction, this._handleEventStatusChange, this._currentSortType);
-    eventPresenter.init(event);
+    eventPresenter.init(event, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
     this._eventPresenter[event.id] = eventPresenter;
   }
 
@@ -192,17 +203,29 @@ export default class TripPresenter {
     renderElement(this._eventsContainer, this._noEventView, RenderPosition.BEFOREEND);
   }
 
+  _renderLoading() {
+    renderElement(this._eventsContainer, this._loadingView, RenderPosition.BEFOREEND);
+  }
+
   _clearTrip() {
     Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
     this._newEventPresenter.destroy();
 
-    removeElement(this._sortingView);
+    if (this._sortingView !== null) {
+      removeElement(this._sortingView);
+    }
+
     removeElement(this._daysView);
     removeElement(this._noEventView);
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     if (this._getEvents().length === 0) {
       this._renderNoEdit();
       return;
