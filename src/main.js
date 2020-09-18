@@ -63,32 +63,23 @@ newEventButton.addEventListener(`click`, newEventButtonClickHandler);
 filterPresenter.init();
 tripPresenter.init();
 
-api.getOffers()
-  .then((offers) => {
-    eventsModel.setOffers(UpdateType.TRIP, offers);
-  })
-  .catch(() => {
-    eventsModel.setOffers(UpdateType.TRIP, []);
-  });
-  
-api.getDestinations()
-  .then((destinations) => {
-    eventsModel.setDestinations(UpdateType.TRIP, destinations);
-  })
-  .catch(() => {
-    eventsModel.setDestinations(UpdateType.TRIP, []);
-  });
-
-api.getEvents()
-  .then((events) => {
-    console.log(events)
+Promise
+  .all([
+    api.getOffers(),
+    api.getDestinations(),
+    api.getEvents(),
+  ])
+  .then(([offers, destinations, events]) => {
+    eventsModel.setOffers(offers);
+    eventsModel.setDestinations(destinations);
     eventsModel.setEvents(UpdateType.INIT, events);
     renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
     navControllerView.setNavControllerClickHandler(navControllerClickHandler);
   })
   .catch(() => {
+    eventsModel.setOffers([]);
+    eventsModel.setDestinations([]);
+    eventsModel.setEvents(UpdateType.INIT, []);
     renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
     navControllerView.setNavControllerClickHandler(navControllerClickHandler);
-    eventsModel.setEvents(UpdateType.INIT, []);
   });
-

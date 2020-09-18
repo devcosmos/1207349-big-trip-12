@@ -1,7 +1,6 @@
 import {RenderPosition, EventStatus, UserAction, UpdateType, SortType} from "../const";
 import {renderElement, replaceElement, removeElement} from "../utils/index";
 import {EventEditorView, EventView} from "../view/index";
-import {DESTINATIONS} from "../mock/event";
 
 export default class EventPresenter {
   constructor(eventListContainer, changeData, changeEventStatus, currentSortType) {

@@ -14,16 +14,12 @@ export default class EventsModel extends Observer {
     this._notify(updateType);
   }
 
-  setOffers(updateType, offers) {
+  setOffers(offers) {
     this._offers = offers.slice();
-
-    this._notify(updateType);
   }
 
-  setDestinations(updateType, destinations) {
+  setDestinations(destinations) {
     this._destinations = destinations.slice();
-
-    this._notify(updateType);
   }
 
   getEvents() {
@@ -31,12 +27,10 @@ export default class EventsModel extends Observer {
   }
 
   getOffers() {
-    console.log(this._offers)
     return this._offers;
   }
 
   getDestinations() {
-    // console.log(this.destinations)
     return this._destinations;
   }
 

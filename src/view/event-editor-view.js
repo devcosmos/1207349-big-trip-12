@@ -3,7 +3,6 @@ import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/index";
 import SmartView from "./smart-view";
 import flatpickr from "flatpickr";
 import he from "he";
-import {getOffers} from "../mock/event";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -51,9 +50,7 @@ const createEventDestinationTemplate = (eventType, cities, currentDestination) =
         value="${he.encode(currentDestination)}" 
         list="destination-list">
       <datalist id="destination-list">  
-        ${
-          cities.map((city) => `<option value="${city.name}"></option>`).join(``)
-        }
+        ${cities.map((city) => `<option value="${city.name}"></option>`).join(``)}
       </datalist>
     </div>`
   );
@@ -98,16 +95,14 @@ const createEventDescriptionTemplate = (city) => {
   );
 };
 
-const createEventEditorTemplate = (event, cities, offers) => {
-  const {isFavorite, eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
+const createEventEditorTemplate = (event, destinations, allOffers) => {
+  const {isFavorite, eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
 
-  // console.log(offers)
-  // console.log(city)
-  
-  const city = cities.length === 0 ? [] : cities.find((city) => city.name === currentDestination);
+  const city = destinations.find((destination) => destination.name === currentDestination);
+  const offers = allOffers.find((offer) => offer.type === event.eventType.toLowerCase()).offers;
+
   const eventTypeTemplate = createEventTypeTemplate(eventType);
-  const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination);
-  // const eventOffersTemplate = offers.length === 0 ? `` : createEventOffersTemplate(acceptedOffers, offers);
+  const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations, currentDestination);
   const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, offers);
   const eventDescriptionTemplate = createEventDescriptionTemplate(city);
   const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtDefaultFormat(dateStart)}`;
@@ -142,7 +137,7 @@ const createEventEditorTemplate = (event, cities, offers) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">Delete</button>
         <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite">
           <span class="visually-hidden">Add to favorite</span>
@@ -169,9 +164,8 @@ export default class EventEditorView extends SmartView {
   constructor(event, destinations, offers) {
     super();
     this._data = Object.assign({}, event);
-    this._cities = destinations;
-    // this._destinations = destinations;
-    this._offers = offers.length === 0 ? [] : offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
+    this._destinations = destinations;
+    this._offers = offers;
 
     this._dateStartDatepicker = null;
     this._dateEndDatepicker = null;
@@ -206,7 +200,7 @@ export default class EventEditorView extends SmartView {
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._data, this._cities, this._offers);
+    return createEventEditorTemplate(this._data, this._destinations, this._offers);
   }
 
   restoreHandlers() {
@@ -292,14 +286,12 @@ export default class EventEditorView extends SmartView {
   }
 
   _destinationInputHandler(evt) {
+    const cities = [];
 
-    const cities = []
-
-    this._cities.forEach((city) => {
+    this._destinations.forEach((city) => {
       cities.push(city.name);
-    })
+    });
 
-    // console.log(cities)
     if (cities.includes(evt.target.value)) {
       evt.target.setCustomValidity(``);
     } else {
@@ -309,7 +301,7 @@ export default class EventEditorView extends SmartView {
 
     this.updateData({
       currentDestination: evt.target.value
-    }, true);
+    });
   }
 
   _favoriteChangeHandler() {
@@ -323,21 +315,17 @@ export default class EventEditorView extends SmartView {
       return;
     }
 
-    if (this._offers.length === 0) {
-      return;
-    }
-    
-    const offers = this._offers;
+    const offers = this._offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
     const offer = offers.find((element) => element.title === evt.target.name);
     const newAcceptedOffers = this._data.acceptedOffers.slice();
     const index = newAcceptedOffers.findIndex((item) => item.title === offer.title);
-    
+
     if (evt.target.checked) {
       newAcceptedOffers.push(offer);
     } else {
       newAcceptedOffers.splice(index, 1);
     }
-    
+
     this.updateData({
       acceptedOffers: newAcceptedOffers
     }, true);
