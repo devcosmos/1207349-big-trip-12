@@ -29,7 +29,7 @@ export default class NewEventPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(eventListContainer, destroyCallback) {
+  init(eventListContainer, destroyCallback, destination, offers) {
     if (this._eventEditorView !== null) {
       return;
     }
@@ -37,7 +37,7 @@ export default class NewEventPresenter {
     this._eventListContainer = eventListContainer;
     this._destroyCallback = destroyCallback;
 
-    this._eventEditorView = new EventEditorView(BLANK_EVENT, DESTINATIONS);
+    this._eventEditorView = new EventEditorView(BLANK_EVENT, destination, offers);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
 

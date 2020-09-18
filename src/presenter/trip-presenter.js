@@ -15,6 +15,7 @@ export default class TripPresenter {
     this._eventPresenter = {};
     this._isLoading = true;
 
+    this._sortingView = null;
     this._tripInfoView = null;
     this._totalPriceView = null;
     this._statisticsView = null;
@@ -47,7 +48,7 @@ export default class TripPresenter {
   }
 
   createEvent(callback) {
-    this._newEventPresenter.init(this._sortingView, callback);
+    this._newEventPresenter.init(this._sortingView, callback, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
   }
 
   removeStats() {
@@ -114,7 +115,7 @@ export default class TripPresenter {
   _handleModelChange(updateType, data) {
     switch (updateType) {
       case UpdateType.EVENT:
-        this._eventPresenter[data.id].init(data);
+        this._eventPresenter[data.id].init(data, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
         break;
       case UpdateType.TRIP:
         this._clearTrip();
@@ -147,7 +148,7 @@ export default class TripPresenter {
 
   _renderEvent(event) {
     const eventPresenter = new EventPresenter(this._eventListElement, this._handleViewAction, this._handleEventStatusChange, this._currentSortType);
-    eventPresenter.init(event);
+    eventPresenter.init(event, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
     this._eventPresenter[event.id] = eventPresenter;
   }
 
@@ -211,7 +212,10 @@ export default class TripPresenter {
     this._eventPresenter = {};
     this._newEventPresenter.destroy();
 
-    removeElement(this._sortingView);
+    if (this._sortingView !== null) {
+      removeElement(this._sortingView);
+    }
+
     removeElement(this._daysView);
     removeElement(this._noEventView);
   }

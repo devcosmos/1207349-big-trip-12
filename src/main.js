@@ -6,7 +6,7 @@ import {TripPresenter, FilterPresenter} from "./presenter/index";
 import Api from "./api";
 
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
-const AUTHORIZATION = `Basic k3jsk3sdfjk4ns1d45kbj`;
+const AUTHORIZATION = `Basic k3jsk3sdfjk4ns1d45k1b2`;
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
@@ -63,8 +63,25 @@ newEventButton.addEventListener(`click`, newEventButtonClickHandler);
 filterPresenter.init();
 tripPresenter.init();
 
+api.getOffers()
+  .then((offers) => {
+    eventsModel.setOffers(UpdateType.TRIP, offers);
+  })
+  .catch(() => {
+    eventsModel.setOffers(UpdateType.TRIP, []);
+  });
+  
+api.getDestinations()
+  .then((destinations) => {
+    eventsModel.setDestinations(UpdateType.TRIP, destinations);
+  })
+  .catch(() => {
+    eventsModel.setDestinations(UpdateType.TRIP, []);
+  });
+
 api.getEvents()
   .then((events) => {
+    console.log(events)
     eventsModel.setEvents(UpdateType.INIT, events);
     renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
     navControllerView.setNavControllerClickHandler(navControllerClickHandler);
@@ -74,3 +91,4 @@ api.getEvents()
     navControllerView.setNavControllerClickHandler(navControllerClickHandler);
     eventsModel.setEvents(UpdateType.INIT, []);
   });
+

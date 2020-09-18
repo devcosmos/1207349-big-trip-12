@@ -33,6 +33,16 @@ export default class Api {
       .then(EventsModel.adaptToClient);
   }
 
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then(Api.toJSON);
+  }
+
+  getOffers() {
+    return this._load({url: `offers`})
+      .then(Api.toJSON);
+  }
+
   _load({
     url,
     method = Method.GET,

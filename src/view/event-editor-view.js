@@ -51,15 +51,15 @@ const createEventDestinationTemplate = (eventType, cities, currentDestination) =
         value="${he.encode(currentDestination)}" 
         list="destination-list">
       <datalist id="destination-list">  
-        ${cities.map((city) => `<option value="${city}"></option>`).join(``)}
+        ${
+          cities.map((city) => `<option value="${city.name}"></option>`).join(``)
+        }
       </datalist>
     </div>`
   );
 };
 
-const createEventOffersTemplate = (acceptedOffers, eventType) => {
-  const offers = getOffers(eventType);
-
+const createEventOffersTemplate = (acceptedOffers, offers) => {
   return (
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -70,12 +70,12 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
             class="event__offer-checkbox  visually-hidden" 
             id="event-offer-${i}" 
             type="checkbox" 
-            name="${offer.name}"
-            ${acceptedOffers.some((acceptedOffer) => acceptedOffer.name === offer.name) ? `checked` : ``}>
+            name="${offer.title}"
+            ${acceptedOffers.some((acceptedOffer) => acceptedOffer.title === offer.title) ? `checked` : ``}>
           <label class="event__offer-label" for="event-offer-${i}">
-            <span class="event__offer-title">${offer.name}</span>
+            <span class="event__offer-title">${offer.title}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${offer.cost}</span>
+            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
           </label>
         </div>`).join(``)}
 
@@ -84,27 +84,32 @@ const createEventOffersTemplate = (acceptedOffers, eventType) => {
   );
 };
 
-const createEventDescriptionTemplate = (description) => {
+const createEventDescriptionTemplate = (city) => {
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      ${description.text ? `<p class="event__destination-description">${description.text}</p>` : `` }
-      ${description.images.length === 0 ? `` : `<div class="event__photos-container">
+      ${city.description ? `<p class="event__destination-description">${city.description}</p>` : `` }
+      ${city.pictures.length === 0 ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
-          ${description.images.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
+          ${city.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
         </div>
       </div>`}
     </section>`
   );
 };
 
-const createEventEditorTemplate = (event, cities) => {
+const createEventEditorTemplate = (event, cities, offers) => {
   const {isFavorite, eventType, currentDestination, acceptedOffers, description, dateStart, dateEnd, cost} = event;
 
+  // console.log(offers)
+  // console.log(city)
+  
+  const city = cities.length === 0 ? [] : cities.find((city) => city.name === currentDestination);
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, cities, currentDestination);
-  const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, eventType);
-  const eventDescriptionTemplate = !description.text && description.images.length === 0 ? `` : createEventDescriptionTemplate(description);
+  // const eventOffersTemplate = offers.length === 0 ? `` : createEventOffersTemplate(acceptedOffers, offers);
+  const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, offers);
+  const eventDescriptionTemplate = createEventDescriptionTemplate(city);
   const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtDefaultFormat(dateStart)}`;
   const dateEndEventAtFormat = dateEnd === null ? `` : `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtDefaultFormat(dateEnd)}`;
 
@@ -161,10 +166,12 @@ const createEventEditorTemplate = (event, cities) => {
 };
 
 export default class EventEditorView extends SmartView {
-  constructor(event, cities) {
+  constructor(event, destinations, offers) {
     super();
     this._data = Object.assign({}, event);
-    this._cities = cities;
+    this._cities = destinations;
+    // this._destinations = destinations;
+    this._offers = offers.length === 0 ? [] : offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
 
     this._dateStartDatepicker = null;
     this._dateEndDatepicker = null;
@@ -199,7 +206,7 @@ export default class EventEditorView extends SmartView {
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._data, this._cities);
+    return createEventEditorTemplate(this._data, this._cities, this._offers);
   }
 
   restoreHandlers() {
@@ -285,7 +292,15 @@ export default class EventEditorView extends SmartView {
   }
 
   _destinationInputHandler(evt) {
-    if (this._cities.includes(evt.target.value)) {
+
+    const cities = []
+
+    this._cities.forEach((city) => {
+      cities.push(city.name);
+    })
+
+    // console.log(cities)
+    if (cities.includes(evt.target.value)) {
       evt.target.setCustomValidity(``);
     } else {
       evt.target.setCustomValidity(`The selected city is not in the list`);
@@ -308,17 +323,21 @@ export default class EventEditorView extends SmartView {
       return;
     }
 
-    const offers = getOffers(this._data.eventType);
-    const offer = offers.find((element) => element.name === evt.target.name);
+    if (this._offers.length === 0) {
+      return;
+    }
+    
+    const offers = this._offers;
+    const offer = offers.find((element) => element.title === evt.target.name);
     const newAcceptedOffers = this._data.acceptedOffers.slice();
-    const index = newAcceptedOffers.findIndex((item) => item.name === offer.name);
-
+    const index = newAcceptedOffers.findIndex((item) => item.title === offer.title);
+    
     if (evt.target.checked) {
       newAcceptedOffers.push(offer);
     } else {
       newAcceptedOffers.splice(index, 1);
     }
-
+    
     this.updateData({
       acceptedOffers: newAcceptedOffers
     }, true);
