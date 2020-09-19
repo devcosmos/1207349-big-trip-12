@@ -1,21 +1,6 @@
 import {RenderPosition, UserAction, UpdateType} from "../const";
 import {renderElement, removeElement} from "../utils/index";
 import {EventEditorView} from "../view/index";
-import {DESTINATIONS, generateId} from "../mock/event";
-
-const BLANK_EVENT = {
-  isFavorite: false,
-  eventType: `Taxi`,
-  currentDestination: DESTINATIONS[0],
-  acceptedOffers: [],
-  description: {
-    text: ``,
-    images: [],
-  },
-  dateStart: new Date(),
-  dateEnd: new Date(),
-  cost: 0,
-};
 
 export default class NewEventPresenter {
   constructor(changeData) {
@@ -37,7 +22,7 @@ export default class NewEventPresenter {
     this._eventListContainer = eventListContainer;
     this._destroyCallback = destroyCallback;
 
-    this._eventEditorView = new EventEditorView(BLANK_EVENT, destination, offers);
+    this._eventEditorView = new EventEditorView(destination, offers);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
 
@@ -67,11 +52,7 @@ export default class NewEventPresenter {
   }
 
   _handleFormSubmit(event) {
-    this._changeData(
-        UserAction.ADD_EVENT,
-        UpdateType.TRIP,
-        Object.assign({id: generateId()}, event)
-    );
+    this._changeData(UserAction.ADD_EVENT, UpdateType.TRIP, event);
     this.destroy();
   }
 

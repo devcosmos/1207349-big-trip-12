@@ -19,14 +19,14 @@ export default class EventPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(event, destinations, offers) {
+  init(destinations, offers, event) {
     this._event = event;
 
     const prevEventView = this._eventView;
     const prevEventEditorView = this._eventEditorView;
 
     this._eventView = new EventView(event);
-    this._eventEditorView = new EventEditorView(event, destinations, offers);
+    this._eventEditorView = new EventEditorView(destinations, offers, event);
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
@@ -87,7 +87,7 @@ export default class EventPresenter {
 
   _handleFormSubmit(update) {
     const isOnlyEventUpdate =
-      (this._currentSortType !== SortType.PRICE || this._event.cost === update.cost) &&
+      (this._currentSortType !== SortType.PRICE || this._event.price === update.price) &&
       (this._currentSortType === SortType.PRICE || this._event.dateStart === update.dateStart) &&
       (this._currentSortType !== SortType.TIME || this._event.dateEnd === update.dateEnd);
 

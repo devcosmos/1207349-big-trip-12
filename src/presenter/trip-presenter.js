@@ -104,10 +104,14 @@ export default class TripPresenter {
         });
         break;
       case UserAction.ADD_EVENT:
-        this._eventsModel.addEvent(updateType, update);
+        this._api.addEvent(update).then((response) => {
+          this._eventsModel.addEvent(updateType, response);
+        });
         break;
       case UserAction.DELETE_EVENT:
-        this._eventsModel.deleteEvent(updateType, update);
+        this._api.deleteEvent(update).then(() => {
+          this._eventsModel.deleteEvent(updateType, update);
+        });
         break;
     }
   }
@@ -115,7 +119,7 @@ export default class TripPresenter {
   _handleModelChange(updateType, data) {
     switch (updateType) {
       case UpdateType.EVENT:
-        this._eventPresenter[data.id].init(data, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
+        this._eventPresenter[data.id].init(this._eventsModel.getDestinations(), this._eventsModel.getOffers(), data);
         break;
       case UpdateType.TRIP:
         this._clearTrip();
@@ -148,7 +152,7 @@ export default class TripPresenter {
 
   _renderEvent(event) {
     const eventPresenter = new EventPresenter(this._eventListElement, this._handleViewAction, this._handleEventStatusChange, this._currentSortType);
-    eventPresenter.init(event, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
+    eventPresenter.init(this._eventsModel.getDestinations(), this._eventsModel.getOffers(), event);
     this._eventPresenter[event.id] = eventPresenter;
   }
 
