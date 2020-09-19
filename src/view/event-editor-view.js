@@ -3,8 +3,21 @@ import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/index";
 import SmartView from "./smart-view";
 import flatpickr from "flatpickr";
 import he from "he";
-
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
+const BLANK_EVENT = {
+  eventType: EVENT_TYPE_TRANSFER[0],
+  currentDestination: ``,
+  acceptedOffers: [],
+  description: {
+    text: ``,
+    photos: [],
+  },
+  dateStart: new Date(),
+  dateEnd: new Date(),
+  price: 0,
+  isFavorite: false,
+};
 
 const createEventTypeTemplate = (type) => {
   return (
@@ -34,7 +47,7 @@ const createEventTypeTemplate = (type) => {
   );
 };
 
-const createEventDestinationTemplate = (eventType, cities, currentDestination) => {
+const createEventDestinationTemplate = (eventType, destinations, currentDestination) => {
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
 
   return (
@@ -47,10 +60,10 @@ const createEventDestinationTemplate = (eventType, cities, currentDestination) =
         id="event-destination" 
         type="text" 
         name="event-destination" 
-        value="${he.encode(currentDestination)}" 
+        value="${he.encode(currentDestination)}" required
         list="destination-list">
       <datalist id="destination-list">  
-        ${cities.map((city) => `<option value="${city.name}"></option>`).join(``)}
+        ${destinations.map((destination) => `<option value="${destination.name}"></option>`).join(``)}
       </datalist>
     </div>`
   );
@@ -81,32 +94,30 @@ const createEventOffersTemplate = (acceptedOffers, offers) => {
   );
 };
 
-const createEventDescriptionTemplate = (city) => {
+const createEventDescriptionTemplate = (destination) => {
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      ${city.description ? `<p class="event__destination-description">${city.description}</p>` : `` }
-      ${city.pictures.length === 0 ? `` : `<div class="event__photos-container">
+      ${destination.description ? `<p class="event__destination-description">${destination.description}</p>` : `` }
+      ${destination.pictures.length === 0 ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
-          ${city.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
+          ${destination.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
         </div>
       </div>`}
     </section>`
   );
 };
 
-const createEventEditorTemplate = (event, destinations, allOffers) => {
-  const {isFavorite, eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
-
-  const city = destinations.find((destination) => destination.name === currentDestination);
-  const offers = allOffers.find((offer) => offer.type === event.eventType.toLowerCase()).offers;
+const createEventEditorTemplate = (event, destinations, offers) => {
+  const {isFavorite, eventType, currentDestination, acceptedOffers, dateStart, dateEnd, price} = event;
+  const descriptionCurrentDestination = currentDestination === `` ? false : destinations.find((destination) => destination.name === currentDestination);
 
   const eventTypeTemplate = createEventTypeTemplate(eventType);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations, currentDestination);
-  const eventOffersTemplate = createEventOffersTemplate(acceptedOffers, offers);
-  const eventDescriptionTemplate = createEventDescriptionTemplate(city);
-  const dateStartEventAtFormat = dateStart === null ? `` : `${getDateAtDefaultFormat(dateStart)} ${getTimeAtDefaultFormat(dateStart)}`;
-  const dateEndEventAtFormat = dateEnd === null ? `` : `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtDefaultFormat(dateEnd)}`;
+  const eventOffersTemplate = offers.length === 0 ? `` : createEventOffersTemplate(acceptedOffers, offers);
+  const eventDescriptionTemplate = descriptionCurrentDestination ? createEventDescriptionTemplate(descriptionCurrentDestination) : ``;
+  const dateStartEventAtFormat = `${getDateAtDefaultFormat(dateStart)} ${getTimeAtDefaultFormat(dateStart)}`;
+  const dateEndEventAtFormat = `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtDefaultFormat(dateEnd)}`;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -133,7 +144,7 @@ const createEventEditorTemplate = (event, destinations, allOffers) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${cost === null ? `` : cost}">
+          <input class="event__input  event__input--price" id="event-price" type="number" name="event-price" value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -161,11 +172,12 @@ const createEventEditorTemplate = (event, destinations, allOffers) => {
 };
 
 export default class EventEditorView extends SmartView {
-  constructor(event, destinations, offers) {
+  constructor(destinations, offers, event = BLANK_EVENT) {
     super();
     this._data = Object.assign({}, event);
     this._destinations = destinations;
     this._offers = offers;
+    this._offersByType = offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
 
     this._dateStartDatepicker = null;
     this._dateEndDatepicker = null;
@@ -200,7 +212,7 @@ export default class EventEditorView extends SmartView {
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._data, this._destinations, this._offers);
+    return createEventEditorTemplate(this._data, this._destinations, this._offersByType);
   }
 
   restoreHandlers() {
@@ -254,8 +266,10 @@ export default class EventEditorView extends SmartView {
       .addEventListener(`input`, this._favoriteChangeHandler);
     this.getElement().querySelector(`.event__type-list`)
       .addEventListener(`click`, this._eventTypeChangeHandler);
-    this.getElement().querySelector(`.event__available-offers`)
-      .addEventListener(`click`, this._offersChangeHandler);
+    if (!(this._offersByType.length === 0)) {
+      this.getElement().querySelector(`.event__available-offers`)
+        .addEventListener(`click`, this._offersChangeHandler);
+    }
   }
 
   _dateStartChangeHandler([userDate]) {
@@ -281,26 +295,29 @@ export default class EventEditorView extends SmartView {
 
   _priceInputHandler(evt) {
     this.updateData({
-      cost: parseInt(evt.target.value, 10)
+      price: parseInt(evt.target.value, 10)
     }, true);
   }
 
   _destinationInputHandler(evt) {
-    const cities = [];
+    const destinations = [];
+    const currentDestination = this._destinations.find((destination) => destination.name === evt.target.value);
 
-    this._destinations.forEach((city) => {
-      cities.push(city.name);
+    this._destinations.forEach((destination) => {
+      destinations.push(destination.name);
     });
 
-    if (cities.includes(evt.target.value)) {
-      evt.target.setCustomValidity(``);
-    } else {
-      evt.target.setCustomValidity(`The selected city is not in the list`);
+    if (!destinations.includes(evt.target.value)) {
+      evt.target.setCustomValidity(`The selected destination is not in the list`);
       return;
     }
 
     this.updateData({
-      currentDestination: evt.target.value
+      currentDestination: evt.target.value,
+      description: {
+        text: currentDestination.description,
+        photos: currentDestination.pictures,
+      },
     });
   }
 
@@ -315,8 +332,7 @@ export default class EventEditorView extends SmartView {
       return;
     }
 
-    const offers = this._offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
-    const offer = offers.find((element) => element.title === evt.target.name);
+    const offer = this._offersByType.find((element) => element.title === evt.target.name);
     const newAcceptedOffers = this._data.acceptedOffers.slice();
     const index = newAcceptedOffers.findIndex((item) => item.title === offer.title);
 
@@ -338,13 +354,11 @@ export default class EventEditorView extends SmartView {
 
     this.getElement().querySelector(`.event__type-toggle`).checked = false;
 
-    const newAcceptedOffers = evt.target.value === this._data.eventType
-      ? this._data.acceptedOffers
-      : [];
+    this._offersByType = this._offers.find((offer) => offer.type === evt.target.value.toLowerCase()).offers;
 
     this.updateData({
       eventType: evt.target.value,
-      acceptedOffers: newAcceptedOffers
+      acceptedOffers: [],
     });
   }
 
