@@ -110,9 +110,10 @@ const createEventDescriptionTemplate = (destination) => {
   );
 };
 
-const createEventEditorTemplate = (event, destinations, offers) => {
+const createEventEditorTemplate = (event, destinations, offers, isNew) => {
   const {isFavorite, eventType, currentDestination, acceptedOffers, dateStart, dateEnd, price, isDisabled, isSaving, isDeleting} = event;
   const descriptionCurrentDestination = currentDestination === `` ? false : destinations.find((destination) => destination.name === currentDestination);
+  const deleteButtonName = isDeleting ? `Deleting...` : `Delete`;
 
   const eventTypeTemplate = createEventTypeTemplate(eventType, isDisabled);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations, currentDestination, isDisabled);
@@ -150,7 +151,9 @@ const createEventEditorTemplate = (event, destinations, offers) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? `disabled` : ``}>${isSaving ? `Saving...` : `Save`}</button>
-        <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>${isDeleting ? `Deleting...` : `Delete`}</button>
+        <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>
+          ${isNew ? `Cancel` : deleteButtonName}
+          </button>
         <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``} ${isDisabled ? `disabled` : ``}>
         <label class="event__favorite-btn" for="event-favorite">
           <span class="visually-hidden">Add to favorite</span>
@@ -174,12 +177,13 @@ const createEventEditorTemplate = (event, destinations, offers) => {
 };
 
 export default class EventEditorView extends SmartView {
-  constructor(destinations, offers, event = BLANK_EVENT) {
+  constructor(destinations, offers, event) {
     super();
-    this._data = EventEditorView.parseEventToData(event);
+    this._data = EventEditorView.parseEventToData(event || BLANK_EVENT);
     this._destinations = destinations;
     this._offers = offers;
     this._offersByType = offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
+    this._isNew = event ? false : true;
 
     this._dateStartDatepicker = null;
     this._dateEndDatepicker = null;
@@ -214,7 +218,7 @@ export default class EventEditorView extends SmartView {
   }
 
   getTemplate() {
-    return createEventEditorTemplate(this._data, this._destinations, this._offersByType);
+    return createEventEditorTemplate(this._data, this._destinations, this._offersByType, this._isNew);
   }
 
   restoreHandlers() {
@@ -386,13 +390,13 @@ export default class EventEditorView extends SmartView {
 
   static parseEventToData(event) {
     return Object.assign(
-      {},
-      event,
-      {
-        isDisabled: false,
-        isSaving: false,
-        isDeleting: false
-      }
+        {},
+        event,
+        {
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false
+        }
     );
   }
 

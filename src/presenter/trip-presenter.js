@@ -115,7 +115,7 @@ export default class TripPresenter {
             this._eventsModel.addEvent(updateType, response);
           })
           .catch(() => {
-            this._newEventPresenter.setAborting;
+            this._newEventPresenter.setAborting();
           });
         break;
       case UserAction.DELETE_EVENT:
