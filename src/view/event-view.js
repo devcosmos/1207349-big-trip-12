@@ -16,7 +16,7 @@ const createAcceptedOffersTemplate = (offers) => {
 };
 
 const createEventTemplate = (event) => {
-  const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
+  const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, price} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
   const timeStartAtShortFormat = getTimeAtDefaultFormat(dateStart);
@@ -44,7 +44,7 @@ const createEventTemplate = (event) => {
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${cost}</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         ${acceptedOffersTemplate}

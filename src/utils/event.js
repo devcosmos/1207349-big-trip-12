@@ -38,7 +38,7 @@ export const sortEventsByDuration = (a, b) => {
 };
 
 export const sortEventsByPrice = (a, b) => {
-  return b.cost - a.cost;
+  return b.price - a.price;
 };
 
 export const sortEventsByDate = (a, b) => {
@@ -55,7 +55,7 @@ export const splitEventsByChartType = (chartType, data) => {
     const eventType = `${ActionIcon[event.eventType]} ${event.eventType.toUpperCase()}`;
     switch (chartType) {
       case (ChartType.MONEY):
-        eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + event.cost : event.cost;
+        eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + event.price : event.price;
         break;
       case (ChartType.TRANSPORT):
         eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + 1 : 1;
