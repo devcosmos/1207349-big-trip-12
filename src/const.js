@@ -34,7 +34,10 @@ export const FilterType = {
 
 export const EventStatus = {
   DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
+  EDITING: `EDITING`,
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
 };
 
 export const UserAction = {

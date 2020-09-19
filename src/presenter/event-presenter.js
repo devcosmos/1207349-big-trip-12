@@ -42,7 +42,8 @@ export default class EventPresenter {
     }
 
     if (this._eventStatus === EventStatus.EDITING) {
-      replaceElement(this._eventEditorView, prevEventEditorView);
+      replaceElement(this._eventView, prevEventEditorView);
+      this._eventStatus = EventStatus.DEFAULT;
     }
 
     removeElement(prevEventView);
@@ -53,6 +54,35 @@ export default class EventPresenter {
     if (this._eventStatus !== EventStatus.DEFAULT) {
       this._eventEditorView.reset(this._event);
       this._replaceFormEditorToEvent();
+    }
+  }
+
+  setViewState(status) {
+    const resetFormState = () => {
+      this._eventEditorView.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (status) {
+      case EventStatus.SAVING:
+        this._eventEditorView.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case EventStatus.DELETING:
+        this._eventEditorView.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case EventStatus.ABORTING:
+        this._eventEditorView.shake(resetFormState);
+        this._eventView.shake(resetFormState);
+        break;
     }
   }
 
@@ -96,8 +126,6 @@ export default class EventPresenter {
         isOnlyEventUpdate ? UpdateType.EVENT : UpdateType.TRIP,
         update
     );
-
-    this._replaceFormEditorToEvent();
   }
 
   _handleDeleteClick(event) {

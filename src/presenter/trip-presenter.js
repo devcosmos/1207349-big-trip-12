@@ -1,4 +1,4 @@
-import {RenderPosition, SortType, UserAction, UpdateType} from "../const";
+import {RenderPosition, SortType, UserAction, UpdateType, EventStatus} from "../const";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
 import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, StatisticsView, LoadingView} from "../view/index";
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
@@ -99,19 +99,34 @@ export default class TripPresenter {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._api.updateEvent(update).then((response) => {
-          this._eventsModel.updateEvent(updateType, response);
-        });
+        this._eventPresenter[update.id].setViewState(EventStatus.SAVING);
+        this._api.updateEvent(update)
+          .then((response) => {
+            this._eventsModel.updateEvent(updateType, response);
+          })
+          .catch(() => {
+            this._eventPresenter[update.id].setViewState(EventStatus.ABORTING);
+          });
         break;
       case UserAction.ADD_EVENT:
-        this._api.addEvent(update).then((response) => {
-          this._eventsModel.addEvent(updateType, response);
-        });
+        this._newEventPresenter.setSaving();
+        this._api.addEvent(update)
+          .then((response) => {
+            this._eventsModel.addEvent(updateType, response);
+          })
+          .catch(() => {
+            this._newEventPresenter.setAborting;
+          });
         break;
       case UserAction.DELETE_EVENT:
-        this._api.deleteEvent(update).then(() => {
-          this._eventsModel.deleteEvent(updateType, update);
-        });
+        this._eventPresenter[update.id].setViewState(EventStatus.DELETING);
+        this._api.deleteEvent(update)
+          .then(() => {
+            this._eventsModel.deleteEvent(updateType, update);
+          })
+          .catch(() => {
+            this._eventPresenter[update.id].setViewState(EventStatus.ABORTING);
+          });
         break;
     }
   }

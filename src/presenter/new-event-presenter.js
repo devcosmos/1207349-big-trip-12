@@ -31,6 +31,25 @@ export default class NewEventPresenter {
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
+  setSaving() {
+    this._eventEditorView.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._eventEditorView.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._eventEditorView.shake(resetFormState);
+  }
+
   destroy() {
     if (this._eventEditorView === null) {
       return;
@@ -53,7 +72,6 @@ export default class NewEventPresenter {
 
   _handleFormSubmit(event) {
     this._changeData(UserAction.ADD_EVENT, UpdateType.TRIP, event);
-    this.destroy();
   }
 
   _handleDeleteClick() {
