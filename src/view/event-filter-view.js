@@ -1,6 +1,6 @@
 import AbstractView from "./abstract-view";
 
-const createEventFiltrationTemplate = (filters, currentFilter) => {
+const createEventFilterTemplate = (filters, currentFilter) => {
   return (
     `<form class="trip-filters" action="#" method="get">
       ${Object.values(filters).map((filter) => `<div class="trip-filters__filter">
@@ -22,7 +22,7 @@ const createEventFiltrationTemplate = (filters, currentFilter) => {
   );
 };
 
-export default class EventFiltrationView extends AbstractView {
+export default class EventFilterView extends AbstractView {
   constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
@@ -34,15 +34,15 @@ export default class EventFiltrationView extends AbstractView {
   }
 
   getTemplate() {
-    return createEventFiltrationTemplate(this._filters, this._currentFilter);
-  }
-
-  _filterTypeChangeHandler(evt) {
-    this._callback.filterTypeChange(evt.target.value);
+    return createEventFilterTemplate(this._filters, this._currentFilter);
   }
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
     this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
+  }
+
+  _filterTypeChangeHandler(evt) {
+    this._callback.filterTypeChange(evt.target.value);
   }
 }

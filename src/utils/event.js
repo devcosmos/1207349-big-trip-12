@@ -45,13 +45,13 @@ export const sortEventsByDate = (a, b) => {
   return a.dateStart - b.dateStart;
 };
 
-export const splitEventsByChartType = (chartType, data) => {
-  const events = chartType === ChartType.TRANSPORT
-    ? data.filter((event) => EVENT_TYPE_TRANSFER.includes(event.eventType))
-    : data;
+export const splitEventsByChartType = (chartType, events) => {
+  const filteredEvents = chartType === ChartType.TRANSPORT
+    ? events.filter((event) => EVENT_TYPE_TRANSFER.includes(event.eventType))
+    : events;
   const eventTypes = {};
 
-  events.forEach((event) => {
+  filteredEvents.forEach((event) => {
     const eventType = `${ActionIcon[event.eventType]} ${event.eventType.toUpperCase()}`;
     switch (chartType) {
       case (ChartType.MONEY):

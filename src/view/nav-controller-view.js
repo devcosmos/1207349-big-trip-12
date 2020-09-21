@@ -23,16 +23,6 @@ export default class NavigationControllerView extends AbstractView {
     return createNavigationControllerTemplate();
   }
 
-  _navControllerClickHandler(evt) {
-    if (evt.target.classList.contains(`trip-tabs__btn--active`)) {
-      return;
-    }
-
-    evt.preventDefault();
-    this.setNavControllerItem(evt.target.dataset.navControlItem);
-    this._callback.navControllerClick(evt.target.dataset.navControlItem);
-  }
-
   setNavControllerClickHandler(callback) {
     this._callback.navControllerClick = callback;
     this.getElement().addEventListener(`click`, this._navControllerClickHandler);
@@ -46,5 +36,15 @@ export default class NavigationControllerView extends AbstractView {
       activeItem.classList.remove(`trip-tabs__btn--active`);
       item.classList.add(`trip-tabs__btn--active`);
     }
+  }
+
+  _navControllerClickHandler(evt) {
+    if (evt.target.classList.contains(`trip-tabs__btn--active`)) {
+      return;
+    }
+
+    evt.preventDefault();
+    this.setNavControllerItem(evt.target.dataset.navControlItem);
+    this._callback.navControllerClick(evt.target.dataset.navControlItem);
   }
 }
