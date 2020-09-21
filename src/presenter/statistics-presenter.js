@@ -20,6 +20,10 @@ export default class StatisticsPresenter {
   }
 
   destroy() {
+    if (this._statisticsView === null) {
+      return;
+    }
+
     removeElement(this._statisticsView);
     this._statisticsView = null;
   }

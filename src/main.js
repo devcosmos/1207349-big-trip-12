@@ -23,7 +23,7 @@ const filterModel = new FilterModel();
 
 const navControllerView = new NavigationControllerView();
 
-const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel, api);
+const tripPresenter = new TripPresenter(eventsElement, eventsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
 const statisticsPresenter = new StatisticsPresenter(eventsElement, eventsModel);
 const tripInfoPresenter = new TripInfoPresenter(tripElement, eventsModel, filterModel);
@@ -43,19 +43,19 @@ const navControllerClickHandler = (tripControlsItem) => {
     case TripControlsItem.NEW_EVENT:
       statisticsPresenter.destroy();
       tripPresenter.destroy();
-      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
+      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
       tripPresenter.init();
       tripPresenter.createEvent(newEventFormCloseHandler);
       newEventButton.disabled = true;
       break;
     case TripControlsItem.TABLE:
       statisticsPresenter.destroy();
-      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
+      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
       tripPresenter.init();
       break;
     case TripControlsItem.STATS:
       tripPresenter.destroy();
-      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
+      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
       statisticsPresenter.init();
       break;
   }

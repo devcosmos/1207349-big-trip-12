@@ -1,5 +1,5 @@
 import {RenderPosition} from "../const";
-import {renderElement, replaceElement} from "../utils/index";
+import {removeElement, renderElement, replaceElement} from "../utils/index";
 import {TripInfoView, TotalPriceView} from "../view/index";
 
 export default class TripInfoPresenter {
@@ -23,14 +23,13 @@ export default class TripInfoPresenter {
   }
 
   _updateViews() {
-    let prevTripInfoView = this._tripInfoView;
+    const prevTripInfoView = this._tripInfoView;
 
     this._tripInfoView = new TripInfoView(this._eventsModel.getEvents());
     this._totalPriceView = new TotalPriceView();
 
     renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
     replaceElement(this._tripInfoView, prevTripInfoView);
-
-    prevTripInfoView = null;
+    removeElement(prevTripInfoView);
   }
 }

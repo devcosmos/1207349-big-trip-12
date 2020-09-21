@@ -30,6 +30,6 @@ export default class FilterPresenter {
   }
 
   _handleFilterTypeChange(filterType) {
-    this._filterModel.setFilter(UpdateType.TRIP, filterType);
+    this._filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, filterType);
   }
 }

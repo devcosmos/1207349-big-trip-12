@@ -4,9 +4,8 @@ import {SortingView, DaysView, DayView, NoEventView, LoadingView} from "../view/
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
-  constructor(eventsContainer, tripContainer, eventsModel, filterModel, api) {
+  constructor(eventsContainer, eventsModel, filterModel, api) {
     this._eventsContainer = eventsContainer;
-    this._tripContainer = tripContainer;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
     this._api = api;
@@ -41,7 +40,7 @@ export default class TripPresenter {
   }
 
   destroy() {
-    this._clearTrip();
+    this._clearTrip(true);
 
     this._eventsModel.removeObserver(this._handleModelChange);
     this._filterModel.removeObserver(this._handleModelChange);
@@ -109,6 +108,10 @@ export default class TripPresenter {
         break;
       case UpdateType.TRIP:
         this._clearTrip();
+        this._renderTrip();
+        break;
+      case UpdateType.TRIP_WITH_RESET_SORT:
+        this._clearTrip(true);
         this._renderTrip();
         break;
       case UpdateType.INIT:
@@ -197,15 +200,17 @@ export default class TripPresenter {
     renderElement(this._eventsContainer, this._loadingView, RenderPosition.BEFOREEND);
   }
 
-  _clearTrip() {
-    Object.values(this._eventPresenter).forEach((presenter) => presenter.destroy());
-    this._eventPresenter = {};
+  _clearTrip(resetSortType = false) {
     this._newEventPresenter.destroy();
+    Object.values(this._eventPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._eventPresenter = {};
 
-    if (this._sortingView !== null) {
-      removeElement(this._sortingView);
+    if (resetSortType) {
+      this._currentSortType = SortType.EVENT;
     }
 
+    removeElement(this._sortingView);
     removeElement(this._daysView);
     removeElement(this._noEventView);
   }

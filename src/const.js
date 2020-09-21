@@ -49,6 +49,7 @@ export const UserAction = {
 export const UpdateType = {
   EVENT: `EVENT`,
   TRIP: `TRIP`,
+  TRIP_WITH_RESET_SORT: `TRIP_WITH_RESET_SORT`,
   INIT: `INIT`
 };
 
