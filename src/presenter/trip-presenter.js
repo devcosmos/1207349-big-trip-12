@@ -1,6 +1,6 @@
 import {RenderPosition, SortType, UserAction, UpdateType, EventStatus} from "../const";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
-import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, StatisticsView, LoadingView} from "../view/index";
+import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, LoadingView} from "../view/index";
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
@@ -18,7 +18,6 @@ export default class TripPresenter {
     this._sortingView = null;
     this._tripInfoView = null;
     this._totalPriceView = null;
-    this._statisticsView = null;
 
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
@@ -49,15 +48,6 @@ export default class TripPresenter {
 
   createEvent(callback) {
     this._newEventPresenter.init(this._sortingView, callback, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
-  }
-
-  removeStats() {
-    removeElement(this._statisticsView);
-  }
-
-  createStats() {
-    this._statisticsView = new StatisticsView(this._getEvents());
-    renderElement(this._eventsContainer, this._statisticsView, RenderPosition.AFTEREND);
   }
 
   destroy({removeHeader = true} = {}) {

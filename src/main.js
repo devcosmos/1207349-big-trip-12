@@ -2,7 +2,7 @@ import {RenderPosition, TripControlsItem, UpdateType, FilterType} from "./const"
 import {renderElement} from "./utils/index";
 import {EventsModel, FilterModel} from "./model/index";
 import {NavigationControllerView} from "./view/index";
-import {TripPresenter, FilterPresenter} from "./presenter/index";
+import {TripPresenter, FilterPresenter, StatisticsPresenter} from "./presenter/index";
 import Api from "./api";
 
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
@@ -25,6 +25,7 @@ const navControllerView = new NavigationControllerView();
 
 const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
+const statisticsPresenter = new StatisticsPresenter(eventsElement, eventsModel);
 
 const newEventButtonClickHandler = (evt) => {
   evt.preventDefault();
@@ -39,6 +40,7 @@ const newEventFormCloseHandler = () => {
 const navControllerClickHandler = (tripControlsItem) => {
   switch (tripControlsItem) {
     case TripControlsItem.NEW_EVENT:
+      statisticsPresenter.destroy();
       tripPresenter.destroy();
       filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
       tripPresenter.init();
@@ -46,14 +48,14 @@ const navControllerClickHandler = (tripControlsItem) => {
       newEventButton.disabled = true;
       break;
     case TripControlsItem.TABLE:
-      tripPresenter.removeStats();
+      statisticsPresenter.destroy();
       filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
       tripPresenter.init();
       break;
     case TripControlsItem.STATS:
       tripPresenter.destroy({removeHeader: false});
       filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
-      tripPresenter.createStats();
+      statisticsPresenter.init();
       break;
   }
 };
