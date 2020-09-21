@@ -2,7 +2,7 @@ import {RenderPosition, TripControlsItem, UpdateType, FilterType} from "./const"
 import {renderElement} from "./utils/index";
 import {EventsModel, FilterModel} from "./model/index";
 import {NavigationControllerView} from "./view/index";
-import {TripPresenter, FilterPresenter} from "./presenter/index";
+import {TripPresenter, FilterPresenter, StatisticsPresenter, TripInfoPresenter} from "./presenter/index";
 import Api from "./api";
 
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
@@ -23,8 +23,10 @@ const filterModel = new FilterModel();
 
 const navControllerView = new NavigationControllerView();
 
-const tripPresenter = new TripPresenter(eventsElement, tripElement, eventsModel, filterModel, api);
+const tripPresenter = new TripPresenter(eventsElement, eventsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
+const statisticsPresenter = new StatisticsPresenter(eventsElement, eventsModel);
+const tripInfoPresenter = new TripInfoPresenter(tripElement, eventsModel, filterModel);
 
 const newEventButtonClickHandler = (evt) => {
   evt.preventDefault();
@@ -39,21 +41,22 @@ const newEventFormCloseHandler = () => {
 const navControllerClickHandler = (tripControlsItem) => {
   switch (tripControlsItem) {
     case TripControlsItem.NEW_EVENT:
+      statisticsPresenter.destroy();
       tripPresenter.destroy();
-      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
+      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
       tripPresenter.init();
       tripPresenter.createEvent(newEventFormCloseHandler);
       newEventButton.disabled = true;
       break;
     case TripControlsItem.TABLE:
-      tripPresenter.removeStats();
-      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
+      statisticsPresenter.destroy();
+      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
       tripPresenter.init();
       break;
     case TripControlsItem.STATS:
-      tripPresenter.destroy({removeHeader: false});
-      filterModel.setFilter(UpdateType.TRIP, FilterType.EVERYTHING);
-      tripPresenter.createStats();
+      tripPresenter.destroy();
+      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
+      statisticsPresenter.init();
       break;
   }
 };
@@ -62,6 +65,7 @@ newEventButton.addEventListener(`click`, newEventButtonClickHandler);
 
 filterPresenter.init();
 tripPresenter.init();
+tripInfoPresenter.init();
 
 Promise
   .all([

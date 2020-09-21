@@ -16,21 +16,23 @@ export default class EventPresenter {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleCloseClick = this._handleCloseClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(event, destinations, offers) {
+  init(destinations, offers, event) {
     this._event = event;
 
     const prevEventView = this._eventView;
     const prevEventEditorView = this._eventEditorView;
 
     this._eventView = new EventView(event);
-    this._eventEditorView = new EventEditorView(event, destinations, offers);
+    this._eventEditorView = new EventEditorView(destinations, offers, event);
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditorView.setFormCloseClickHandler(this._handleCloseClick);
 
     if (prevEventView === null || prevEventEditorView === null) {
       renderElement(this._eventListContainer, this._eventView, RenderPosition.BEFOREEND);
@@ -42,7 +44,8 @@ export default class EventPresenter {
     }
 
     if (this._eventStatus === EventStatus.EDITING) {
-      replaceElement(this._eventEditorView, prevEventEditorView);
+      replaceElement(this._eventView, prevEventEditorView);
+      this._eventStatus = EventStatus.DEFAULT;
     }
 
     removeElement(prevEventView);
@@ -53,6 +56,35 @@ export default class EventPresenter {
     if (this._eventStatus !== EventStatus.DEFAULT) {
       this._eventEditorView.reset(this._event);
       this._replaceFormEditorToEvent();
+    }
+  }
+
+  setViewState(status) {
+    const resetFormState = () => {
+      this._eventEditorView.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (status) {
+      case EventStatus.SAVING:
+        this._eventEditorView.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case EventStatus.DELETING:
+        this._eventEditorView.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case EventStatus.ABORTING:
+        this._eventEditorView.shake(resetFormState);
+        this._eventView.shake(resetFormState);
+        break;
     }
   }
 
@@ -81,13 +113,17 @@ export default class EventPresenter {
     }
   }
 
+  _handleCloseClick() {
+    this.resetView();
+  }
+
   _handleEditClick() {
     this._replaceEventToFormEditor();
   }
 
   _handleFormSubmit(update) {
     const isOnlyEventUpdate =
-      (this._currentSortType !== SortType.PRICE || this._event.cost === update.cost) &&
+      (this._currentSortType !== SortType.PRICE || this._event.price === update.price) &&
       (this._currentSortType === SortType.PRICE || this._event.dateStart === update.dateStart) &&
       (this._currentSortType !== SortType.TIME || this._event.dateEnd === update.dateEnd);
 
@@ -96,8 +132,6 @@ export default class EventPresenter {
         isOnlyEventUpdate ? UpdateType.EVENT : UpdateType.TRIP,
         update
     );
-
-    this._replaceFormEditorToEvent();
   }
 
   _handleDeleteClick(event) {

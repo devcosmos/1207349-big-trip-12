@@ -23,12 +23,6 @@ export default class NavigationControllerView extends AbstractView {
     return createNavigationControllerTemplate();
   }
 
-  _navControllerClickHandler(evt) {
-    evt.preventDefault();
-    this.setNavControllerItem(evt.target.dataset.navControlItem);
-    this._callback.navControllerClick(evt.target.dataset.navControlItem);
-  }
-
   setNavControllerClickHandler(callback) {
     this._callback.navControllerClick = callback;
     this.getElement().addEventListener(`click`, this._navControllerClickHandler);
@@ -36,11 +30,21 @@ export default class NavigationControllerView extends AbstractView {
 
   setNavControllerItem(tripControlsItem) {
     const item = this.getElement().querySelector(`[data-nav-control-item=${tripControlsItem}]`);
-    const ActiveItem = this.getElement().querySelector(`.trip-tabs__btn--active`);
+    const activeItem = this.getElement().querySelector(`.trip-tabs__btn--active`);
 
-    if (item && ActiveItem !== item) {
-      ActiveItem.classList.remove(`trip-tabs__btn--active`);
+    if (activeItem !== item) {
+      activeItem.classList.remove(`trip-tabs__btn--active`);
       item.classList.add(`trip-tabs__btn--active`);
     }
+  }
+
+  _navControllerClickHandler(evt) {
+    if (evt.target.classList.contains(`trip-tabs__btn--active`)) {
+      return;
+    }
+
+    evt.preventDefault();
+    this.setNavControllerItem(evt.target.dataset.navControlItem);
+    this._callback.navControllerClick(evt.target.dataset.navControlItem);
   }
 }

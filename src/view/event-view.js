@@ -2,11 +2,13 @@ import {EVENT_TYPE_ACTIVITY} from "../const";
 import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../utils/index";
 import AbstractView from "./abstract-view";
 
+const MAX_DISPLAY_OFFERS = 3;
+
 const createAcceptedOffersTemplate = (offers) => {
   return (
     offers.length === 0 ? `` : `<h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${offers.map((offer) => `<li class="event__offer">
+        ${offers.slice(0, MAX_DISPLAY_OFFERS).map((offer) => `<li class="event__offer">
           <span class="event__offer-title">${offer.title}</span>
           &plus;
           &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -16,7 +18,7 @@ const createAcceptedOffersTemplate = (offers) => {
 };
 
 const createEventTemplate = (event) => {
-  const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, cost} = event;
+  const {eventType, currentDestination, acceptedOffers, dateStart, dateEnd, price} = event;
 
   const prepositions = EVENT_TYPE_ACTIVITY.includes(eventType) ? `in` : `to`;
   const timeStartAtShortFormat = getTimeAtDefaultFormat(dateStart);
@@ -44,7 +46,7 @@ const createEventTemplate = (event) => {
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${cost}</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         ${acceptedOffersTemplate}
@@ -69,13 +71,13 @@ export default class EventView extends AbstractView {
     return createEventTemplate(this._event);
   }
 
-  _editClickHandler() {
-    this._callback.editClick();
-  }
-
   setEditClickHandler(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
+  }
+
+  _editClickHandler() {
+    this._callback.editClick();
   }
 }
 

@@ -1,5 +1,5 @@
 import {RenderPosition, FilterType, UpdateType} from "../const";
-import {EventFiltrationView} from "../view/index";
+import {EventFilterView} from "../view/index";
 import {renderElement, removeElement} from "../utils/index";
 
 export default class FilterPresenter {
@@ -14,7 +14,7 @@ export default class FilterPresenter {
   }
 
   init() {
-    this._filterView = new EventFiltrationView(FilterType, this._filterModel.getFilter());
+    this._filterView = new EventFilterView(FilterType, this._filterModel.getFilter());
     this._filterView.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     renderElement(this._filterContainer, this._filterView, RenderPosition.AFTEREND);
@@ -30,6 +30,6 @@ export default class FilterPresenter {
   }
 
   _handleFilterTypeChange(filterType) {
-    this._filterModel.setFilter(UpdateType.TRIP, filterType);
+    this._filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, filterType);
   }
 }
