@@ -6,7 +6,7 @@ import he from "he";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  eventType: EVENT_TYPE_TRANSFER[0],
+  eventType: EVENT_TYPE_TRANSFER[4],
   currentDestination: ``,
   acceptedOffers: [],
   description: {
@@ -110,15 +110,33 @@ const createEventDescriptionTemplate = (destination) => {
   );
 };
 
+const createEventDetailsTemplate = (destinations, offers, currentDestination, acceptedOffers, isDisabled) => {
+  const eventOffersTemplate = offers.length === 0
+    ? ``
+    : createEventOffersTemplate(acceptedOffers, offers, isDisabled);
+
+  const eventDescriptionTemplate = currentDestination === ``
+    ? ``
+    : createEventDescriptionTemplate(destinations.find((destination) => destination.name === currentDestination));
+
+  return (
+    `<section class="event__details">
+      ${eventOffersTemplate}
+      ${eventDescriptionTemplate}
+    </section>`
+  );
+};
+
 const createEventEditorTemplate = (event, destinations, offers, isNew) => {
   const {isFavorite, eventType, currentDestination, acceptedOffers, dateStart, dateEnd, price, isDisabled, isSaving, isDeleting} = event;
-  const descriptionCurrentDestination = currentDestination === `` ? false : destinations.find((destination) => destination.name === currentDestination);
   const deleteButtonName = isDeleting ? `Deleting...` : `Delete`;
+
+  const eventDetailsTemplate = (offers.length === 0 && currentDestination === ``)
+    ? ``
+    : createEventDetailsTemplate(destinations, offers, currentDestination, acceptedOffers, isDisabled);
 
   const eventTypeTemplate = createEventTypeTemplate(eventType, isDisabled);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations, currentDestination, isDisabled);
-  const eventOffersTemplate = offers.length === 0 ? `` : createEventOffersTemplate(acceptedOffers, offers, isDisabled);
-  const eventDescriptionTemplate = descriptionCurrentDestination ? createEventDescriptionTemplate(descriptionCurrentDestination) : ``;
   const dateStartEventAtFormat = `${getDateAtDefaultFormat(dateStart)} ${getTimeAtDefaultFormat(dateStart)}`;
   const dateEndEventAtFormat = `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtDefaultFormat(dateEnd)}`;
 
@@ -154,7 +172,7 @@ const createEventEditorTemplate = (event, destinations, offers, isNew) => {
         <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>
           ${isNew ? `Cancel` : deleteButtonName}
           </button>
-        <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``} ${isDisabled ? `disabled` : ``}>
+        ${isNew ? `` : `<input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``} ${isDisabled ? `disabled` : ``}>
         <label class="event__favorite-btn" for="event-favorite">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -163,15 +181,9 @@ const createEventEditorTemplate = (event, destinations, offers, isNew) => {
         </label>
         <button class="event__rollup-btn" type="button" ${isDisabled ? `disabled` : ``}>
           <span class="visually-hidden">Open event</span>
-        </button>
+        </button>`}
       </header>
-      <section class="event__details">
-
-        ${eventOffersTemplate}
-
-        ${eventDescriptionTemplate}
-
-      </section>
+      ${eventDetailsTemplate}
     </form>`
   );
 };
@@ -227,7 +239,9 @@ export default class EventEditorView extends SmartView {
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setFormCloseClickHandler(this._callback.formCloseClick);
+    if (!this._isNew) {
+      this.setFormCloseClickHandler(this._callback.formCloseClick);
+    }
   }
 
   setFormSubmitHandler(callback) {
@@ -285,10 +299,12 @@ export default class EventEditorView extends SmartView {
       .addEventListener(`input`, this._priceInputHandler);
     this.getElement().querySelector(`.event__input--destination`)
       .addEventListener(`input`, this._destinationInputHandler);
-    this.getElement().querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`input`, this._favoriteChangeHandler);
     this.getElement().querySelector(`.event__type-list`)
       .addEventListener(`click`, this._eventTypeChangeHandler);
+    if (!this._isNew) {
+      this.getElement().querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`input`, this._favoriteChangeHandler);
+    }
     if (!(this._offersByType.length === 0)) {
       this.getElement().querySelector(`.event__available-offers`)
         .addEventListener(`click`, this._offersChangeHandler);

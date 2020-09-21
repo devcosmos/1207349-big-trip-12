@@ -114,8 +114,7 @@ export default class EventPresenter {
   }
 
   _handleCloseClick() {
-    this._eventEditorView.reset(this._event);
-    this._replaceFormEditorToEvent();
+    this.resetView();
   }
 
   _handleEditClick() {

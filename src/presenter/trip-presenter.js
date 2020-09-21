@@ -36,7 +36,8 @@ export default class TripPresenter {
   }
 
   createEvent(callback) {
-    this._newEventPresenter.init(this._sortingView, callback, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
+    const container = this._getEvents().length === 0 ? this._eventsContainer.querySelector(`h2`) : this._sortingView;
+    this._newEventPresenter.init(container, callback, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
   }
 
   destroy() {
@@ -210,7 +211,10 @@ export default class TripPresenter {
       this._currentSortType = SortType.EVENT;
     }
 
-    removeElement(this._sortingView);
+    if (this._sortingView !== null) {
+      removeElement(this._sortingView);
+    }
+
     removeElement(this._daysView);
     removeElement(this._noEventView);
   }
