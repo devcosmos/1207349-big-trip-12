@@ -192,6 +192,7 @@ export default class EventEditorView extends SmartView {
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
+    this._formCloseClickHandler = this._formCloseClickHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._dateStartChangeHandler = this._dateStartChangeHandler.bind(this);
     this._dateEndChangeHandler = this._dateEndChangeHandler.bind(this);
@@ -202,6 +203,10 @@ export default class EventEditorView extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  getTemplate() {
+    return createEventEditorTemplate(this._data, this._destinations, this._offersByType, this._isNew);
   }
 
   removeElement() {
@@ -217,15 +222,27 @@ export default class EventEditorView extends SmartView {
     this.updateData(EventEditorView.parseEventToData(event));
   }
 
-  getTemplate() {
-    return createEventEditorTemplate(this._data, this._destinations, this._offersByType, this._isNew);
-  }
-
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setFormCloseClickHandler(this._callback.formCloseClick);
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+  }
+
+  setFormCloseClickHandler(callback) {
+    this._callback.formCloseClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseClickHandler);
   }
 
   _setDatepicker() {
@@ -378,14 +395,9 @@ export default class EventEditorView extends SmartView {
     this._callback.deleteClick(EventEditorView.parseDataToEvent(this._data));
   }
 
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
-  }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+  _formCloseClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.formCloseClick();
   }
 
   static parseEventToData(event) {
