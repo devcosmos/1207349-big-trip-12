@@ -1,6 +1,6 @@
 import {RenderPosition, SortType, UserAction, UpdateType, EventStatus} from "../const";
 import {splitEventsByDays, sortEventsByDuration, sortEventsByPrice, sortEventsByDate, renderElement, removeElement, filter} from "../utils/index";
-import {TripInfoView, TotalPriceView, SortingView, DaysView, DayView, NoEventView, LoadingView} from "../view/index";
+import {SortingView, DaysView, DayView, NoEventView, LoadingView} from "../view/index";
 import {EventPresenter, NewEventPresenter} from "../presenter/index";
 
 export default class TripPresenter {
@@ -16,8 +16,6 @@ export default class TripPresenter {
     this._isLoading = true;
 
     this._sortingView = null;
-    this._tripInfoView = null;
-    this._totalPriceView = null;
 
     this._daysView = new DaysView();
     this._noEventView = new NoEventView();
@@ -32,14 +30,6 @@ export default class TripPresenter {
   }
 
   init() {
-    if (this._tripInfoView === null || this._totalPriceView === null) {
-      this._tripInfoView = new TripInfoView(this._getEvents());
-      this._totalPriceView = new TotalPriceView();
-
-      renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
-      renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
-    }
-
     this._eventsModel.addObserver(this._handleModelChange);
     this._filterModel.addObserver(this._handleModelChange);
 
@@ -50,20 +40,11 @@ export default class TripPresenter {
     this._newEventPresenter.init(this._sortingView, callback, this._eventsModel.getDestinations(), this._eventsModel.getOffers());
   }
 
-  destroy({removeHeader = true} = {}) {
+  destroy() {
     this._clearTrip();
-
-    if (removeHeader) {
-      removeElement(this._tripInfoView);
-      removeElement(this._totalPriceView);
-
-      this._tripInfoView = null;
-      this._totalPriceView = null;
-    }
 
     this._eventsModel.removeObserver(this._handleModelChange);
     this._filterModel.removeObserver(this._handleModelChange);
-
   }
 
   _getEvents() {
