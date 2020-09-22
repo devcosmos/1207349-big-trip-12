@@ -1,5 +1,5 @@
 import {EVENT_TYPE_TRANSFER, EVENT_TYPE_ACTIVITY} from "../const";
-import {getDateAtDefaultFormat, getTimeAtDefaultFormat} from "../utils/index";
+import {getDateAtDefaultFormat, getTimeAtDefaultFormat, isOnline} from "../utils/index";
 import SmartView from "./smart-view";
 import flatpickr from "flatpickr";
 import he from "he";
@@ -101,7 +101,7 @@ const createEventDescriptionTemplate = (destination) => {
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       ${destination.description ? `<p class="event__destination-description">${destination.description}</p>` : `` }
-      ${destination.pictures.length === 0 ? `` : `<div class="event__photos-container">
+      ${destination.pictures.length === 0 || !isOnline() ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
           ${destination.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
         </div>
@@ -194,7 +194,8 @@ export default class EventEditorView extends SmartView {
     this._data = EventEditorView.parseEventToData(event || BLANK_EVENT);
     this._destinations = destinations;
     this._offers = offers;
-    this._offersByType = offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
+    this._offersByType = [];
+    // this._offersByType = offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
     this._isNew = event ? false : true;
 
     this._dateStartDatepicker = null;
