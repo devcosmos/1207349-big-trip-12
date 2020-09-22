@@ -1,4 +1,4 @@
-import {EventsModel} from "./model/index";
+import {EventsModel} from "../model/index";
 
 const HttpMethod = {
   GET: `GET`,
@@ -62,6 +62,17 @@ export default class Api {
       method: HttpMethod.DELETE
     });
   }
+
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: HttpMethod.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
+  }
+
 
   _load({
     url,

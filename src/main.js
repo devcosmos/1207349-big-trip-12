@@ -3,7 +3,7 @@ import {renderElement} from "./utils/index";
 import {EventsModel, FilterModel} from "./model/index";
 import {NavigationControllerView} from "./view/index";
 import {TripPresenter, FilterPresenter, StatisticsPresenter, TripInfoPresenter} from "./presenter/index";
-import Api from "./api";
+import Api from "./api/index";
 
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const AUTHORIZATION = `Basic k3jsk3sdfjk4ns1d45k1b2`;
