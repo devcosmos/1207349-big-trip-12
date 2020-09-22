@@ -87,3 +87,10 @@ Promise
     renderElement(tripControlsFirstElement, navControllerView, RenderPosition.AFTEREND);
     navControllerView.setNavControllerClickHandler(navControllerClickHandler);
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .catch(() => {
+      throw new Error(`ServiceWorker isn't available`);
+    });
+});
