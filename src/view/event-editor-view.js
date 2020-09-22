@@ -103,7 +103,7 @@ const createEventDescriptionTemplate = (destination) => {
       ${destination.description ? `<p class="event__destination-description">${destination.description}</p>` : `` }
       ${destination.pictures.length === 0 || !isOnline() ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
-          ${destination.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
+          ${destination.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join(``)}
         </div>
       </div>`}
     </section>`
@@ -194,8 +194,7 @@ export default class EventEditorView extends SmartView {
     this._data = EventEditorView.parseEventToData(event || BLANK_EVENT);
     this._destinations = destinations;
     this._offers = offers;
-    this._offersByType = [];
-    // this._offersByType = offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
+    this._offersByType = offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
     this._isNew = event ? false : true;
 
     this._dateStartDatepicker = null;
@@ -224,11 +223,7 @@ export default class EventEditorView extends SmartView {
 
   removeElement() {
     super.removeElement();
-
-    if (this._datepicker) {
-      this._datepicker.destroy();
-      this._datepicker = null;
-    }
+    this._destroyDateDatepickers();
   }
 
   reset(event) {
@@ -260,7 +255,7 @@ export default class EventEditorView extends SmartView {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseClickHandler);
   }
 
-  _setDatepicker() {
+  _destroyDateDatepickers() {
     if (this._dateStartDatepicker) {
       this._dateStartDatepicker.destroy();
       this._dateStartDatepicker = null;
@@ -270,6 +265,10 @@ export default class EventEditorView extends SmartView {
       this._dateEndDatepicker.destroy();
       this._dateEndDatepicker = null;
     }
+  }
+
+  _setDatepicker() {
+    this._destroyDateDatepickers();
 
     this._dateStartDatepicker = flatpickr(
         this.getElement().querySelector(`#event-start-time`),
