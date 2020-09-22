@@ -3,10 +3,13 @@ import {renderElement} from "./utils/index";
 import {EventsModel, FilterModel} from "./model/index";
 import {NavigationControllerView} from "./view/index";
 import {TripPresenter, FilterPresenter, StatisticsPresenter, TripInfoPresenter} from "./presenter/index";
-import Api from "./api/index";
+import {Api, Store, Provider} from "./api/index";
 
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const AUTHORIZATION = `Basic k3jsk3sdfjk4ns1d45k1b2`;
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v12`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
@@ -17,13 +20,15 @@ const tripControlsSecondElement = tripElement.querySelector(`.trip-controls > h2
 const newEventButton = tripElement.querySelector(`.trip-main__event-add-btn`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
 
 const navControllerView = new NavigationControllerView();
 
-const tripPresenter = new TripPresenter(eventsElement, eventsModel, filterModel, api);
+const tripPresenter = new TripPresenter(eventsElement, eventsModel, filterModel, apiWithProvider);
 const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
 const statisticsPresenter = new StatisticsPresenter(eventsElement, eventsModel);
 const tripInfoPresenter = new TripInfoPresenter(tripElement, eventsModel, filterModel);
@@ -69,9 +74,9 @@ tripInfoPresenter.init();
 
 Promise
   .all([
-    api.getOffers(),
-    api.getDestinations(),
-    api.getEvents(),
+    apiWithProvider.getOffers(),
+    apiWithProvider.getDestinations(),
+    apiWithProvider.getEvents(),
   ])
   .then(([offers, destinations, events]) => {
     eventsModel.setOffers(offers);
@@ -93,4 +98,13 @@ window.addEventListener(`load`, () => {
     .catch(() => {
       throw new Error(`ServiceWorker isn't available`);
     });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });
