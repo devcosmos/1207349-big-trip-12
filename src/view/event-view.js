@@ -1,8 +1,6 @@
-import {EVENT_TYPE_ACTIVITY} from "../const";
+import {EVENT_TYPE_ACTIVITY, MAX_DISPLAY_OFFERS} from "../const";
 import {getTimeAtDefaultFormat, getDateAtSystemFormat, getDurationTime} from "../utils/index";
 import AbstractView from "./abstract-view";
-
-const MAX_DISPLAY_OFFERS = 3;
 
 const createAcceptedOffersTemplate = (offers) => {
   return (

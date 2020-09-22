@@ -1,6 +1,6 @@
 import {EventsModel} from "./model/index";
 
-const Method = {
+const HttpMethod = {
   GET: `GET`,
   PUT: `PUT`,
   POST: `POST`,
@@ -37,7 +37,7 @@ export default class Api {
   updateEvent(event) {
     return this._load({
       url: `points/${event.id}`,
-      method: Method.PUT,
+      method: HttpMethod.PUT,
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
@@ -48,7 +48,7 @@ export default class Api {
   addEvent(event) {
     return this._load({
       url: `points`,
-      method: Method.POST,
+      method: HttpMethod.POST,
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
@@ -59,13 +59,13 @@ export default class Api {
   deleteEvent(event) {
     return this._load({
       url: `points/${event.id}`,
-      method: Method.DELETE
+      method: HttpMethod.DELETE
     });
   }
 
   _load({
     url,
-    method = Method.GET,
+    method = HttpMethod.GET,
     body = null,
     headers = new Headers()
   }) {

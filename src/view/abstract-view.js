@@ -1,6 +1,5 @@
 import {createElement} from "../utils/index";
-
-const SHAKE_ANIMATION_TIMEOUT = 600;
+import {SHAKE_ANIMATION_TIMEOUT} from "../const";
 
 export default class AbstractView {
   constructor() {
