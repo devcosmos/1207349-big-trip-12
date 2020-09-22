@@ -29,7 +29,7 @@ const filterModel = new FilterModel();
 const navControllerView = new NavigationControllerView();
 
 const tripPresenter = new TripPresenter(eventsElement, eventsModel, filterModel, apiWithProvider);
-const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel);
+const filterPresenter = new FilterPresenter(tripControlsSecondElement, filterModel, eventsModel);
 const statisticsPresenter = new StatisticsPresenter(eventsElement, eventsModel);
 const tripInfoPresenter = new TripInfoPresenter(tripElement, eventsModel, filterModel);
 

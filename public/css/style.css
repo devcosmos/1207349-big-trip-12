@@ -931,7 +931,7 @@ main {
 .statistics__item:not(:last-child) {
   margin-bottom: 78px; }
 
-input:disabled, button:disabled, form.disabled label, .flatpickr-input[readonly]:disabled {
+input:disabled, button:disabled, form.disabled label, .flatpickr-input[readonly]:disabled, input:disabled + label {
   cursor: default; }
 
 @keyframes shake {
