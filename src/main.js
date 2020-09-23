@@ -94,10 +94,7 @@ Promise
   });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .catch(() => {
-      throw new Error(`ServiceWorker isn't available`);
-    });
+  navigator.serviceWorker.register(`/sw.js`);
 });
 
 window.addEventListener(`online`, () => {
