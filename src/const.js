@@ -1,3 +1,6 @@
+export const SHAKE_ANIMATION_TIMEOUT = 600;
+export const MAX_DISPLAY_OFFERS = 3;
+
 export const EVENT_TYPE_TRANSFER = [
   `Taxi`,
   `Bus`,

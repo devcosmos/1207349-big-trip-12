@@ -1,8 +1,8 @@
-import {getDateAtShortFormat} from "../utils/index";
+import {getDateAtShortFormat, sortEventsByDate} from "../utils/index";
 import AbstractView from "./abstract-view";
 
 const getTripRoute = (tripEvents) => {
-  const cities = tripEvents.map((event) => event.currentDestination);
+  const cities = tripEvents.sort(sortEventsByDate).map((event) => event.currentDestination);
   const uniqueCities = Array.from(new Set(cities));
 
   return (uniqueCities.length > 3)
@@ -12,7 +12,10 @@ const getTripRoute = (tripEvents) => {
 
 const getTripDateInterval = (tripEvents) => {
   const start = getDateAtShortFormat(tripEvents[0].dateStart).split(` `);
-  const end = getDateAtShortFormat(tripEvents[tripEvents.length - 1].dateStart).split(` `);
+  const end = getDateAtShortFormat(tripEvents[tripEvents.length - 1].dateEnd).split(` `);
+  if (start.toString() === end.toString()) {
+    return `${start[1]}&nbsp;${start[0]}`;
+  }
 
   return `${start[1]}&nbsp;${start[0]}&nbsp;&mdash;&nbsp;${end[1]}${start[0] === end[0] ? `` : `&nbsp;` + end[0] }`;
 };

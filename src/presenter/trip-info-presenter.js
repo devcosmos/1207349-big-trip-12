@@ -16,7 +16,7 @@ export default class TripInfoPresenter {
 
   init() {
     this._tripInfoView = new TripInfoView(this._eventsModel.getEvents());
-    this._totalPriceView = new TotalPriceView();
+    this._totalPriceView = new TotalPriceView(this._eventsModel.getEvents());
 
     renderElement(this._tripContainer, this._tripInfoView, RenderPosition.AFTERBEGIN);
     renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
@@ -26,7 +26,7 @@ export default class TripInfoPresenter {
     const prevTripInfoView = this._tripInfoView;
 
     this._tripInfoView = new TripInfoView(this._eventsModel.getEvents());
-    this._totalPriceView = new TotalPriceView();
+    this._totalPriceView = new TotalPriceView(this._eventsModel.getEvents());
 
     renderElement(this._tripInfoView, this._totalPriceView, RenderPosition.BEFOREEND);
     replaceElement(this._tripInfoView, prevTripInfoView);
