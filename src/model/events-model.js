@@ -100,7 +100,7 @@ export default class EventsModel extends Observer {
     const adaptedEvent = Object.assign(
         {},
         {
-          "id" : event.id,
+          "id": event.id,
           "type": event.eventType.toLowerCase(),
           "destination": {
             "name": event.currentDestination,
