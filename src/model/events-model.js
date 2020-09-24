@@ -77,8 +77,8 @@ export default class EventsModel extends Observer {
   static adaptToClient(event) {
     const adaptedEvent = Object.assign(
         {},
-        event,
         {
+          id: event.id,
           eventType: event.type[0].toUpperCase() + event.type.slice(1),
           currentDestination: event.destination.name,
           description: {
@@ -93,22 +93,14 @@ export default class EventsModel extends Observer {
         }
     );
 
-    delete adaptedEvent.type;
-    delete adaptedEvent.destination;
-    delete adaptedEvent.date_from;
-    delete adaptedEvent.date_to;
-    delete adaptedEvent.base_price;
-    delete adaptedEvent.offers;
-    delete adaptedEvent.is_favorite;
-
     return adaptedEvent;
   }
 
   static adaptToServer(event) {
     const adaptedEvent = Object.assign(
         {},
-        event,
         {
+          "id" : event.id,
           "type": event.eventType.toLowerCase(),
           "destination": {
             "name": event.currentDestination,
@@ -122,15 +114,6 @@ export default class EventsModel extends Observer {
           "is_favorite": event.isFavorite
         }
     );
-
-    delete adaptedEvent.eventType;
-    delete adaptedEvent.currentDestination;
-    delete adaptedEvent.description;
-    delete adaptedEvent.dateStart;
-    delete adaptedEvent.dateEnd;
-    delete adaptedEvent.price;
-    delete adaptedEvent.acceptedOffers;
-    delete adaptedEvent.isFavorite;
 
     return adaptedEvent;
   }
