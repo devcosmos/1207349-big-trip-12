@@ -56,8 +56,7 @@ export const UpdateType = {
   INIT: `INIT`
 };
 
-export const TripControlsItem = {
-  NEW_EVENT: `New event`,
+export const NavigationTab = {
   TABLE: `Table`,
   STATS: `Stats`
 };
