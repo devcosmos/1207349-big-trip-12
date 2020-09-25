@@ -3,8 +3,8 @@ import {renderElement, removeElement} from "../utils/index";
 import {EventEditorView} from "../view/index";
 
 export default class NewEventPresenter {
-  constructor(changeData) {
-    this._changeData = changeData;
+  constructor(viewAction) {
+    this._viewAction = viewAction;
 
     this._eventEditorView = null;
     this._destroyCallback = null;
@@ -14,19 +14,19 @@ export default class NewEventPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(eventListContainer, destroyCallback, destination, offers) {
+  init(eventListElement, destroyCallback, destinations, offers) {
     if (this._eventEditorView !== null) {
       return;
     }
 
-    this._eventListContainer = eventListContainer;
+    this._eventListElement = eventListElement;
     this._destroyCallback = destroyCallback;
 
-    this._eventEditorView = new EventEditorView(destination, offers);
+    this._eventEditorView = new EventEditorView(destinations, offers);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
-    this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditorView.setFormDeleteClickHandler(this._handleDeleteClick);
 
-    renderElement(this._eventListContainer, this._eventEditorView, RenderPosition.AFTEREND);
+    renderElement(this._eventListElement, this._eventEditorView, RenderPosition.AFTEREND);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
@@ -71,7 +71,7 @@ export default class NewEventPresenter {
   }
 
   _handleFormSubmit(event) {
-    this._changeData(UserAction.ADD_EVENT, UpdateType.TRIP, event);
+    this._viewAction(UserAction.ADD_EVENT, UpdateType.TRIP, event);
   }
 
   _handleDeleteClick() {

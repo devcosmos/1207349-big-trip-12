@@ -6,15 +6,15 @@ export default class NavigationPresenter {
   constructor(navigationElement, newEventButtonElement, tripPresenter, statisticsPresenter, navigationModel, filterModel) {
     this._navigationElement = navigationElement;
     this._newEventButtonElement = newEventButtonElement;
-    this._tripPresenter =  tripPresenter;
+    this._tripPresenter = tripPresenter;
     this._statisticsPresenter = statisticsPresenter;
     this._navigationModel = navigationModel;
     this._filterModel = filterModel;
 
     this._handleNavigationModel = this._handleNavigationModel.bind(this);
     this._navigationClickHandler = this._navigationClickHandler.bind(this);
-    this._newEventButtonClickHandler = this._newEventButtonClickHandler.bind(this)
-    this._newEventFormCloseHandler = this._newEventFormCloseHandler.bind(this)
+    this._newEventButtonClickHandler = this._newEventButtonClickHandler.bind(this);
+    this._newEventFormCloseHandler = this._newEventFormCloseHandler.bind(this);
 
     this._navigationModel.addObserver(this._handleNavigationModel);
 
@@ -39,7 +39,7 @@ export default class NavigationPresenter {
 
   _newEventFormCloseHandler() {
     this._newEventButtonElement.disabled = false;
-  };
+  }
 
   _newEventButtonClickHandler() {
     if (this._navigationModel.getTab() === NavigationTab.TABLE) {
@@ -50,7 +50,7 @@ export default class NavigationPresenter {
 
     this._tripPresenter.createEvent(this._newEventFormCloseHandler);
     this._newEventButtonElement.disabled = true;
-  };
+  }
 
   _navigationClickHandler(navigationTab) {
     switch (navigationTab) {
@@ -67,5 +67,5 @@ export default class NavigationPresenter {
         this._statisticsPresenter.init();
         break;
     }
-  };
+  }
 }

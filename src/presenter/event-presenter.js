@@ -3,8 +3,8 @@ import {renderElement, replaceElement, removeElement} from "../utils/index";
 import {EventEditorView, EventView} from "../view/index";
 
 export default class EventPresenter {
-  constructor(eventListContainer, changeData, changeEventStatus, currentSortType) {
-    this._eventListContainer = eventListContainer;
+  constructor(eventListElement, changeData, changeEventStatus, currentSortType) {
+    this._eventListElement = eventListElement;
     this._changeData = changeData;
     this._changeEventStatus = changeEventStatus;
     this._currentSortType = currentSortType;
@@ -31,11 +31,11 @@ export default class EventPresenter {
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
-    this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditorView.setFormDeleteClickHandler(this._handleDeleteClick);
     this._eventEditorView.setFormCloseClickHandler(this._handleCloseClick);
 
     if (prevEventView === null || prevEventEditorView === null) {
-      renderElement(this._eventListContainer, this._eventView, RenderPosition.BEFOREEND);
+      renderElement(this._eventListElement, this._eventView, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -124,8 +124,8 @@ export default class EventPresenter {
   _handleFormSubmit(update) {
     const isOnlyEventUpdate =
       (this._currentSortType !== SortType.PRICE || this._event.price === update.price) &&
-      (this._currentSortType === SortType.PRICE || this._event.dateStart === update.dateStart) &&
-      (this._currentSortType !== SortType.TIME || this._event.dateEnd === update.dateEnd);
+      (this._currentSortType === SortType.PRICE || this._event.startDate === update.startDate) &&
+      (this._currentSortType !== SortType.TIME || this._event.endDate === update.endDate);
 
     this._changeData(
         UserAction.UPDATE_EVENT,
