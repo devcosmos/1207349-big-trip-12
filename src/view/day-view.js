@@ -5,7 +5,7 @@ const createDayTemplate = (date, index) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        ${date === null ? `` : `<span class="day__counter">${index}</span>
+        ${!date ? `` : `<span class="day__counter">${index}</span>
         <time class="day__date" datetime="${getDateAtSystemFormat(date)}">${getDateAtShortFormat(date)}</time>`}
       </div>
       <ul class="trip-events__list" id="trip-events__list-${index}"></ul>
@@ -14,7 +14,7 @@ const createDayTemplate = (date, index) => {
 };
 
 export default class DayView extends AbstractView {
-  constructor(date = null, index = 1) {
+  constructor(date, index = 1) {
     super();
     this._date = date;
     this._index = index;

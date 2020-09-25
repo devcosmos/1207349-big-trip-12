@@ -19,7 +19,7 @@ export default class NavigationView extends AbstractView {
     this._activeTab = activeTab;
 
     this._callback = {};
-    
+
     this._navigationClickHandler = this._navigationClickHandler.bind(this);
   }
 

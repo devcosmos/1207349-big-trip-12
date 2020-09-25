@@ -11,8 +11,8 @@ const getTripRoute = (tripEvents) => {
 };
 
 const getTripDateInterval = (tripEvents) => {
-  const startDate = getDateAtShortFormat(tripEvents[0].dateStart);
-  const endDate = getDateAtShortFormat(tripEvents[tripEvents.length - 1].dateEnd);
+  const startDate = getDateAtShortFormat(tripEvents[0].startDate);
+  const endDate = getDateAtShortFormat(tripEvents[tripEvents.length - 1].endDate);
   const splitStartDate = startDate.split(` `);
   const splitEndDate = endDate.split(` `);
   if (startDate === endDate) {
