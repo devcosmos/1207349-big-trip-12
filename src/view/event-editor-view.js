@@ -13,8 +13,8 @@ const BLANK_EVENT = {
     text: ``,
     photos: [],
   },
-  dateStart: new Date(),
-  dateEnd: new Date(),
+  startDate: new Date(),
+  endDate: new Date(),
   price: 0,
   isFavorite: false,
 };
@@ -101,7 +101,7 @@ const createEventDescriptionTemplate = (destination) => {
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       ${destination.description ? `<p class="event__destination-description">${destination.description}</p>` : `` }
-      ${destination.pictures.length === 0 || !isOnline() ? `` : `<div class="event__photos-container">
+      ${!destination.pictures.length || !isOnline() ? `` : `<div class="event__photos-container">
         <div class="event__photos-tape">
           ${destination.pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join(``)}
         </div>
@@ -111,9 +111,9 @@ const createEventDescriptionTemplate = (destination) => {
 };
 
 const createEventDetailsTemplate = (destinations, offers, currentDestination, acceptedOffers, isDisabled) => {
-  const eventOffersTemplate = offers.length === 0
-    ? ``
-    : createEventOffersTemplate(acceptedOffers, offers, isDisabled);
+  const eventOffersTemplate = offers.length
+    ? createEventOffersTemplate(acceptedOffers, offers, isDisabled)
+    : ``;
 
   const eventDescriptionTemplate = currentDestination === ``
     ? ``
@@ -128,17 +128,17 @@ const createEventDetailsTemplate = (destinations, offers, currentDestination, ac
 };
 
 const createEventEditorTemplate = (event, destinations, offers, isNew) => {
-  const {isFavorite, eventType, currentDestination, acceptedOffers, dateStart, dateEnd, price, isDisabled, isSaving, isDeleting} = event;
+  const {isFavorite, eventType, currentDestination, acceptedOffers, startDate, endDate, price, isDisabled, isSaving, isDeleting} = event;
   const deleteButtonName = isDeleting ? `Deleting...` : `Delete`;
 
-  const eventDetailsTemplate = (offers.length === 0 && currentDestination === ``)
+  const eventDetailsTemplate = (!offers.length && currentDestination === ``)
     ? ``
     : createEventDetailsTemplate(destinations, offers, currentDestination, acceptedOffers, isDisabled);
 
   const eventTypeTemplate = createEventTypeTemplate(eventType, isDisabled);
   const eventDestinationTemplate = createEventDestinationTemplate(eventType, destinations, currentDestination, isDisabled);
-  const dateStartEventAtFormat = `${getDateAtDefaultFormat(dateStart)} ${getTimeAtDefaultFormat(dateStart)}`;
-  const dateEndEventAtFormat = `${getDateAtDefaultFormat(dateEnd)} ${getTimeAtDefaultFormat(dateEnd)}`;
+  const startDateEventAtFormat = `${getDateAtDefaultFormat(startDate)} ${getTimeAtDefaultFormat(startDate)}`;
+  const endDateEventAtFormat = `${getDateAtDefaultFormat(endDate)} ${getTimeAtDefaultFormat(endDate)}`;
 
   return (
     `<form class="trip-events__item  event  event--edit ${isDisabled ? `disabled` : ``}" action="#" method="post">
@@ -152,12 +152,12 @@ const createEventEditorTemplate = (event, destinations, offers, isNew) => {
           <label class="visually-hidden" for="event-start-time">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateStartEventAtFormat}" ${isDisabled ? `disabled` : ``}>
+          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${startDateEventAtFormat}" ${isDisabled ? `disabled` : ``}>
           &mdash;
           <label class="visually-hidden" for="event-end-time">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateEndEventAtFormat}" ${isDisabled ? `disabled` : ``}>
+          <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${endDateEventAtFormat}" ${isDisabled ? `disabled` : ``}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -195,23 +195,25 @@ export default class EventEditorView extends SmartView {
     this._destinations = destinations;
     this._offers = offers;
     this._offersByType = offers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
-    this._isNew = event ? false : true;
+    this._isNew = !event;
 
-    this._dateStartDatepicker = null;
-    this._dateEndDatepicker = null;
+    this._startDatepicker = null;
+    this._endDatepicker = null;
 
     this._callback = {};
 
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
-    this._formCloseClickHandler = this._formCloseClickHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
-    this._dateStartChangeHandler = this._dateStartChangeHandler.bind(this);
-    this._dateEndChangeHandler = this._dateEndChangeHandler.bind(this);
-    this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
-    this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
     this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
+    this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
+
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseClickHandler = this._formCloseClickHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepicker();
@@ -223,7 +225,7 @@ export default class EventEditorView extends SmartView {
 
   removeElement() {
     super.removeElement();
-    this._destroyDateDatepickers();
+    this._destroyDatepickers();
   }
 
   reset(event) {
@@ -234,7 +236,7 @@ export default class EventEditorView extends SmartView {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setFormDeleteClickHandler(this._callback.deleteClick);
     if (!this._isNew) {
       this.setFormCloseClickHandler(this._callback.formCloseClick);
     }
@@ -245,124 +247,96 @@ export default class EventEditorView extends SmartView {
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
-  }
-
   setFormCloseClickHandler(callback) {
     this._callback.formCloseClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseClickHandler);
   }
 
-  _destroyDateDatepickers() {
-    if (this._dateStartDatepicker) {
-      this._dateStartDatepicker.destroy();
-      this._dateStartDatepicker = null;
-    }
-
-    if (this._dateEndDatepicker) {
-      this._dateEndDatepicker.destroy();
-      this._dateEndDatepicker = null;
-    }
-  }
-
-  _setDatepicker() {
-    this._destroyDateDatepickers();
-
-    this._dateStartDatepicker = flatpickr(
-        this.getElement().querySelector(`#event-start-time`),
-        {
-          'dateFormat': `d/m/y H:i`,
-          'enableTime': true,
-          'time_24hr': true,
-          'defaultDate': this._data.dateStart,
-          'onChange': this._dateStartChangeHandler
-        }
-    );
-
-    this._dateEndDatepicker = flatpickr(
-        this.getElement().querySelector(`#event-end-time`),
-        {
-          'dateFormat': `d/m/y H:i`,
-          'enableTime': true,
-          'time_24hr': true,
-          'minDate': this._data.dateStart,
-          'defaultDate': this._data.dateEnd,
-          'onChange': this._dateEndChangeHandler
-        }
-    );
+  setFormDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__input--price`)
       .addEventListener(`input`, this._priceInputHandler);
-    this.getElement().querySelector(`.event__input--destination`)
-      .addEventListener(`input`, this._destinationInputHandler);
-    this.getElement().querySelector(`.event__type-list`)
-      .addEventListener(`click`, this._eventTypeChangeHandler);
-    if (!this._isNew) {
-      this.getElement().querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`input`, this._favoriteChangeHandler);
-    }
-    if (!(this._offersByType.length === 0)) {
+    if (this._offersByType.length) {
       this.getElement().querySelector(`.event__available-offers`)
         .addEventListener(`click`, this._offersChangeHandler);
     }
+    if (!this._isNew) {
+      this.getElement().querySelector(`.event__favorite-checkbox`)
+        .addEventListener(`input`, this._favoriteChangeHandler);
+    }
+    this.getElement().querySelector(`.event__type-list`)
+      .addEventListener(`click`, this._eventTypeChangeHandler);
+    this.getElement().querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
   }
 
-  _dateStartChangeHandler([userDate]) {
+  _setDatepicker() {
+    this._destroyDatepickers();
+
+    this._startDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time`),
+        {
+          'dateFormat': `d/m/y H:i`,
+          'enableTime': true,
+          'time_24hr': true,
+          'defaultDate': this._data.startDate,
+          'onChange': this._startDateChangeHandler
+        }
+    );
+
+    this._endDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time`),
+        {
+          'dateFormat': `d/m/y H:i`,
+          'enableTime': true,
+          'time_24hr': true,
+          'minDate': this._data.startDate,
+          'defaultDate': this._data.endDate,
+          'onChange': this._endDateChangeHandler
+        }
+    );
+  }
+
+  _destroyDatepickers() {
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
+  }
+
+  _startDateChangeHandler([userDate]) {
     this.updateData({
-      dateStart: userDate
+      startDate: userDate
     }, true);
 
-    this._dateEndDatepicker.set(`minDate`, userDate);
+    this._endDatepicker.set(`minDate`, userDate);
 
-    if (userDate > this._data.dateEnd) {
-      this._dateEndDatepicker.setDate(userDate);
+    if (userDate > this._data.endDate) {
+      this._endDatepicker.setDate(userDate);
       this.updateData({
-        dateEnd: userDate
+        endDate: userDate
       }, true);
     }
   }
 
-  _dateEndChangeHandler([userDate]) {
+  _endDateChangeHandler([userDate]) {
     this.updateData({
-      dateEnd: userDate
+      endDate: userDate
     }, true);
   }
 
   _priceInputHandler(evt) {
     this.updateData({
       price: parseInt(evt.target.value, 10)
-    }, true);
-  }
-
-  _destinationInputHandler(evt) {
-    const destinations = [];
-    const currentDestination = this._destinations.find((destination) => destination.name === evt.target.value);
-
-    this._destinations.forEach((destination) => {
-      destinations.push(destination.name);
-    });
-
-    if (!destinations.includes(evt.target.value)) {
-      evt.target.setCustomValidity(`The selected destination is not in the list`);
-      return;
-    }
-
-    this.updateData({
-      currentDestination: evt.target.value,
-      description: {
-        text: currentDestination.description,
-        photos: currentDestination.pictures,
-      },
-    });
-  }
-
-  _favoriteChangeHandler() {
-    this.updateData({
-      isFavorite: !this._data.isFavorite
     }, true);
   }
 
@@ -386,18 +360,39 @@ export default class EventEditorView extends SmartView {
     }, true);
   }
 
+  _favoriteChangeHandler() {
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    }, true);
+  }
+
   _eventTypeChangeHandler(evt) {
     if (evt.target.tagName !== `INPUT`) {
       return;
     }
-
-    this.getElement().querySelector(`.event__type-toggle`).checked = false;
 
     this._offersByType = this._offers.find((offer) => offer.type === evt.target.value.toLowerCase()).offers;
 
     this.updateData({
       eventType: evt.target.value,
       acceptedOffers: [],
+    });
+  }
+
+  _destinationInputHandler(evt) {
+    const selectedDestination = this._destinations.find((destination) => destination.name === evt.target.value);
+
+    if (!selectedDestination) {
+      evt.target.setCustomValidity(`The selected destination is not in the list`);
+      return;
+    }
+
+    this.updateData({
+      currentDestination: selectedDestination.name,
+      description: {
+        text: selectedDestination.description,
+        photos: selectedDestination.pictures,
+      },
     });
   }
 
@@ -411,8 +406,7 @@ export default class EventEditorView extends SmartView {
     this._callback.deleteClick(EventEditorView.parseDataToEvent(this._data));
   }
 
-  _formCloseClickHandler(evt) {
-    evt.preventDefault();
+  _formCloseClickHandler() {
     this._callback.formCloseClick();
   }
 
