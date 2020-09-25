@@ -19,7 +19,7 @@ export default class SmartView extends AbstractView {
     this.restoreHandlers();
   }
 
-  updateData(update, justDataUpdating) {
+  updateData(update, onlyDataUpdating) {
 
     if (!update) {
       return;
@@ -31,7 +31,7 @@ export default class SmartView extends AbstractView {
         update
     );
 
-    if (justDataUpdating) {
+    if (onlyDataUpdating) {
       return;
     }
 
