@@ -10,14 +10,15 @@ const STORE_VER = `v12`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const headerElement = document.querySelector(`.trip-main`);
-const mainElement = document.querySelector(`.trip-events`); //создать ещё 1 селектор для статистики 
+const bodyElement = document.querySelector(`.page-body__page-main .page-body__container`);
+const mainElement = bodyElement.querySelector(`.trip-events`);
 const tabsElement = headerElement.querySelector(`.trip-main__tabs`);
 const filtersElement = headerElement.querySelector(`.trip-main__filters`);
 const newEventButtonElement = headerElement.querySelector(`.trip-main__event-add-btn`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
-const apiProxyCache = new ApiProxyCache(api, store); // apiProxyCache -> apiProxyCacheCache
+const apiProxyCache = new ApiProxyCache(api, store);
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
@@ -25,7 +26,7 @@ const navigationModel = new NavigationModel();
 
 const tripPresenter = new TripPresenter(mainElement, eventsModel, filterModel, apiProxyCache);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, eventsModel);
-const statisticsPresenter = new StatisticsPresenter(mainElement, eventsModel); // передавать не main а статистику 
+const statisticsPresenter = new StatisticsPresenter(bodyElement, eventsModel);
 const tripInfoPresenter = new TripInfoPresenter(headerElement, eventsModel, filterModel);
 const navigationPresenter = new NavigationPresenter(tabsElement, newEventButtonElement, tripPresenter, statisticsPresenter, navigationModel, filterModel);
 

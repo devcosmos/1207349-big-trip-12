@@ -4,6 +4,8 @@ import SmartView from "./smart-view";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
+const BAR_HEIGHT = 55;
+
 const renderChart = (canvas, chartType, events) => {
   const labels = [];
   const data = [];
@@ -70,7 +72,6 @@ const renderChart = (canvas, chartType, events) => {
             display: false,
             drawBorder: false
           },
-          // barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -81,7 +82,6 @@ const renderChart = (canvas, chartType, events) => {
             display: false,
             drawBorder: false
           },
-          // minBarLength: 50
         }],
       },
       legend: {
@@ -114,7 +114,6 @@ const createStatisticsTemplate = () => {
 export default class StatisticsView extends SmartView {
   constructor(events) {
     super();
-
     this._data = events;
 
     this._setCharts();
@@ -133,14 +132,12 @@ export default class StatisticsView extends SmartView {
     const eventsByTransportTypeAndRepeats = splitEventsByChartType(ChartType.TRANSPORT, this._data);
     const eventsByTypeAndTimeSpend = splitEventsByChartType(ChartType.TIME_SPENT, this._data);
 
-    const BAR_HEIGHT = 55;
-
     moneyCtx.height = BAR_HEIGHT * eventsByTypeAndPrice.length;
     transportCtx.height = BAR_HEIGHT * eventsByTransportTypeAndRepeats.length;
     timeSpendCtx.height = BAR_HEIGHT * eventsByTypeAndTimeSpend.length;
 
-    this._moneyCart = renderChart(moneyCtx, ChartType.MONEY, eventsByTypeAndPrice);
-    this._transportCart = renderChart(transportCtx, ChartType.TRANSPORT, eventsByTransportTypeAndRepeats);
-    this._spendCart = renderChart(timeSpendCtx, ChartType.TIME_SPENT, eventsByTypeAndTimeSpend);
+    renderChart(moneyCtx, ChartType.MONEY, eventsByTypeAndPrice);
+    renderChart(transportCtx, ChartType.TRANSPORT, eventsByTransportTypeAndRepeats);
+    renderChart(timeSpendCtx, ChartType.TIME_SPENT, eventsByTypeAndTimeSpend);
   }
 }
