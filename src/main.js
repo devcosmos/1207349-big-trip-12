@@ -1,7 +1,7 @@
 import {UpdateType} from "./const";
 import {EventsModel, FilterModel, NavigationModel} from "./model/index";
 import {TripPresenter, FilterPresenter, StatisticsPresenter, TripInfoPresenter, NavigationPresenter} from "./presenter/index";
-import {Api, Store, ApiProxy} from "./api/index";
+import {Api, Store, ApiProxyCache} from "./api/index";
 
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const AUTHORIZATION = `Basic k3jsk3sdfjk4ns1d45k1b2`;
@@ -17,13 +17,13 @@ const newEventButtonElement = headerElement.querySelector(`.trip-main__event-add
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
-const apiProxy = new ApiProxy(api, store); // apiProxy -> apiProxyCashe
+const apiProxyCache = new ApiProxyCache(api, store); // apiProxyCache -> apiProxyCacheCache
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
 const navigationModel = new NavigationModel();
 
-const tripPresenter = new TripPresenter(mainElement, eventsModel, filterModel, apiProxy);
+const tripPresenter = new TripPresenter(mainElement, eventsModel, filterModel, apiProxyCache);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, eventsModel);
 const statisticsPresenter = new StatisticsPresenter(mainElement, eventsModel); // передавать не main а статистику 
 const tripInfoPresenter = new TripInfoPresenter(headerElement, eventsModel, filterModel);
@@ -36,9 +36,9 @@ tripPresenter.init();
 
 Promise
   .all([
-    apiProxy.getOffers(),
-    apiProxy.getDestinations(),
-    apiProxy.getEvents(),
+    apiProxyCache.getOffers(),
+    apiProxyCache.getDestinations(),
+    apiProxyCache.getEvents(),
   ])
   .then(([offers, destinations, events]) => {
     eventsModel.setOffers(offers);
@@ -57,7 +57,7 @@ window.addEventListener(`load`, () => {
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
-  apiProxy.sync();
+  apiProxyCache.sync();
 });
 
 window.addEventListener(`offline`, () => {

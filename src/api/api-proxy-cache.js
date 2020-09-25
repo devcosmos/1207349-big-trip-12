@@ -20,7 +20,7 @@ const createStoreStructure = (items) => {
   }, {});
 };
 
-export default class ApyProxy {
+export default class ApiProxyCache {
   constructor(api, store) {
     this._api = api;
     this._store = store;
