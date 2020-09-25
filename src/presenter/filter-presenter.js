@@ -3,30 +3,30 @@ import {EventFilterView} from "../view/index";
 import {renderElement, removeElement} from "../utils/index";
 
 export default class FilterPresenter {
-  constructor(filterContainer, filterModel, eventsModel) {
-    this._filterContainer = filterContainer;
+  constructor(filterElement, filterModel, eventsModel) {
+    this._filterElement = filterElement;
     this._filterModel = filterModel;
     this._eventsModel = eventsModel;
 
-    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleEventModel = this._handleEventModel.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
-    this._eventsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._eventsModel.addObserver(this._handleEventModel);
+    this._filterModel.addObserver(this._handleEventModel);
   }
 
   init() {
-    this._filterView = new EventFilterView(FilterType, this._filterModel.getFilter(), this._eventsModel.getEvents());
+    this._filterView = new EventFilterView(Object.values(FilterType), this._filterModel.getFilter(), this._eventsModel.getEvents());
     this._filterView.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
-    renderElement(this._filterContainer, this._filterView, RenderPosition.AFTEREND);
+    renderElement(this._filterElement, this._filterView, RenderPosition.AFTEREND);
   }
 
   destroy() {
     removeElement(this._filterView);
   }
 
-  _handleModelEvent() {
+  _handleEventModel() {
     this.destroy();
     this.init();
   }

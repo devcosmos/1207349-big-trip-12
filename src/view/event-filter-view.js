@@ -4,7 +4,8 @@ import {filter} from "../utils/index";
 const createEventFilterTemplate = (filters, currentFilter, events) => {
   return (
     `<form class="trip-filters" action="#" method="get">
-      ${Object.values(filters).map((filterItem) => `<div class="trip-filters__filter">
+
+      ${filters.map((filterItem) => `<div class="trip-filters__filter">
         <input
           id="filter-${filterItem}"
           class="trip-filters__filter-input visually-hidden"
@@ -12,7 +13,7 @@ const createEventFilterTemplate = (filters, currentFilter, events) => {
           name="trip-filter"
           value="${filterItem}"
           ${filterItem === currentFilter ? `checked` : ``}
-          ${filter[filterItem](events).length === 0 ? `disabled` : ``}
+          ${filter[filterItem](events).length ? `` : `disabled`}
         >
         <label class="trip-filters__filter-label" for="filter-${filterItem}">
           ${filterItem}
