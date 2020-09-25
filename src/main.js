@@ -50,7 +50,7 @@ Promise
     eventsModel.setOffers([]);
     eventsModel.setDestinations([]);
     eventsModel.setEvents(UpdateType.INIT, []);
-  })
+  });
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);
