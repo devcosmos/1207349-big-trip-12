@@ -85,8 +85,8 @@ export default class EventsModel extends Observer {
             text: event.destination.description,
             photos: event.destination.pictures
           },
-          dateEnd: event.date_to !== null ? new Date(event.date_to) : event.date_to,
-          dateStart: event.date_from !== null ? new Date(event.date_from) : event.date_from,
+          endDate: event.date_to !== null ? new Date(event.date_to) : event.date_to,
+          startDate: event.date_from !== null ? new Date(event.date_from) : event.date_from,
           price: event.base_price,
           acceptedOffers: event.offers,
           isFavorite: event.is_favorite
@@ -107,8 +107,8 @@ export default class EventsModel extends Observer {
             "description": event.description.text,
             "pictures": event.description.photos
           },
-          "date_from": event.dateStart !== null ? new Date(event.dateStart) : event.dateStart,
-          "date_to": event.dateEnd !== null ? new Date(event.dateEnd) : event.dateEnd,
+          "date_from": event.startDate !== null ? new Date(event.startDate) : event.startDate,
+          "date_to": event.endDate !== null ? new Date(event.endDate) : event.endDate,
           "base_price": event.price,
           "offers": event.acceptedOffers,
           "is_favorite": event.isFavorite
