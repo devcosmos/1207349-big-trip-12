@@ -9,7 +9,7 @@ export const splitEventsByDays = (events) => {
   events.forEach((event) => {
     const date = event.startDate;
 
-    if (tripDays.length === 0) {
+    if (!tripDays.length) {
       tripDays.push([date, [event]]);
     } else if (tripDays[dayCount][0].toDateString() === date.toDateString()) {
       tripDays[dayCount][1].push(event);
