@@ -1,8 +1,6 @@
-import {RenderPosition, NavigationTab, UpdateType, FilterType} from "./const";
-import {renderElement} from "./utils/index";
-import {EventsModel, FilterModel} from "./model/index";
-import {NavigationView} from "./view/index";
-import {TripPresenter, FilterPresenter, StatisticsPresenter, TripInfoPresenter} from "./presenter/index";
+import {UpdateType} from "./const";
+import {EventsModel, FilterModel, NavigationModel} from "./model/index";
+import {TripPresenter, FilterPresenter, StatisticsPresenter, TripInfoPresenter, NavigationPresenter} from "./presenter/index";
 import {Api, Store, ApiProxy} from "./api/index";
 
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
@@ -12,61 +10,29 @@ const STORE_VER = `v12`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const headerElement = document.querySelector(`.trip-main`);
-const mainElement = document.querySelector(`.trip-events`);
+const mainElement = document.querySelector(`.trip-events`); //создать ещё 1 селектор для статистики 
 const tabsElement = headerElement.querySelector(`.trip-main__tabs`);
 const filtersElement = headerElement.querySelector(`.trip-main__filters`);
-const newEventButton = headerElement.querySelector(`.trip-main__event-add-btn`);
+const newEventButtonElement = headerElement.querySelector(`.trip-main__event-add-btn`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
-const apiProxy = new ApiProxy(api, store);
+const apiProxy = new ApiProxy(api, store); // apiProxy -> apiProxyCashe
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
-
-const navigationView = new NavigationView();
+const navigationModel = new NavigationModel();
 
 const tripPresenter = new TripPresenter(mainElement, eventsModel, filterModel, apiProxy);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, eventsModel);
-const statisticsPresenter = new StatisticsPresenter(mainElement, eventsModel);
+const statisticsPresenter = new StatisticsPresenter(mainElement, eventsModel); // передавать не main а статистику 
 const tripInfoPresenter = new TripInfoPresenter(headerElement, eventsModel, filterModel);
+const navigationPresenter = new NavigationPresenter(tabsElement, newEventButtonElement, tripPresenter, statisticsPresenter, navigationModel, filterModel);
 
-const newEventButtonClickHandler = () => {
-  if (navigationView.isActiveTab(NavigationTab.TABLE)) {
-    filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
-  } else {
-    navigationClickHandler(NavigationTab.TABLE);
-  }
-
-  navigationView.setActiveTab(NavigationTab.TABLE);
-  tripPresenter.createEvent(newEventFormCloseHandler);
-  newEventButton.disabled = true;
-};
-
-const newEventFormCloseHandler = () => {
-  newEventButton.disabled = false;
-};
-
-const navigationClickHandler = (navigationTab) => {
-  switch (navigationTab) {
-    case NavigationTab.TABLE:
-      statisticsPresenter.destroy();
-      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
-      tripPresenter.init();
-      break;
-    case NavigationTab.STATS:
-      tripPresenter.destroy();
-      filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
-      statisticsPresenter.init();
-      break;
-  }
-};
-
-newEventButton.addEventListener(`click`, newEventButtonClickHandler);
-
+tripInfoPresenter.init();
+navigationPresenter.init();
 filterPresenter.init();
 tripPresenter.init();
-tripInfoPresenter.init();
 
 Promise
   .all([
@@ -84,10 +50,6 @@ Promise
     eventsModel.setDestinations([]);
     eventsModel.setEvents(UpdateType.INIT, []);
   })
-  .finally(() => {
-    renderElement(tabsElement, navigationView, RenderPosition.AFTEREND);
-    navigationView.setNavigationClickHandler(navigationClickHandler);
-  });
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);
