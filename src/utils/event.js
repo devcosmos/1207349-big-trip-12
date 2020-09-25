@@ -7,7 +7,7 @@ export const splitEventsByDays = (events) => {
   let dayCount = 0;
 
   events.forEach((event) => {
-    const date = event.dateStart;
+    const date = event.startDate;
 
     if (tripDays.length === 0) {
       tripDays.push([date, [event]]);
@@ -23,8 +23,8 @@ export const splitEventsByDays = (events) => {
 };
 
 export const sortEventsByDuration = (a, b) => {
-  const durationA = (Date.parse(a.dateEnd) - Date.parse(a.dateStart));
-  const durationB = (Date.parse(b.dateEnd) - Date.parse(b.dateStart));
+  const durationA = (Date.parse(a.endDate) - Date.parse(a.startDate));
+  const durationB = (Date.parse(b.endDate) - Date.parse(b.startDate));
 
   if (durationA > durationB) {
     return -1;
@@ -42,7 +42,7 @@ export const sortEventsByPrice = (a, b) => {
 };
 
 export const sortEventsByDate = (a, b) => {
-  return a.dateStart - b.dateStart;
+  return a.startDate - b.startDate;
 };
 
 export const splitEventsByChartType = (chartType, events) => {
@@ -61,7 +61,7 @@ export const splitEventsByChartType = (chartType, events) => {
         eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + 1 : 1;
         break;
       case (ChartType.TIME_SPENT):
-        const duration = getDurationInHours(event.dateStart, event.dateEnd);
+        const duration = getDurationInHours(event.startDate, event.endDate);
         eventTypes[eventType] = eventTypes[eventType] ? eventTypes[eventType] + duration : duration;
         break;
     }
