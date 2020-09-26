@@ -22,7 +22,7 @@ export default class NavigationPresenter {
   }
 
   init() {
-    this._navigationView = new NavigationView(Object.values(NavigationTab), this._navigationModel.getTab());
+    this._navigationView = new NavigationView(Object.values(NavigationTab), this._navigationModel.getActiveTab());
     this._navigationView.setNavigationClickHandler(this._navigationClickHandler);
 
     renderElement(this._navigationElement, this._navigationView, RenderPosition.AFTEREND);
@@ -42,7 +42,7 @@ export default class NavigationPresenter {
   }
 
   _newEventButtonClickHandler() {
-    if (this._navigationModel.getTab() === NavigationTab.TABLE) {
+    if (this._navigationModel.getActiveTab() === NavigationTab.TABLE) {
       this._filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
     } else {
       this._navigationClickHandler(NavigationTab.TABLE);
@@ -56,13 +56,13 @@ export default class NavigationPresenter {
     switch (navigationTab) {
       case NavigationTab.TABLE:
         this._statisticsPresenter.destroy();
-        this._navigationModel.setTab(UpdateType.TRIP_WITH_RESET_SORT, NavigationTab.TABLE);
+        this._navigationModel.setActiveTab(UpdateType.TRIP_WITH_RESET_SORT, NavigationTab.TABLE);
         this._filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
         this._tripPresenter.init();
         break;
       case NavigationTab.STATS:
         this._tripPresenter.destroy();
-        this._navigationModel.setTab(UpdateType.TRIP_WITH_RESET_SORT, NavigationTab.STATS);
+        this._navigationModel.setActiveTab(UpdateType.TRIP_WITH_RESET_SORT, NavigationTab.STATS);
         this._filterModel.setFilter(UpdateType.TRIP_WITH_RESET_SORT, FilterType.EVERYTHING);
         this._statisticsPresenter.init();
         break;

@@ -43,10 +43,10 @@ export default class Store {
     );
   }
 
-  setAdditionalDataByKey(key, data) {
+  setAdditionalDataByKey(key, tripData) {
     this._storage.setItem(
         key,
-        JSON.stringify(data)
+        JSON.stringify(tripData)
     );
   }
 

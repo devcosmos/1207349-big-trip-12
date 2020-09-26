@@ -63,11 +63,11 @@ export default class Api {
     });
   }
 
-  sync(data) {
+  sync(tripData) {
     return this._load({
       url: `points/sync`,
       method: HttpMethod.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(tripData),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON);

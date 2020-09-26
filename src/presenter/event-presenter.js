@@ -31,10 +31,10 @@ export default class EventPresenter {
 
     this._eventView.setEditClickHandler(this._handleEditClick);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
-    this._eventEditorView.setFormDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
     this._eventEditorView.setFormCloseClickHandler(this._handleCloseClick);
 
-    if (prevEventView === null || prevEventEditorView === null) {
+    if (!prevEventView || !prevEventEditorView) {
       renderElement(this._eventListElement, this._eventView, RenderPosition.BEFOREEND);
       return;
     }

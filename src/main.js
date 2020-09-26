@@ -10,7 +10,7 @@ const STORE_VER = `v12`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const headerElement = document.querySelector(`.trip-main`);
-const bodyElement = document.querySelector(`.page-body__page-main .page-body__container`);
+const bodyElement = document.querySelector(`.page-main__container`);
 const mainElement = bodyElement.querySelector(`.trip-events`);
 const tabsElement = headerElement.querySelector(`.trip-main__tabs`);
 const filtersElement = headerElement.querySelector(`.trip-main__filters`);

@@ -15,7 +15,7 @@ export default class NewEventPresenter {
   }
 
   init(eventListElement, destroyCallback, destinations, offers) {
-    if (this._eventEditorView !== null) {
+    if (this._eventEditorView) {
       return;
     }
 
@@ -24,7 +24,7 @@ export default class NewEventPresenter {
 
     this._eventEditorView = new EventEditorView(destinations, offers);
     this._eventEditorView.setFormSubmitHandler(this._handleFormSubmit);
-    this._eventEditorView.setFormDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditorView.setDeleteClickHandler(this._handleDeleteClick);
 
     renderElement(this._eventListElement, this._eventEditorView, RenderPosition.AFTEREND);
 
@@ -51,11 +51,11 @@ export default class NewEventPresenter {
   }
 
   destroy() {
-    if (this._eventEditorView === null) {
+    if (!this._eventEditorView) {
       return;
     }
 
-    if (this._destroyCallback !== null) {
+    if (this._destroyCallback) {
       this._destroyCallback();
     }
 

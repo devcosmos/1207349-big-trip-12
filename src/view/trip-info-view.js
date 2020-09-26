@@ -13,13 +13,13 @@ const getTripRoute = (tripEvents) => {
 const getTripDateInterval = (tripEvents) => {
   const startDate = getDateAtShortFormat(tripEvents[0].startDate);
   const endDate = getDateAtShortFormat(tripEvents[tripEvents.length - 1].endDate);
-  const splitStartDate = startDate.split(` `);
-  const splitEndDate = endDate.split(` `);
+  const splitedStartDate = startDate.split(` `);
+  const splitedEndDate = endDate.split(` `);
   if (startDate === endDate) {
-    return `${splitStartDate[1]} ${splitStartDate[0]}`;
+    return `${splitedStartDate[1]} ${splitedStartDate[0]}`;
   }
 
-  return `${splitStartDate[1]} ${splitStartDate[0]} &mdash; ${splitEndDate[1]}${splitStartDate[0] === splitEndDate[0] ? `` : ` ` + splitEndDate[0]}`;
+  return `${splitedStartDate[1]} ${splitedStartDate[0]} &mdash; ${splitedEndDate[1]}${splitedStartDate[0] === splitedEndDate[0] ? `` : ` ` + splitedEndDate[0]}`;
 };
 
 const createTripInfoTemplate = (tripEvents) => {

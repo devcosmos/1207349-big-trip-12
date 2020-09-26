@@ -236,7 +236,7 @@ export default class EventEditorView extends SmartView {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setFormDeleteClickHandler(this._callback.deleteClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
     if (!this._isNew) {
       this.setFormCloseClickHandler(this._callback.formCloseClick);
     }
@@ -252,7 +252,7 @@ export default class EventEditorView extends SmartView {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseClickHandler);
   }
 
-  setFormDeleteClickHandler(callback) {
+  setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }

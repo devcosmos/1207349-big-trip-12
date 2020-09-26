@@ -18,12 +18,11 @@ export const getDateAtDefaultFormat = (date) => {
 
 export const getDurationTime = (start, end) => {
   const duration = moment.duration(Date.parse(end) - Date.parse(start));
+  const day = duration.days() ? moment(duration.days(), `D`).format(`DD`) + `D ` : ``;
+  const hours = duration.hours() ? moment(duration.hours(), `H`).format(`HH`) + `H ` : ``;
+  const minutes = duration.minutes() ? moment(duration.minutes(), `m`).format(`mm`) + `M` : ``;
 
-  return (
-    `${duration.days() ? `${moment(duration.days(), `D`).format(`DD`)}D` : ``}
-    ${duration.hours() ? ` ${moment(duration.hours(), `H`).format(`HH`)}H` : ``}
-    ${duration.minutes() ? ` ${moment(duration.minutes(), `m`).format(`mm`)}M` : ``}`
-  );
+  return [day, hours, minutes].join(``);
 };
 
 export const getDurationInHours = (start, end) => {

@@ -210,7 +210,7 @@ export default class TripPresenter {
       this._currentSortType = SortType.EVENT;
     }
 
-    if (this._sortingView !== null) {
+    if (this._sortingView) {
       removeElement(this._sortingView);
     }
 

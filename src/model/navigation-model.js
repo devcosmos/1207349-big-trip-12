@@ -7,12 +7,12 @@ export default class NavigationModel extends Observer {
     this._activeTab = NavigationTab.TABLE;
   }
 
-  setTab(updateType, tab) {
+  setActiveTab(updateType, tab) {
     this._activeTab = tab;
     this._notify(updateType, tab);
   }
 
-  getTab() {
+  getActiveTab() {
     return this._activeTab;
   }
 }
