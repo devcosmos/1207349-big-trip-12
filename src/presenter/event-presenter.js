@@ -122,14 +122,14 @@ export default class EventPresenter {
   }
 
   _handleFormSubmit(update) {
-    const isOnlyEventUpdate =
-      (this._currentSortType !== SortType.PRICE || this._event.price === update.price) &&
-      (this._currentSortType === SortType.PRICE || this._event.startDate === update.startDate) &&
-      (this._currentSortType !== SortType.TIME || this._event.endDate === update.endDate);
+    const isUpdateTrip =
+      (this._currentSortType === SortType.PRICE && this._event.price !== update.price) ||
+      (this._currentSortType === SortType.TIME && (this._event.startDate !== update.startDate || this._event.endDate !== update.endDate)) ||
+      (this._currentSortType === SortType.EVENT && this._event.startDate !== update.startDate);
 
     this._changeData(
         UserAction.UPDATE_EVENT,
-        isOnlyEventUpdate ? UpdateType.EVENT : UpdateType.TRIP,
+        isUpdateTrip ? UpdateType.TRIP : UpdateType.EVENT,
         update
     );
   }
